@@ -15,6 +15,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Routes
+app.use("/api/users", require("./src/routes/userRoutes"));
+app.use("/api/contents", require("./src/routes/contentRoutes"));
+app.use("/api/notifications", require("./src/routes/notificationRoutes"));
+
 app.get("/", (req, res) => {
   res.send("API UO-Compagnon is running...");
 });
