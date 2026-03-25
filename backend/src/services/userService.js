@@ -1,22 +1,37 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const { calculateCurrentStep } = require("../config/constants");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const registerUser = async (userData) => {
-  const { name, email, password, program } = userData;
+  // On récupère bien les dates depuis userData
+  const { name, email, password, program, arrivalDate, classStartDate } =
+    userData;
+
   const userExists = await User.findOne({ email });
   if (userExists) throw new Error("Utilisateur déjà existant");
 
-  const user = await User.create({ name, email, password, program });
+  // On passe les dates à la création
+  const user = await User.create({
+    name,
+    email,
+    password,
+    program,
+    arrivalDate,
+    classStartDate,
+  });
+
   return {
     _id: user._id,
     name: user.name,
     email: user.email,
     program: user.program,
-    currentStep: user.currentStep,
+    arrivalDate: user.arrivalDate,
+    classStartDate: user.classStartDate,
+    currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
     token: generateToken(user._id),
   };
 };
@@ -29,7 +44,10 @@ const loginUser = async (email, password) => {
       name: user.name,
       email: user.email,
       program: user.program,
-      currentStep: user.currentStep,
+      arrivalDate: user.arrivalDate,
+      classStartDate: user.classStartDate,
+      // Calcul dynamique à chaque connexion
+      currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
       readNotifications: user.readNotifications,
       token: generateToken(user._id),
     };

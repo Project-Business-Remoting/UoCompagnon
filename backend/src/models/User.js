@@ -6,17 +6,9 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    program: { type: String, default: "Undecided" },
-    currentStep: {
-      type: String,
-      enum: [
-        "Avant l'arrivée",
-        "Semaine d'accueil",
-        "Premier mois",
-        "Mi-session",
-      ],
-      default: "Avant l'arrivée",
-    },
+    program: { type: String, required: true },
+    arrivalDate: { type: Date, required: true }, // Arrivée au pays
+    classStartDate: { type: Date, required: true }, // Premier jour de cours
     readNotifications: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
     ],
