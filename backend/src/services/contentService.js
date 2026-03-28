@@ -13,4 +13,18 @@ const createContent = async (contentData) => {
   return await Content.create(contentData);
 };
 
-module.exports = { getAllContents, getContentById, createContent };
+const updateContent = async (id, contentData) => {
+  return await Content.findByIdAndUpdate(id, contentData, { new: true });
+};
+
+const deleteContent = async (id) => {
+  return await Content.findByIdAndDelete(id);
+};
+
+module.exports = { 
+  getAllContents, 
+  getContentById, 
+  createContent,
+  updateContent,
+  deleteContent
+};

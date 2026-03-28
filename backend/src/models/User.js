@@ -4,7 +4,12 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    match: [/^\w+([\.-]?\w+)*@uottawa\.ca$/, 'Veuillez utiliser votre adresse email @uottawa.ca']
+  },
     password: { type: String, required: true },
     program: { type: String, required: true },
     arrivalDate: { type: Date, required: true }, // Arrivée au pays

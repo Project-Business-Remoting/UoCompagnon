@@ -19,4 +19,24 @@ const addContent = async (req, res) => {
   }
 };
 
-module.exports = { getContents, addContent };
+const updateContent = async (req, res) => {
+  try {
+    const content = await contentService.updateContent(req.params.id, req.body);
+    if (!content) return res.status(404).json({ message: "Contenu non trouvé" });
+    res.json(content);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const deleteContent = async (req, res) => {
+  try {
+    const content = await contentService.deleteContent(req.params.id);
+    if (!content) return res.status(404).json({ message: "Contenu non trouvé" });
+    res.json({ message: "Contenu supprimé avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getContents, addContent, updateContent, deleteContent };
