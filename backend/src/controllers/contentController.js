@@ -39,4 +39,14 @@ const deleteContent = async (req, res) => {
   }
 };
 
-module.exports = { getContents, addContent, updateContent, deleteContent };
+// Contenus contextuels — auto-filtrés par la phase de l'utilisateur connecté
+const getRelevantContents = async (req, res) => {
+  try {
+    const contents = await contentService.getRelevantForUser(req.user);
+    res.json(contents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getContents, addContent, updateContent, deleteContent, getRelevantContents };

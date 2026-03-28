@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     match: [/^\w+([\.-]?\w+)*@uottawa\.ca$/, 'Veuillez utiliser votre adresse email @uottawa.ca']
   },
     password: { type: String, required: true },
+    role: { type: String, enum: ["student", "admin"], default: "student" },
     program: { type: String, required: true },
     arrivalDate: { type: Date, required: true }, // Arrivée au pays
     classStartDate: { type: Date, required: true }, // Premier jour de cours

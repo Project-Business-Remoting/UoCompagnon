@@ -1,4 +1,5 @@
 const Content = require("../models/Content");
+const { getRelevantContents: getRelevantFromPhase } = require("./phaseService");
 
 const getAllContents = async (step) => {
   const filter = step ? { step } : {};
@@ -21,10 +22,16 @@ const deleteContent = async (id) => {
   return await Content.findByIdAndDelete(id);
 };
 
+// Contenus contextuels filtrés automatiquement par la phase du user
+const getRelevantForUser = async (user) => {
+  return await getRelevantFromPhase(user);
+};
+
 module.exports = { 
   getAllContents, 
   getContentById, 
   createContent,
   updateContent,
-  deleteContent
+  deleteContent,
+  getRelevantForUser
 };

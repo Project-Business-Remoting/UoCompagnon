@@ -2,7 +2,7 @@ const notificationService = require("../services/notificationService");
 
 const getNotifications = async (req, res) => {
   try {
-    const { step } = req.query; // ex: ?step=Avant l'arrivée
+    const { step } = req.query;
     const notifications =
       await notificationService.getNotificationsByStep(step);
     res.json(notifications);
@@ -11,10 +11,32 @@ const getNotifications = async (req, res) => {
   }
 };
 
+// Notifications intelligentes — combinaison dynamiques + persistantes
+const getSmartNotifications = async (req, res) => {
+  try {
+    const notifications =
+      await notificationService.getSmartNotificationsForUser(req.user);
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const markAsRead = async (req, res) => {
   try {
-    // req.user sera injecté par notre futur middleware d'authentification
     const user = await notificationService.markAllAsRead(req.user._id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const markOneAsRead = async (req, res) => {
+  try {
+    const user = await notificationService.markOneAsRead(
+      req.user._id,
+      req.params.id
+    );
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -23,5 +45,7 @@ const markAsRead = async (req, res) => {
 
 module.exports = {
   getNotifications,
+  getSmartNotifications,
   markAsRead,
+  markOneAsRead,
 };
