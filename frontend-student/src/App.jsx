@@ -4,6 +4,9 @@ import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import JourneyHub from './pages/JourneyHub';
+import ContentDetail from './pages/ContentDetail';
+import Notifications from './pages/Notifications';
 import './App.css';
 
 // Pages placeholder — remplacées dans les commits suivants
@@ -48,8 +51,9 @@ function App() {
         }>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="hub" element={<PlaceholderPage title="Hub" />} />
-          <Route path="notifications" element={<PlaceholderPage title="Notifications" />} />
+          <Route path="hub" element={<JourneyHub />} />
+          <Route path="hub/:id" element={<ContentDetail />} />
+          <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<PlaceholderPage title="Profile" />} />
         </Route>
       </Routes>

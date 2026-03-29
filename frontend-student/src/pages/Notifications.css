@@ -1,0 +1,123 @@
+/* ===== Notifications ===== */
+
+.notifs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Header --- */
+.notifs-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.notifs-unread {
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* --- List --- */
+.notifs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* --- Item --- */
+.notifs-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: var(--transition);
+}
+
+.notifs-item--read {
+  opacity: 0.6;
+}
+
+.notifs-item-left {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- Dot --- */
+.notifs-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.4rem;
+}
+
+.notifs-dot--info { background: var(--info); }
+.notifs-dot--warning { background: var(--warning); }
+.notifs-dot--success { background: var(--success); }
+
+/* --- Content --- */
+.notifs-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.notifs-item-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.notifs-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.notifs-item-message {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.notifs-item-step {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* --- Mark button --- */
+.notifs-mark-btn {
+  color: var(--text-muted);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.notifs-mark-btn:hover {
+  color: var(--success);
+  background: var(--success-light);
+}
+
+/* --- Empty --- */
+.notifs-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 0;
+  font-size: 0.9rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .notifs-header {
+    flex-direction: column;
+  }
+}
