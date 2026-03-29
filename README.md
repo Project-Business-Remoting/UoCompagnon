@@ -124,10 +124,29 @@ src/
   context/ThemeContext.jsx      # Dark mode / Light mode
   components/layout/Sidebar.jsx # Navigation laterale
   components/layout/Layout.jsx  # Layout principal (sidebar + contenu)
+  components/dashboard/PhaseStepper.jsx # Stepper visuel des 4 phases
+  pages/Login.jsx               # Page de connexion
+  pages/Register.jsx            # Page d'inscription
+  pages/Dashboard.jsx           # Dashboard intelligent
+  pages/JourneyHub.jsx          # Hub des contenus filtres par phase
+  pages/ContentDetail.jsx       # Page de detail d'un contenu
+  pages/Notifications.jsx       # Notifications smart + systeme
+  pages/Profile.jsx             # Profil utilisateur et preferences
   i18n/fr.json                  # Traductions francaises
   i18n/en.json                  # Traductions anglaises
   index.css                     # Design System "Garnet & Glass"
 ```
+
+### Pages disponibles
+| Route | Page | Description |
+|---|---|---|
+| `/login` | Connexion | Email + mot de passe, lien admin, lien inscription |
+| `/register` | Inscription | Nom, email, programme, dates, mot de passe |
+| `/dashboard` | Tableau de bord | Stepper phases, progression, contenus prioritaires, notifications |
+| `/hub` | Mes Contenus | Grille filtrable par categorie, clic vers detail |
+| `/hub/:id` | Detail Contenu | Description complete, services, contacts, tags |
+| `/notifications` | Notifications | Smart (dynamiques) + Systeme (DB), marquer comme lu |
+| `/profile` | Mon Profil | Infos, dates, phase actuelle, preferences (theme, langue) |
 
 ### Design System "Garnet & Glass"
 | Token | Hex | Usage |

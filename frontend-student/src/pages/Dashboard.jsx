@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { fetchDashboard } from '../services/api';
 import { useLang } from '../context/LangContext';
@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { lang, t } = useLang();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -95,7 +96,7 @@ const Dashboard = () => {
           <div className="dashboard-list">
             {contents.priority.length > 0 ? (
               contents.priority.slice(0, 4).map((content) => (
-                <div key={content._id} className="dashboard-list-item">
+                <div key={content._id} className="dashboard-list-item dashboard-list-item--clickable" onClick={() => navigate(`/hub/${content._id}`)}>
                   <div className="dashboard-list-info">
                     <span className="dashboard-list-title">{content.title}</span>
                     <span className="dashboard-list-category">{content.category}</span>

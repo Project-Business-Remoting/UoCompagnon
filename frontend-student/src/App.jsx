@@ -7,15 +7,10 @@ import Dashboard from './pages/Dashboard';
 import JourneyHub from './pages/JourneyHub';
 import ContentDetail from './pages/ContentDetail';
 import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
 import './App.css';
 
-// Pages placeholder — remplacées dans les commits suivants
-const PlaceholderPage = ({ title }) => (
-  <div style={{ padding: '2rem' }}>
-    <h1>{title}</h1>
-    <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Page en construction...</p>
-  </div>
-);
+
 
 // Protection des routes
 const ProtectedRoute = ({ children }) => {
@@ -54,7 +49,7 @@ function App() {
           <Route path="hub" element={<JourneyHub />} />
           <Route path="hub/:id" element={<ContentDetail />} />
           <Route path="notifications" element={<Notifications />} />
-          <Route path="profile" element={<PlaceholderPage title="Profile" />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>
