@@ -118,12 +118,24 @@ npm run dev    # Demarre sur http://localhost:5173
 ### Architecture
 ```
 src/
-  services/api.js          # Wrapper API avec injection JWT
-  context/AuthContext.jsx   # Gestion authentification
-  context/LangContext.jsx   # Systeme i18n FR/EN
-  i18n/fr.json              # Traductions francaises
-  i18n/en.json              # Traductions anglaises
+  services/api.js              # Wrapper API avec injection JWT
+  context/AuthContext.jsx       # Gestion authentification
+  context/LangContext.jsx       # Systeme i18n FR/EN
+  context/ThemeContext.jsx      # Dark mode / Light mode
+  components/layout/Sidebar.jsx # Navigation laterale
+  components/layout/Layout.jsx  # Layout principal (sidebar + contenu)
+  i18n/fr.json                  # Traductions francaises
+  i18n/en.json                  # Traductions anglaises
+  index.css                     # Design System "Garnet & Glass"
 ```
+
+### Design System "Garnet & Glass"
+| Token | Hex | Usage |
+|---|---|---|
+| Primary | `#D0103A` | Boutons, accents, stepper |
+| Secondary | `#424242` | Textes, sidebar |
+| Tertiary | `#007574` | Badges, liens |
+| Neutral | `#F5F5F5` | Fonds de page |
 
 Le proxy Vite redirige automatiquement `/api` vers le backend (port 5001).
 
