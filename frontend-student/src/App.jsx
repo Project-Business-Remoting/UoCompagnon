@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import './App.css';
 
-// Pages — placeholder temporaires, remplacées dans les commits suivants
+// Pages placeholder — remplacées dans les commits suivants
 const PlaceholderPage = ({ title }) => (
   <div style={{ padding: '2rem' }}>
     <h1>{title}</h1>
@@ -19,12 +21,24 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Redirection si déjà connecté
+const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="loading-screen">Chargement...</div>;
+  if (user) return <Navigate to="/dashboard" />;
+  return children;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<PlaceholderPage title="Login" />} />
-        <Route path="/register" element={<PlaceholderPage title="Register" />} />
+        <Route path="/login" element={
+          <PublicRoute><Login /></PublicRoute>
+        } />
+        <Route path="/register" element={
+          <PublicRoute><Register /></PublicRoute>
+        } />
 
         <Route path="/" element={
           <ProtectedRoute>
