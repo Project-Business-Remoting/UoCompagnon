@@ -95,11 +95,55 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 
 ---
 
-##  Développement
+##  Developpement
 
 *   **Backend** : Node.js / Express / Mongoose
-*   **Sécurité** : JWT (stockage localStorage), Bcryptjs
+*   **Frontend** : React 19 / Vite 8 / Vanilla CSS
+*   **Securite** : JWT (stockage localStorage), Bcryptjs
 *   **Validation** : Regex stricte sur le domaine @uottawa.ca
+*   **i18n** : Systeme bilingue FR/EN avec fichiers JSON
+*   **Theming** : Dark mode / Light mode avec persistance localStorage
 
 ---
-*Projet développé pour l'intégration numérique des étudiants internationaux à l'Université d'Ottawa.*
+
+##  Frontend Student
+
+### Installation
+```bash
+cd frontend-student
+npm install
+npm run dev    # Demarre sur http://localhost:5173
+```
+
+### Architecture
+```
+src/
+  services/api.js          # Wrapper API avec injection JWT
+  context/AuthContext.jsx   # Gestion authentification
+  context/LangContext.jsx   # Systeme i18n FR/EN
+  i18n/fr.json              # Traductions francaises
+  i18n/en.json              # Traductions anglaises
+```
+
+Le proxy Vite redirige automatiquement `/api` vers le backend (port 5001).
+
+---
+
+##  Lancement complet
+
+Pour lancer l'ensemble du projet, ouvrir **3 terminaux** :
+
+```bash
+# Terminal 1 : Backend
+cd backend && npm start
+
+# Terminal 2 : Frontend Student
+cd frontend-student && npm run dev
+
+# Terminal 3 : Frontend Admin (a venir)
+cd frontend-admin && npm run dev
+```
+
+---
+*Projet developpe pour l'integration numerique des etudiants internationaux a l'Universite d'Ottawa.*
+

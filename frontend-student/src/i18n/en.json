@@ -1,0 +1,91 @@
+{
+  "login": {
+    "title": "Login",
+    "subtitle": "Access your UO-Compagnon student space",
+    "email": "uOttawa email address",
+    "emailPlaceholder": "firstname.lastname@uottawa.ca",
+    "password": "Password",
+    "submit": "Sign in",
+    "adminLink": "Administrator login",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "footer": "2026 University of Ottawa - UO-Compagnon v1.0"
+  },
+  "register": {
+    "title": "Create an account",
+    "subtitle": "Register with your uOttawa email",
+    "name": "Full name",
+    "namePlaceholder": "First Last",
+    "email": "uOttawa email address",
+    "emailPlaceholder": "firstname.lastname@uottawa.ca",
+    "program": "Study program",
+    "programPlaceholder": "Select your program",
+    "arrivalDate": "Arrival date in Canada",
+    "classStartDate": "Class start date",
+    "password": "Password",
+    "confirmPassword": "Confirm",
+    "submit": "Register",
+    "hasAccount": "Already have an account?",
+    "login": "Sign in"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "contents": "Contents",
+    "notifications": "Notifications",
+    "profile": "My Profile",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "adminMode": "Admin Mode",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "greeting": "Hello",
+    "priorityContents": "Priority Contents",
+    "recentNotifications": "Recent Notifications",
+    "viewAll": "View all",
+    "phaseDescription": {
+      "Avant l'arrivee": "Prepare for your arrival in Canada and at the University of Ottawa.",
+      "Semaine d'accueil": "Discover the campus, activate your services and meet the community.",
+      "Premier mois": "Get settled into your courses, explore services, and build your routine.",
+      "Mi-session": "Prepare for exams, check your GPA, and plan ahead."
+    },
+    "phases": {
+      "1": "Pre-arrival",
+      "2": "Welcome Week",
+      "3": "First Month",
+      "4": "Midterm"
+    }
+  },
+  "hub": {
+    "title": "My Contents",
+    "filterAll": "All",
+    "noContents": "No content available at this time."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "markRead": "Mark as read",
+    "smartBadge": "Smart",
+    "systemBadge": "System",
+    "noNotifications": "No notifications at this time."
+  },
+  "profile": {
+    "title": "My Profile",
+    "name": "Name",
+    "email": "Email",
+    "program": "Program",
+    "arrivalDate": "Arrival date",
+    "classStartDate": "Class start date",
+    "currentPhase": "Current phase",
+    "preferences": "Preferences"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "priority": {
+      "Prioritaire": "High",
+      "Moyen": "Medium",
+      "Bas": "Low"
+    }
+  }
+}

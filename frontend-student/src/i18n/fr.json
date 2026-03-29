@@ -1,0 +1,91 @@
+{
+  "login": {
+    "title": "Connexion",
+    "subtitle": "Accedez a votre espace etudiant UO-Compagnon",
+    "email": "Adresse courriel uOttawa",
+    "emailPlaceholder": "prenom.nom@uottawa.ca",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "adminLink": "Connexion administrateur",
+    "noAccount": "Pas encore de compte ?",
+    "register": "S'inscrire",
+    "footer": "2026 Universite d'Ottawa - UO-Compagnon v1.0"
+  },
+  "register": {
+    "title": "Creer un compte",
+    "subtitle": "Inscrivez-vous avec votre courriel uOttawa",
+    "name": "Nom complet",
+    "namePlaceholder": "Prenom Nom",
+    "email": "Adresse courriel uOttawa",
+    "emailPlaceholder": "prenom.nom@uottawa.ca",
+    "program": "Programme d'etudes",
+    "programPlaceholder": "Selectionnez votre programme",
+    "arrivalDate": "Date d'arrivee au Canada",
+    "classStartDate": "Date de debut des cours",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer",
+    "submit": "S'inscrire",
+    "hasAccount": "Vous avez deja un compte ?",
+    "login": "Se connecter"
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord",
+    "contents": "Contenus",
+    "notifications": "Notifications",
+    "profile": "Mon Profil",
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair",
+    "adminMode": "Mode Admin",
+    "logout": "Deconnexion"
+  },
+  "dashboard": {
+    "greeting": "Bonjour",
+    "priorityContents": "Contenus prioritaires",
+    "recentNotifications": "Notifications recentes",
+    "viewAll": "Tout voir",
+    "phaseDescription": {
+      "Avant l'arrivee": "Prepare ton arrivee au Canada et a l'Universite d'Ottawa.",
+      "Semaine d'accueil": "Decouvre le campus, active tes services et rencontre la communaute.",
+      "Premier mois": "Installe-toi dans tes cours, explore les services et construis ta routine.",
+      "Mi-session": "Prepare tes examens, verifie ton GPA et planifie la suite."
+    },
+    "phases": {
+      "1": "Avant l'arrivee",
+      "2": "Semaine d'accueil",
+      "3": "Premier mois",
+      "4": "Mi-session"
+    }
+  },
+  "hub": {
+    "title": "Mes Contenus",
+    "filterAll": "Tous",
+    "noContents": "Aucun contenu disponible pour le moment."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "markRead": "Marquer comme lu",
+    "smartBadge": "Intelligent",
+    "systemBadge": "Systeme",
+    "noNotifications": "Aucune notification pour le moment."
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "name": "Nom",
+    "email": "Email",
+    "program": "Programme",
+    "arrivalDate": "Date d'arrivee",
+    "classStartDate": "Debut des cours",
+    "currentPhase": "Phase actuelle",
+    "preferences": "Preferences"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "priority": {
+      "Prioritaire": "Prioritaire",
+      "Moyen": "Moyen",
+      "Bas": "Bas"
+    }
+  }
+}
