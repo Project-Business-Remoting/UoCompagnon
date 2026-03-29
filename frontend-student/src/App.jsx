@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 // Pages placeholder — remplacées dans les commits suivants
@@ -46,7 +47,7 @@ function App() {
           </ProtectedRoute>
         }>
           <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<PlaceholderPage title="Dashboard" />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="hub" element={<PlaceholderPage title="Hub" />} />
           <Route path="notifications" element={<PlaceholderPage title="Notifications" />} />
           <Route path="profile" element={<PlaceholderPage title="Profile" />} />
