@@ -88,10 +88,12 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 | `PUT` | `/api/notifications/mark-read` | Marque toutes les notifications comme lues pour le user. |
 | `PUT` | `/api/notifications/mark-read/:id` | Marque une notification spécifique comme lue. |
 
-###  Administration & Stats
+###  Administration & Support
 | Méthode | Route | Description |
 |---|---|---|
-| `GET` | `/api/dashboard/admin` | Statistiques globales, graphiques de distribution et users récents (**Admin requis**). |
+| `GET` | `/api/dashboard/admin` | Statistiques globales et fil d'actualité des questions récentes (**Admin requis**). |
+| `GET` | `/api/questions` | Liste de toutes les questions posées par les étudiants. |
+| `PUT` | `/api/questions/:id/answer` | Permet à l'admin de répondre à une question étudiante. |
 
 ---
 
@@ -101,7 +103,7 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 *   **Frontend** : React 19 / Vite 8 / Vanilla CSS
 *   **Securite** : JWT (stockage localStorage), Bcryptjs
 *   **Validation** : Regex stricte sur le domaine @uottawa.ca
-*   **i18n** : Systeme bilingue FR/EN avec fichiers JSON
+*   **Localisation** : Application nativement en Anglais avec support bilingue FR/EN (Context API).
 *   **Theming** : Dark mode / Light mode avec persistance localStorage
 
 ---
@@ -171,8 +173,14 @@ cd backend && npm start
 # Terminal 2 : Frontend Student
 cd frontend-student && npm run dev
 
-# Terminal 3 : Frontend Admin (a venir)
+# Terminal 3 : Frontend Admin
 cd frontend-admin && npm run dev
+```
+
+### Script de Création d'Administrateur
+Pour des raisons de sécurité, l'inscription "Admin" n'est pas ouverte au public. Utilisez ce script interactif depuis le terminal (dans le dossier `backend`) :
+```bash
+node scripts/create-admin.js <email> <password> "<Nom_Complet>"
 ```
 
 ---

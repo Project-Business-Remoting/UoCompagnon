@@ -43,9 +43,22 @@ const markOneAsRead = async (req, res) => {
   }
 };
 
+const deleteNotification = async (req, res) => {
+  try {
+    const deleted = await notificationService.deleteOneNotification(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Notification non trouvée" });
+    }
+    res.json({ message: "Notification supprimée avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getNotifications,
   getSmartNotifications,
   markAsRead,
   markOneAsRead,
+  deleteNotification,
 };

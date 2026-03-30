@@ -6,9 +6,13 @@ const { protect } = require("../middleware/authMiddleware");
 router.post("/register", register);
 router.post("/login", login);
 
+const { calculateCurrentStep } = require("../config/constants");
+
 // Route de test pour vérifier si le token fonctionne
 router.get("/profile", protect, (req, res) => {
-  res.json(req.user);
+  const userObj = req.user.toObject();
+  userObj.currentStep = calculateCurrentStep(req.user.arrivalDate, req.user.classStartDate);
+  res.json(userObj);
 });
 
 module.exports = router;

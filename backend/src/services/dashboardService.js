@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Content = require("../models/Content");
 const Notification = require("../models/Notification");
+const Question = require("../models/Question");
 const {
   getUserPhase,
   getPhaseProgress,
@@ -22,12 +23,28 @@ const getStudentDashboard = async (user) => {
   // Notifications dynamiques
   const smartNotifications = generateSmartNotifications(user);
 
-  // Notifications persistantes non lues
-  const dbNotifications = await Notification.find({ relatedStep: currentStep });
+  // 2. Notifications persistantes non lues (Phase + Privées)
+  const dbNotifications = await Notification.find({
+    $or: [
+      { relatedStep: currentStep, user: null },
+      { user: user._id }
+    ]
+  });
   const readIds = user.readNotifications.map((id) => id.toString());
   const unreadDbNotifs = dbNotifications.filter(
     (n) => !readIds.includes(n._id.toString())
   );
+
+  // 3. Formatter pour le dashboard (combiner smart + DB unread)
+  // On les met tous dans 'smart' car c'est ce que consomme le Dashboard.jsx
+  const allRecentNotifs = [
+    ...smartNotifications,
+    ...unreadDbNotifs.map(n => ({
+      ...n.toObject(),
+      isSmartNotification: false,
+      isRead: false
+    }))
+  ].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
   // Contenus prioritaires (top 5 de la phase actuelle)
   const priorityContents = relevantContents
@@ -56,12 +73,21 @@ const getStudentDashboard = async (user) => {
       byCategory: groupByCategory(relevantContents),
     },
     notifications: {
-      smart: smartNotifications,
+      smart: allRecentNotifs.slice(0, 5),
       unread: unreadDbNotifs.length,
       total: smartNotifications.length + unreadDbNotifs.length,
     },
     actions: recommendedActions,
   };
+};
+
+
+
+// Status weight for sorting
+const STATUS_WEIGHT = {
+  'New': 0,
+  'In Progress': 1,
+  'Answered': 2
 };
 
 /**
@@ -72,26 +98,21 @@ const getAdminDashboard = async () => {
   const totalContents = await Content.countDocuments();
   const totalNotifications = await Notification.countDocuments();
 
-  // Distribution des contenus par phase
-  const contentsByPhase = await Content.aggregate([
-    { $group: { _id: "$step", count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
-  ]);
-
-  // Distribution des contenus par catégorie
-  const contentsByCategory = await Content.aggregate([
-    { $group: { _id: "$category", count: { $sum: 1 } } },
-    { $sort: { count: -1 } },
-  ]);
-
-  // Distribution des contenus par priorité
-  const contentsByPriority = await Content.aggregate([
-    { $group: { _id: "$priority", count: { $sum: 1 } } },
-  ]);
-
   // Utilisateurs récents (5 derniers inscrits)
   const recentUsers = await User.find({ role: "student" })
-    .select("name email program createdAt")
+    .select("name email program createdAt arrivalDate classStartDate")
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  const mappedRecentUsers = recentUsers.map(u => {
+    const obj = u.toObject();
+    obj.currentStep = getUserPhase(u);
+    return obj;
+  });
+
+  // Questions récentes pour l'admin (les "notifications" métier pour l'admin)
+  const recentQuestions = await Question.find()
+    .populate('author', 'name email profileImage')
     .sort({ createdAt: -1 })
     .limit(5);
 
@@ -101,21 +122,15 @@ const getAdminDashboard = async () => {
       totalContents,
       totalNotifications,
     },
-    distributions: {
-      contentsByPhase: contentsByPhase.map((p) => ({
-        phase: p._id,
-        count: p.count,
-      })),
-      contentsByCategory: contentsByCategory.map((c) => ({
-        category: c._id,
-        count: c.count,
-      })),
-      contentsByPriority: contentsByPriority.map((p) => ({
-        priority: p._id,
-        count: p.count,
-      })),
-    },
-    recentUsers,
+    recentUsers: mappedRecentUsers,
+    recentQuestions: recentQuestions.map(q => ({
+      _id: q._id,
+      subject: q.subject,
+      author: q.isAnonymous ? 'Anonymous' : (q.author?.name || 'Unknown'),
+      status: q.status,
+      createdAt: q.createdAt,
+      type: q.isAnonymous ? 'Anonymous' : 'Direct'
+    }))
   };
 };
 
@@ -124,29 +139,29 @@ const getAdminDashboard = async () => {
  */
 const getRecommendedActions = (step) => {
   const actions = {
-    "Avant l'arrivée": [
-      { label: "Vérifie ton visa et tes documents", done: false },
-      { label: "Réserve ton logement", done: false },
-      { label: "Souscris à une assurance santé", done: false },
-      { label: "Prépare ta valise", done: false },
+    "Before Arrival": [
+      { label: "Check your visa and documents", done: false },
+      { label: "Secure your accommodation", done: false },
+      { label: "Enroll in a health insurance plan", done: false },
+      { label: "Pack your bags", done: false },
     ],
-    "Semaine d'accueil": [
-      { label: "Active ta carte étudiante", done: false },
-      { label: "Participe aux événements d'orientation", done: false },
-      { label: "Configure ton accès uoZone et Brightspace", done: false },
-      { label: "Repère tes salles de cours", done: false },
+    "Welcome Week": [
+      { label: "Activate your student card", done: false },
+      { label: "Participate in orientation events", done: false },
+      { label: "Set up your uoZone and Brightspace access", done: false },
+      { label: "Find your classrooms on campus", done: false },
     ],
-    "Premier mois": [
-      { label: "Comprends tes plans de cours", done: false },
-      { label: "Identifie les services de tutorat", done: false },
-      { label: "Consulte les clubs et associations", done: false },
-      { label: "Prends rendez-vous avec ton conseiller académique", done: false },
+    "First Month": [
+      { label: "Understand your course syllabi", done: false },
+      { label: "Identify tutoring services", done: false },
+      { label: "Check out student clubs and associations", done: false },
+      { label: "Schedule an appointment with an academic advisor", done: false },
     ],
-    "Mi-session": [
-      { label: "Vérifie ton GPA actuel", done: false },
-      { label: "Planifie tes révisions pour les examens", done: false },
-      { label: "Révise les règles d'intégrité académique", done: false },
-      { label: "Consulte les services de bien-être", done: false },
+    "Mid-Term": [
+      { label: "Organize study groups for exams", done: false },
+      { label: "Understand GPA calculations", done: false },
+      { label: "Review academic integrity rules", done: false },
+      { label: "Check course drop deadlines", done: false },
     ],
   };
 

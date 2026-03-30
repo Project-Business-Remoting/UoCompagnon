@@ -3,10 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #D0103A;
-  --primary-hover: #b00d30;
-  --primary-light: rgba(208, 16, 58, 0.08);
-  --primary-border: rgba(208, 16, 58, 0.2);
+  --primary: #8F001A;
+  --primary-hover: #700014;
+  --primary-light: rgba(143, 0, 26, 0.08);
+  --primary-border: rgba(143, 0, 26, 0.2);
   --secondary: #424242;
   --tertiary: #007574;
   --tertiary-light: rgba(0, 117, 116, 0.08);
@@ -21,10 +21,10 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --sidebar-bg: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  --sidebar-bg: var(--primary);
   --sidebar-text: rgba(255, 255, 255, 0.65);
   --sidebar-text-active: #FFFFFF;
-  --sidebar-active-bg: var(--primary);
+  --sidebar-active-bg: #6a0013;
   --sidebar-w: 260px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -52,8 +52,8 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
-  --sidebar-bg: linear-gradient(180deg, #0a0a15 0%, #111127 100%);
-  --primary-light: rgba(208, 16, 58, 0.15);
+  --sidebar-bg: linear-gradient(180deg, #4A000D 0%, #1A0005 100%);
+  --primary-light: rgba(143, 0, 26, 0.15);
   --tertiary-light: rgba(0, 117, 116, 0.15);
   --info-light: rgba(59, 130, 246, 0.15);
   --warning-light: rgba(245, 158, 11, 0.15);
@@ -94,7 +94,7 @@ h3 { font-size: 1rem; font-weight: 600; }
 /* Buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600; transition: var(--transition); }
 .btn-primary { background: var(--primary); color: var(--text-inverse); }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(208, 16, 58, 0.3); }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(143, 0, 26, 0.3); }
 .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
 .btn-outline:hover { background: var(--bg-color); border-color: var(--text-muted); }
 .btn-danger { background: var(--danger); color: white; }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Moon, Sun, Globe } from 'lucide-react';
+import { Moon, Sun, Globe, Eye, EyeOff } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../context/LangContext';
@@ -11,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { lang, toggleLang, t } = useLang();
@@ -48,10 +49,7 @@ const Login = () => {
       <div className="auth-container">
         {/* Logo */}
         <div className="auth-logo">
-          <h1 className="auth-logo-title">
-            <span className="auth-logo-uo">UO</span>-Compagnon
-          </h1>
-          <p className="auth-logo-subtitle">STUDENT ACADEMIC COMPANION</p>
+          <img src={logoImg} alt="UO-Compagnon Logo" style={{ height: '120px', marginBottom: '0.5rem' }} />
         </div>
 
         {/* Form */}
@@ -76,14 +74,24 @@ const Login = () => {
 
             <div className="form-group">
               <label className="form-label">{t('login.password')}</label>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="form-input"
+                  style={{ width: '100%', paddingRight: '2.5rem' }}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <button
@@ -95,12 +103,6 @@ const Login = () => {
             </button>
           </form>
 
-          <button
-            className="btn btn-outline btn-block"
-            onClick={() => window.location.href = 'http://localhost:5174'}
-          >
-            {t('login.adminLink')}
-          </button>
 
           <p className="auth-switch">
             {t('login.noAccount')}{' '}

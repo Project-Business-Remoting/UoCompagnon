@@ -4,21 +4,22 @@ const contentSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
+    articleBody: { type: String, required: true },
     category: { type: String, required: true },
     step: {
       type: String,
       enum: [
-        "Avant l'arrivée",
-        "Semaine d'accueil",
-        "Premier mois",
-        "Mi-session",
+        "Before Arrival",
+        "Welcome Week",
+        "First Month",
+        "Mid-Term",
       ],
       required: true,
     },
     priority: {
       type: String,
-      enum: ["Prioritaire", "Moyen", "Bas"],
-      default: "Moyen",
+      enum: ["High", "Medium", "Low"],
+      default: "Medium",
     },
     tags: [String],
     details: {

@@ -4,10 +4,10 @@ const { calculateCurrentStep } = require("../config/constants");
 
 // Ordre des phases pour le calcul de progression et le filtrage cumulatif
 const PHASE_ORDER = [
-  "Avant l'arrivée",
-  "Semaine d'accueil",
-  "Premier mois",
-  "Mi-session",
+  "Before Arrival",
+  "Welcome Week",
+  "First Month",
+  "Mid-Term",
 ];
 
 /**
@@ -101,14 +101,14 @@ const generateSmartNotifications = (user) => {
 
   const smartNotifs = [];
 
-  // --- Phase : Avant l'arrivée ---
+  // --- Phase : Before Arrival ---
   if (diffToArrival > 7 && diffToArrival <= 30) {
     smartNotifs.push({
       _id: "smart_arrival_30",
       title: "Prépare ton arrivée",
       message: `Tu arrives dans ${diffToArrival} jours au Canada. Commence à préparer ta checklist de départ !`,
       type: "info",
-      relatedStep: "Avant l'arrivée",
+      relatedStep: "Before Arrival",
       isSmartNotification: true,
     });
   }
@@ -119,7 +119,7 @@ const generateSmartNotifications = (user) => {
       title: " Ton arrivée approche !",
       message: `Plus que ${diffToArrival} jours ! Vérifie tes documents d'immigration, ton billet d'avion et ton logement.`,
       type: "warning",
-      relatedStep: "Avant l'arrivée",
+      relatedStep: "Before Arrival",
       isSmartNotification: true,
     });
   }
@@ -130,19 +130,19 @@ const generateSmartNotifications = (user) => {
       title: " Dernière ligne droite !",
       message: `Tu arrives dans ${diffToArrival} jour(s) ! Assure-toi d'avoir ton passeport, ta lettre d'admission et ton assurance santé.`,
       type: "warning",
-      relatedStep: "Avant l'arrivée",
+      relatedStep: "Before Arrival",
       isSmartNotification: true,
     });
   }
 
-  // --- Phase : Semaine d'accueil ---
-  if (currentStep === "Semaine d'accueil") {
+  // --- Phase : Welcome Week ---
+  if (currentStep === "Welcome Week") {
     smartNotifs.push({
       _id: "smart_welcome",
       title: " Bienvenue à Ottawa !",
       message: "Tu es arrivé(e) ! Consulte les événements de la semaine d'accueil et active ta carte étudiante.",
       type: "success",
-      relatedStep: "Semaine d'accueil",
+      relatedStep: "Welcome Week",
       isSmartNotification: true,
     });
 
@@ -158,15 +158,15 @@ const generateSmartNotifications = (user) => {
     }
   }
 
-  // --- Phase : Premier mois ---
-  if (currentStep === "Premier mois") {
+  // --- Phase : First Month ---
+  if (currentStep === "First Month") {
     if (diffFromClasses <= 7) {
       smartNotifs.push({
         _id: "smart_first_week",
         title: " Première semaine de cours",
         message: "Prends le temps de comprendre tes plans de cours et repère les dates importantes (examens, remises).",
         type: "info",
-        relatedStep: "Premier mois",
+        relatedStep: "First Month",
         isSmartNotification: true,
       });
     }
@@ -194,8 +194,8 @@ const generateSmartNotifications = (user) => {
     }
   }
 
-  // --- Phase : Mi-session ---
-  if (currentStep === "Mi-session") {
+  // --- Phase : Mid-Term ---
+  if (currentStep === "Mid-Term") {
     smartNotifs.push({
       _id: "smart_mid_session",
       title: " Mi-session !",

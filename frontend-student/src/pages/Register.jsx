@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Moon, Sun, Globe } from 'lucide-react';
+import { Moon, Sun, Globe, Eye, EyeOff } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../context/LangContext';
@@ -38,6 +39,7 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -86,10 +88,7 @@ const Register = () => {
       <div className="auth-container">
         {/* Logo */}
         <div className="auth-logo">
-          <h1 className="auth-logo-title">
-            <span className="auth-logo-uo">UO</span>-Compagnon
-          </h1>
-          <p className="auth-logo-subtitle">STUDENT ACADEMIC COMPANION</p>
+          <img src={logoImg} alt="UO-Compagnon Logo" style={{ height: '120px', marginBottom: '0.5rem' }} />
         </div>
 
         {/* Form */}
@@ -170,29 +169,42 @@ const Register = () => {
             <div className="auth-row">
               <div className="form-group">
                 <label className="form-label">{t('register.password')}</label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-input"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  minLength={6}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    className="form-input"
+                    style={{ paddingRight: '2.5rem' }}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
               <div className="form-group">
                 <label className="form-label">{t('register.confirmPassword')}</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  className="form-input"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  minLength={6}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    className="form-input"
+                    style={{ paddingRight: '2.5rem' }}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    minLength={6}
+                  />
+                </div>
               </div>
             </div>
 

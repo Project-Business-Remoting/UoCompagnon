@@ -46,3 +46,15 @@ export const markAllNotificationsRead = () =>
   request('/notifications/mark-read', { method: 'PUT' });
 export const markNotificationRead = (id) =>
   request(`/notifications/mark-read/${id}`, { method: 'PUT' });
+export const deleteNotification = async (id) => {
+  return await request(`/notifications/${id}`, { method: 'DELETE' });
+};
+
+// Questions API
+export const getMyQuestions = () => request('/questions/mine');
+export const getAllQuestions = () => request('/questions');
+export const createQuestion = (questionData) =>
+  request('/questions', { method: 'POST', body: JSON.stringify(questionData) });
+export const replyToQuestion = (id, answer) =>
+  request(`/questions/${id}/reply`, { method: 'PUT', body: JSON.stringify({ answer }) });
+

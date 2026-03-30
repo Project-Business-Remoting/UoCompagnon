@@ -36,7 +36,23 @@
     "darkMode": "Dark mode",
     "lightMode": "Light mode",
     "adminMode": "Admin Mode",
+    "faqAdmin": "Admin FAQ",
+    "directQuestions": "Direct Questions",
+    "anonymousQuestions": "Anonymous Questions",
     "logout": "Logout"
+  },
+  "welcome": {
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "title": "Welcome to UO-Compagnon",
+    "subtitle": "Your personal academic guide at the University of Ottawa.",
+    "studentTitle": "Student Portal",
+    "studentDesc": "Log in to define your phase, view your priority content and receive important alerts.",
+    "enterBtn": "Enter",
+    "adminTitle": "Administration",
+    "adminDesc": "Access the control panel to manage content, notifications, and view statistics.",
+    "accessBtn": "Access",
+    "footer": "2026 University of Ottawa — UO-Compagnon v1.0"
   },
   "dashboard": {
     "greeting": "Hello",
@@ -65,6 +81,7 @@
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "markRead": "Mark as read",
+    "delete": "Delete notification",
     "smartBadge": "Smart",
     "systemBadge": "System",
     "noNotifications": "No notifications at this time."
@@ -83,9 +100,9 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "priority": {
-      "Prioritaire": "High",
-      "Moyen": "Medium",
-      "Bas": "Low"
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low"
     }
   }
 }

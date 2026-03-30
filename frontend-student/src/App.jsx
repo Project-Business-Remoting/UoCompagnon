@@ -8,15 +8,15 @@ import JourneyHub from './pages/JourneyHub';
 import ContentDetail from './pages/ContentDetail';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
-import './App.css';
-
-
-
-// Protection des routes
+import Faq from './pages/Faq';
+import DirectQuestions from './pages/DirectQuestions';
+import AnonymousQuestions from './pages/AnonymousQuestions';
+import Welcome from './pages/Welcome';
+import './App.css';// Protection des routes
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return <div className="loading-screen">Chargement...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/welcome" />;
   return children;
 };
 
@@ -32,6 +32,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/welcome" element={
+          <PublicRoute><Welcome /></PublicRoute>
+        } />
         <Route path="/login" element={
           <PublicRoute><Login /></PublicRoute>
         } />
@@ -50,6 +53,9 @@ function App() {
           <Route path="hub/:id" element={<ContentDetail />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="faq" element={<Faq />} />
+          <Route path="direct-questions" element={<DirectQuestions />} />
+          <Route path="anonymous-questions" element={<AnonymousQuestions />} />
         </Route>
       </Routes>
     </Router>

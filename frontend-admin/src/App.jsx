@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ContentManagement from './pages/ContentManagement';
+import QuestionsManagement from './pages/QuestionsManagement';
 import './App.css';
 // Protection des routes admin
 const ProtectedRoute = ({ children }) => {
@@ -38,6 +39,7 @@ function AppRoutes() {
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="contents" element={<ContentManagement />} />
+          <Route path="questions" element={<QuestionsManagement />} />
         </Route>
       </Routes>
     </Router>

@@ -4,8 +4,8 @@ import { fetchRelevantContents } from '../services/api';
 import { useLang } from '../context/LangContext';
 import './JourneyHub.css';
 
-// Catégories exactes du seed (avec accents)
-const CATEGORIES = ['Administratif', 'Académique', 'Vie étudiante', 'Santé'];
+// Catégories exactes du seed
+const CATEGORIES = ['Administrative', 'Academic', 'Student Life', 'Health'];
 
 const JourneyHub = () => {
   const [contents, setContents] = useState([]);
@@ -73,8 +73,8 @@ const JourneyHub = () => {
             >
               <div className="hub-card-header">
                 <h3 className="hub-card-title">{content.title}</h3>
-                <span className={`badge ${content.priority === 'Prioritaire' ? 'badge-primary' : content.priority === 'Moyen' ? 'badge-warning' : 'badge-tertiary'}`}>
-                  {t(`common.priority.${content.priority}`)}
+                <span className={`badge ${content.priority === 'High' ? 'badge-primary' : content.priority === 'Medium' ? 'badge-warning' : 'badge-tertiary'}`}>
+                  {content.priority}
                 </span>
               </div>
 

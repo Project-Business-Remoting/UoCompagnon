@@ -7,11 +7,11 @@ const translations = { fr, en };
 const LangContext = createContext(null);
 
 export const LangProvider = ({ children }) => {
-  const [lang, setLang] = useState(localStorage.getItem('uo_lang') || 'fr');
+  const [lang, setLang] = useState(localStorage.getItem('uo_lang') || 'en');
 
   const toggleLang = useCallback(() => {
     setLang((prev) => {
-      const next = prev === 'fr' ? 'en' : 'fr';
+      const next = prev === 'en' ? 'fr' : 'en';
       localStorage.setItem('uo_lang', next);
       return next;
     });

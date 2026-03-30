@@ -45,7 +45,7 @@ const Layout = () => {
         </header>
 
         <div className="layout-content">
-          <Outlet />
+          <Outlet context={{ setNotificationCount }} />
         </div>
       </main>
     </div>

@@ -3,13 +3,14 @@ import { Plus, Edit, Trash2, X } from 'lucide-react';
 import { fetchAllContents, createContent, updateContent, deleteContent } from '../services/api';
 import './ContentManagement.css';
 
-const CATEGORIES = ['Administratif', 'Académique', 'Vie étudiante', 'Santé'];
-const STEPS = ["Avant l'arrivée", "Semaine d'accueil", "Premier mois", "Mi-session"];
-const PRIORITIES = ['Prioritaire', 'Moyen', 'Bas'];
+const CATEGORIES = ['Administrative', 'Academic', 'Student Life', 'Health'];
+const STEPS = ["Before Arrival", "Welcome Week", "First Month", "Mid-Term"];
+const PRIORITIES = ['High', 'Medium', 'Low'];
 
 const initialForm = {
   title: '',
   description: '',
+  articleBody: '',
   category: CATEGORIES[0],
   step: STEPS[0],
   priority: PRIORITIES[0]
@@ -53,6 +54,7 @@ const ContentManagement = () => {
     setFormData({
       title: content.title || '',
       description: content.description || '',
+      articleBody: content.articleBody || '',
       category: content.category || CATEGORIES[0],
       step: content.step || STEPS[0],
       priority: content.priority || PRIORITIES[0]
@@ -93,7 +95,7 @@ const ContentManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce contenu ?')) return;
+    if (!window.confirm('Are you sure you want to delete this content?')) return;
     
     try {
       await deleteContent(id);
@@ -103,14 +105,14 @@ const ContentManagement = () => {
     }
   };
 
-  if (loading && contents.length === 0) return <div className="loading-screen">Chargement...</div>;
+  if (loading && contents.length === 0) return <div className="loading-screen">Loading...</div>;
 
   return (
     <div className="admin-contents">
       <div className="admin-header-row">
-        <h1>Gestion des Contenus</h1>
+        <h1>Content Management</h1>
         <button className="btn btn-primary" onClick={openAddModal}>
-          <Plus size={18} /> Nouveau Contenu
+          <Plus size={18} /> Add New Content
         </button>
       </div>
 
@@ -120,17 +122,17 @@ const ContentManagement = () => {
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Titre</th>
-              <th>Catégorie</th>
+              <th>Title</th>
+              <th>Category</th>
               <th>Phase</th>
-              <th>Priorité</th>
+              <th>Priority</th>
               <th className="th-actions">Actions</th>
             </tr>
           </thead>
           <tbody>
             {contents.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center py-4">Aucun contenu trouvé.</td>
+                <td colSpan="5" className="text-center py-4">No content found.</td>
               </tr>
             ) : (
               contents.map((content) => (
@@ -140,17 +142,17 @@ const ContentManagement = () => {
                   <td>{content.step}</td>
                   <td>
                     <span className={`badge ${
-                      content.priority === 'Prioritaire' ? 'badge-primary' : 
-                      content.priority === 'Moyen' ? 'badge-warning' : 'badge-info'
+                      content.priority === 'High' ? 'badge-primary' : 
+                      content.priority === 'Medium' ? 'badge-warning' : 'badge-info'
                     }`}>
                       {content.priority}
                     </span>
                   </td>
                   <td className="td-actions">
-                    <button className="action-btn action-edit" onClick={() => openEditModal(content)} title="Modifier">
+                    <button className="action-btn action-edit" onClick={() => openEditModal(content)} title="Edit">
                       <Edit size={16} />
                     </button>
-                    <button className="action-btn action-delete" onClick={() => handleDelete(content._id)} title="Supprimer">
+                    <button className="action-btn action-delete" onClick={() => handleDelete(content._id)} title="Delete">
                       <Trash2 size={16} />
                     </button>
                   </td>
@@ -166,7 +168,7 @@ const ContentManagement = () => {
         <div className="modal-overlay">
           <div className="modal-content card">
             <div className="modal-header">
-              <h2>{editingId ? 'Modifier le contenu' : 'Nouveau contenu'}</h2>
+              <h2>{editingId ? 'Edit Content' : 'New Content'}</h2>
               <button className="modal-close" onClick={closeModal}><X size={20} /></button>
             </div>
             
@@ -174,7 +176,7 @@ const ContentManagement = () => {
 
             <form onSubmit={handleSubmit} className="modal-form">
               <div className="form-group">
-                <label className="form-label">Titre</label>
+                <label className="form-label">Title</label>
                 <input 
                   type="text" name="title" className="form-input" 
                   value={formData.title} onChange={handleFormChange} required 
@@ -182,16 +184,24 @@ const ContentManagement = () => {
               </div>
               
               <div className="form-group">
-                <label className="form-label">Description</label>
+                <label className="form-label">Description (Short summary)</label>
                 <textarea 
-                  name="description" className="form-input form-textarea" rows="4"
+                  name="description" className="form-input form-textarea" rows="2"
                   value={formData.description} onChange={handleFormChange} required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Article Content (Body)</label>
+                <textarea 
+                  name="articleBody" className="form-input form-textarea" rows="6"
+                  value={formData.articleBody} onChange={handleFormChange} required 
                 />
               </div>
 
               <div className="form-row">
                 <div className="form-group flex-1">
-                  <label className="form-label">Catégorie</label>
+                  <label className="form-label">Category</label>
                   <select name="category" className="form-input form-select" value={formData.category} onChange={handleFormChange}>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
@@ -206,16 +216,16 @@ const ContentManagement = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Priorité</label>
+                <label className="form-label">Priority</label>
                 <select name="priority" className="form-input form-select" value={formData.priority} onChange={handleFormChange}>
                   {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="btn btn-outline" onClick={closeModal} disabled={saving}>Annuler</button>
+                <button type="button" className="btn btn-outline" onClick={closeModal} disabled={saving}>Cancel</button>
                 <button type="submit" className="btn btn-primary" disabled={saving}>
-                  {saving ? 'Enregistrement...' : 'Enregistrer'}
+                  {saving ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>

@@ -46,3 +46,12 @@ export const deleteContent = (id) =>
   request(`/contents/${id}`, {
     method: 'DELETE',
   });
+
+// Questions Admin API
+export const getAllQuestions = () => request('/questions');
+export const replyToQuestion = (id, answer) =>
+  request(`/questions/${id}/reply`, {
+    method: 'PUT',
+    body: JSON.stringify({ answer })
+  });
+

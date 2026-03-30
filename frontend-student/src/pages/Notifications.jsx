@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { CheckCircle } from 'lucide-react';
-import { fetchSmartNotifications, markNotificationRead, markAllNotificationsRead } from '../services/api';
+import { CheckCircle, Trash2 } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
+import { fetchSmartNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification } from '../services/api';
 import { useLang } from '../context/LangContext';
 import './Notifications.css';
 
@@ -9,6 +10,8 @@ const Notifications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { t } = useLang();
+  const contextParams = useOutletContext() || {};
+  const setNotificationCount = contextParams.setNotificationCount || (() => {});
 
   useEffect(() => {
     const load = async () => {
@@ -30,6 +33,7 @@ const Notifications = () => {
       setNotifications((prev) =>
         prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
       );
+      setNotificationCount(prev => Math.max(0, prev - 1));
     } catch (err) {
       // Smart notifications ne peuvent pas être marquées comme lues
     }
@@ -39,16 +43,34 @@ const Notifications = () => {
     try {
       await markAllNotificationsRead();
       setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true }))
+        prev.map((n) => (n.isSmartNotification ? n : { ...n, isRead: true }))
       );
+      setNotificationCount(0);
     } catch (err) {
       // Silencieux
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteNotification(id);
+      // Supprimer du tableau et decrémenter si non lu !
+      setNotifications((prev) => {
+        const notifToDelete = prev.find(n => n._id === id);
+        if (notifToDelete && !notifToDelete.isRead && !notifToDelete.isSmartNotification) {
+          setNotificationCount(count => Math.max(0, count - 1));
+        }
+        return prev.filter(n => n._id !== id);
+      });
+    } catch (err) {
+      alert("Error deleting notification");
     }
   };
 
   if (loading) return <div className="loading-screen">{t('common.loading')}</div>;
   if (error) return <div className="error-message">{error}</div>;
 
+  const unreadSystemCount = notifications.filter((n) => !n.isRead && !n.isSmartNotification).length;
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
@@ -60,7 +82,7 @@ const Notifications = () => {
             <span className="notifs-unread">{unreadCount} non lue(s)</span>
           )}
         </div>
-        {unreadCount > 0 && (
+        {unreadSystemCount > 0 && (
           <button className="btn btn-outline" onClick={handleMarkAllRead}>
             <CheckCircle size={16} />
             {t('notifications.markAllRead')}
@@ -80,26 +102,49 @@ const Notifications = () => {
                 <div className="notifs-item-content">
                   <div className="notifs-item-top">
                     <h3 className="notifs-item-title">{notif.title}</h3>
-                    <span className={`badge ${notif.isSmartNotification ? 'badge-tertiary' : 'badge-info'}`}>
-                      {notif.isSmartNotification
-                        ? t('notifications.smartBadge')
-                        : t('notifications.systemBadge')}
-                    </span>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <span className={`badge ${notif.isSmartNotification ? 'badge-tertiary' : 'badge-info'}`}>
+                        {notif.isSmartNotification
+                          ? t('notifications.smartBadge')
+                          : t('notifications.systemBadge')}
+                      </span>
+                      {notif.isRead && !notif.isSmartNotification && (
+                        <span className="badge" style={{ background: 'var(--bg-color)', border: '1px solid var(--border-color)', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <CheckCircle size={12} />
+                          Lu
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="notifs-item-message">{notif.message}</p>
-                  <span className="notifs-item-step">{notif.relatedStep}</span>
+                  <div className="notifs-item-footer" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    <span>{notif.relatedStep}</span>
+                    <span>{notif.date}</span>
+                  </div>
                 </div>
               </div>
 
-              {!notif.isRead && !notif.isSmartNotification && (
-                <button
-                  className="notifs-mark-btn"
-                  onClick={() => handleMarkRead(notif._id)}
-                  title={t('notifications.markRead')}
-                >
-                  <CheckCircle size={18} />
-                </button>
-              )}
+              <div className="notifs-item-actions" style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                {!notif.isRead && !notif.isSmartNotification && (
+                  <button
+                    className="notifs-mark-btn"
+                    onClick={() => handleMarkRead(notif._id)}
+                    title={t('notifications.markRead')}
+                  >
+                    <CheckCircle size={18} />
+                  </button>
+                )}
+                {!notif.isSmartNotification && (
+                  <button
+                    className="notifs-mark-btn"
+                    style={{ color: 'var(--danger)', background: 'var(--danger-light)' }}
+                    onClick={() => handleDelete(notif._id)}
+                    title={t('notifications.delete')}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>

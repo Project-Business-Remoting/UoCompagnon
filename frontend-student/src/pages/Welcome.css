@@ -1,0 +1,215 @@
+.welcome-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-color);
+  color: var(--text-main);
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+.welcome-topbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  width: 100%;
+}
+
+.welcome-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.welcome-toggle:hover {
+  color: var(--text-main);
+  background: var(--bg-card);
+}
+
+.welcome-container {
+  flex-grow: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Header & Logo */
+.welcome-header {
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.welcome-logo {
+  height: 120px;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+/* Cards */
+.welcome-cards {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.welcome-card {
+  flex: 1;
+  max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-main);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.admin-card {
+  animation-delay: 0.4s;
+}
+
+.welcome-card-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  background: var(--bg-color);
+  transition: all 0.3s ease;
+}
+
+.student-card .welcome-card-icon {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.admin-card .welcome-card-icon {
+  color: var(--tertiary);
+  background: var(--tertiary-light);
+}
+
+.welcome-card h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.welcome-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.welcome-card-btn {
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.student-card .welcome-card-btn { color: var(--primary); }
+.admin-card .welcome-card-btn { color: var(--tertiary); }
+
+/* Hover Effects */
+.welcome-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: var(--primary-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.student-card:hover {
+  box-shadow: 0 20px 40px rgba(143, 0, 26, 0.2);
+}
+
+.admin-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 117, 116, 0.2);
+}
+
+.student-card:hover .welcome-card-btn {
+  transform: translateX(5px);
+}
+.admin-card:hover .welcome-card-btn {
+  transform: translateX(5px);
+}
+
+.student-card:hover .welcome-card-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+.admin-card:hover .welcome-card-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+
+/* Footer */
+.welcome-footer {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  animation: fadeIn 1s ease-out 1s both;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .welcome-cards {
+    flex-direction: column;
+    perspective: none;
+  }
+  .welcome-title { font-size: 2.25rem; }
+}

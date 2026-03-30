@@ -36,7 +36,23 @@
     "darkMode": "Mode sombre",
     "lightMode": "Mode clair",
     "adminMode": "Mode Admin",
+    "faqAdmin": "FAQ Admin",
+    "directQuestions": "Questions Directes",
+    "anonymousQuestions": "Questions Anonymes",
     "logout": "Deconnexion"
+  },
+  "welcome": {
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair",
+    "title": "Bienvenue sur UO-Compagnon",
+    "subtitle": "Ton guide académique personnel à l'Université d'Ottawa.",
+    "studentTitle": "Espace Étudiant",
+    "studentDesc": "Connecte-toi pour définir ta phase, voir tes contenus prioritaires et recevoir les alertes importantes.",
+    "enterBtn": "Entrer",
+    "adminTitle": "Administration",
+    "adminDesc": "Accède au panneau de contrôle pour gérer les contenus, les notifications et visualiser les statistiques.",
+    "accessBtn": "Accéder",
+    "footer": "2026 Université d'Ottawa — UO-Compagnon v1.0"
   },
   "dashboard": {
     "greeting": "Bonjour",
@@ -65,6 +81,7 @@
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
     "markRead": "Marquer comme lu",
+    "delete": "Supprimer la notification",
     "smartBadge": "Intelligent",
     "systemBadge": "Systeme",
     "noNotifications": "Aucune notification pour le moment."
@@ -72,7 +89,7 @@
   "profile": {
     "title": "Mon Profil",
     "name": "Nom",
-    "email": "Email",
+    "email": "Courriel",
     "program": "Programme",
     "arrivalDate": "Date d'arrivee",
     "classStartDate": "Debut des cours",
@@ -83,9 +100,9 @@
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "priority": {
-      "Prioritaire": "Prioritaire",
-      "Moyen": "Moyen",
-      "Bas": "Bas"
+      "High": "Prioritaire",
+      "Medium": "Moyen",
+      "Low": "Bas"
     }
   }
 }

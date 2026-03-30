@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { fetchDashboard } from '../services/api';
 import { useLang } from '../context/LangContext';
@@ -8,16 +8,16 @@ import './Dashboard.css';
 
 const PHASE_DESCRIPTIONS = {
   fr: {
-    "Avant l'arrivée": "Prepare ton arrivee au Canada et a l'Universite d'Ottawa.",
-    "Semaine d'accueil": "Decouvre le campus, active tes services et rencontre la communaute.",
-    "Premier mois": "Installe-toi dans tes cours, explore les services et construis ta routine.",
-    "Mi-session": "Prepare tes examens, verifie ton GPA et planifie la suite.",
+    "Before Arrival": "Prepare ton arrivee au Canada et a l'Universite d'Ottawa.",
+    "Welcome Week": "Decouvre le campus, active tes services et rencontre la communaute.",
+    "First Month": "Installe-toi dans tes cours, explore les services et construis ta routine.",
+    "Mid-Term": "Prepare tes examens, verifie ton GPA et planifie la suite.",
   },
   en: {
-    "Avant l'arrivée": "Prepare for your arrival in Canada and at the University of Ottawa.",
-    "Semaine d'accueil": "Discover the campus, activate your services and meet the community.",
-    "Premier mois": "Get settled into your courses, explore services, and build your routine.",
-    "Mi-session": "Prepare for exams, check your GPA, and plan ahead.",
+    "Before Arrival": "Prepare for your arrival in Canada and at the University of Ottawa.",
+    "Welcome Week": "Discover the campus, activate your services and meet the community.",
+    "First Month": "Get settled into your courses, explore services, and build your routine.",
+    "Mid-Term": "Prepare for exams, check your GPA, and plan ahead.",
   },
 };
 
@@ -27,12 +27,16 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const { lang, t } = useLang();
   const navigate = useNavigate();
+  const { setNotificationCount } = useOutletContext() || {};
 
   useEffect(() => {
     const load = async () => {
       try {
         const dashboard = await fetchDashboard();
         setData(dashboard);
+        if (setNotificationCount) {
+          setNotificationCount(dashboard.notifications?.total || 0);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -40,7 +44,7 @@ const Dashboard = () => {
       }
     };
     load();
-  }, []);
+  }, [setNotificationCount]);
 
   if (loading) return <div className="loading-screen">{t('common.loading')}</div>;
   if (error) return <div className="error-message">{error}</div>;

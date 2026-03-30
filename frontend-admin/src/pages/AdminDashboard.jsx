@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Users, FileText, Bell } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, FileText, Bell, X, Calendar, BookOpen, Clock, ArrowRight } from 'lucide-react';
 import { fetchAdminDashboard } from '../services/api';
 import './AdminDashboard.css';
 
@@ -7,6 +8,7 @@ const AdminDashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -22,15 +24,15 @@ const AdminDashboard = () => {
     load();
   }, []);
 
-  if (loading) return <div className="loading-screen">Chargement...</div>;
+  if (loading) return <div className="loading-screen">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
   if (!data) return null;
 
-  const { stats, distributions, recentUsers } = data;
+  const { stats, recentUsers, recentQuestions = [] } = data;
 
   return (
     <div className="admin-dash">
-      <h1>Dashboard Administrateur</h1>
+      <h1>Administrator Dashboard</h1>
 
       {/* Stats Cards */}
       <div className="admin-stats">
@@ -38,96 +40,112 @@ const AdminDashboard = () => {
           <div className="admin-stat-icon admin-stat-icon--users"><Users size={24} /></div>
           <div className="admin-stat-info">
             <span className="admin-stat-value">{stats.totalUsers}</span>
-            <span className="admin-stat-label">Étudiants</span>
+            <span className="admin-stat-label">Total Students</span>
           </div>
         </div>
         <div className="card admin-stat-card">
           <div className="admin-stat-icon admin-stat-icon--contents"><FileText size={24} /></div>
           <div className="admin-stat-info">
             <span className="admin-stat-value">{stats.totalContents}</span>
-            <span className="admin-stat-label">Contenus</span>
-          </div>
-        </div>
-        <div className="card admin-stat-card">
-          <div className="admin-stat-icon admin-stat-icon--notifs"><Bell size={24} /></div>
-          <div className="admin-stat-info">
-            <span className="admin-stat-value">{stats.totalNotifications}</span>
-            <span className="admin-stat-label">Notifications</span>
+            <span className="admin-stat-label">Published Contents</span>
           </div>
         </div>
       </div>
 
-      {/* Distributions */}
-      <div className="admin-grid">
-        {/* By Phase */}
-        <div className="card admin-distrib">
-          <h2>Distribution par Phase</h2>
-          <div className="admin-bars">
-            {Object.entries(distributions.byStep || {}).map(([step, count]) => (
-              <div key={step} className="admin-bar-group">
-                <div className="admin-bar-label">
-                  <span>{step}</span>
-                  <span className="admin-bar-count">{count}</span>
+      <div className="admin-grid-v2">
+        {/* Recent Questions (Notifications for Admin) */}
+        <div className="card admin-section">
+          <div className="admin-section-header">
+            <h2>Recent Questions</h2>
+            <Link to="/questions" className="admin-view-all">
+              View All <ArrowRight size={14} />
+            </Link>
+          </div>
+          <div className="admin-list">
+            {recentQuestions.length > 0 ? (
+              recentQuestions.map((q) => (
+                <div key={q._id} className="admin-list-item admin-notif-item">
+                  <span className={`admin-notif-dot admin-notif-dot--${(q.status || 'pending').toLowerCase().replace(' ', '-')}`} title={q.status} />
+                  <div className="admin-list-info">
+                    <div className="admin-list-title-row">
+                      <span className="admin-list-title">{q.subject}</span>
+                      <span className={`badge badge-sm ${(q.type || 'Direct') === 'Anonymous' ? 'badge-tertiary' : 'badge-primary'}`}>
+                        {q.type}
+                      </span>
+                    </div>
+                    <span className="admin-list-author">From: {q.author || 'Anonymous'}</span>
+                  </div>
                 </div>
-                <div className="admin-bar-track">
-                  <div
-                    className="admin-bar-fill admin-bar-fill--phase"
-                    style={{ width: `${Math.max((count / (stats.totalContents || 1)) * 100, 5)}%` }}
-                  />
-                </div>
+              ))
+            ) : (
+              <div className="admin-empty-state">
+                <p className="admin-empty">No recent questions documented yet.</p>
+                <Link to="/questions" className="btn btn-tertiary btn-sm" style={{ marginTop: '0.5rem' }}>View Management</Link>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
-        {/* By Category */}
-        <div className="card admin-distrib">
-          <h2>Distribution par Catégorie</h2>
-          <div className="admin-bars">
-            {Object.entries(distributions.byCategory || {}).map(([cat, count]) => (
-              <div key={cat} className="admin-bar-group">
-                <div className="admin-bar-label">
-                  <span>{cat}</span>
-                  <span className="admin-bar-count">{count}</span>
-                </div>
-                <div className="admin-bar-track">
-                  <div
-                    className="admin-bar-fill admin-bar-fill--cat"
-                    style={{ width: `${Math.max((count / (stats.totalContents || 1)) * 100, 5)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Users */}
-      <div className="card admin-recent">
-        <h2>Derniers inscrits</h2>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Programme</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentUsers.map((u) => (
-                <tr key={u._id}>
-                  <td className="admin-table-name">{u.name}</td>
-                  <td>{u.email}</td>
-                  <td>{u.program}</td>
-                  <td>{new Date(u.createdAt).toLocaleDateString('fr-CA')}</td>
+        {/* Recently Registered Students */}
+        <div className="card admin-section">
+          <h2>Recently Registered Students</h2>
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Program</th>
+                  <th>Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {recentUsers.map((u) => (
+                  <tr key={u._id} onClick={() => setSelectedUser(u)} className="admin-table-row-clickable">
+                    <td className="admin-table-name">{u.name}</td>
+                    <td>{u.program}</td>
+                    <td>{new Date(u.createdAt).toLocaleDateString('en-CA')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
+      {selectedUser && (
+        <div className="modal-overlay">
+          <div className="modal-content card admin-user-modal">
+            <div className="modal-header">
+              <h2>Student Profile</h2>
+              <button className="modal-close" onClick={() => setSelectedUser(null)}><X size={20} /></button>
+            </div>
+            <div className="admin-user-details">
+              <div className="admin-user-avatar">{selectedUser.name.charAt(0)}</div>
+              <h3>{selectedUser.name}</h3>
+              <p className="admin-user-email">{selectedUser.email}</p>
+              
+              <div className="admin-user-grid">
+                <div className="admin-user-item">
+                  <BookOpen size={16} />
+                  <span><strong>Program:</strong> {selectedUser.program}</span>
+                </div>
+                <div className="admin-user-item">
+                  <Clock size={16} />
+                  <span><strong>Current Phase:</strong> <span className="badge badge-primary">{selectedUser.currentStep || 'Unknown'}</span></span>
+                </div>
+                <div className="admin-user-item">
+                  <Calendar size={16} />
+                  <span><strong>Arrival:</strong> {new Date(selectedUser.arrivalDate).toLocaleDateString('en-CA')}</span>
+                </div>
+                <div className="admin-user-item">
+                  <Calendar size={16} />
+                  <span><strong>Start of Classes:</strong> {new Date(selectedUser.classStartDate).toLocaleDateString('en-CA')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

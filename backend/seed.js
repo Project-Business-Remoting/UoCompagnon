@@ -16,11 +16,11 @@ const seedData = async () => {
     await Content.deleteMany();
     await Notification.deleteMany();
 
-    console.log("Base de données vidée...");
+    console.log("Database cleared...");
 
     // ===== UTILISATEURS =====
 
-    // Étudiant de test (dates ajustées pour être en phase "Premier mois")
+    // Étudiant de test (dates ajustées pour être en phase "First Month")
     const now = new Date();
     const arrivalDate = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // Arrivé il y a 15 jours
     const classStartDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000); // Cours commencés il y a 10 jours
@@ -46,225 +46,221 @@ const seedData = async () => {
       classStartDate: new Date("2020-01-15"),
     });
 
-    console.log("Utilisateurs créés (étudiant + admin)...");
+    console.log("Users created (student + admin)...");
 
     // ===== CONTENUS — Toutes les phases =====
     await Content.insertMany([
-      // --- Avant l'arrivée ---
+      // --- Before Arrival ---
       {
-        title: "Trouver son logement",
-        description:
-          "Guide complet des résidences universitaires et du logement hors-campus à Ottawa. Comparatif des quartiers, prix moyens et conseils pratiques.",
-        category: "Vie étudiante",
-        step: "Avant l'arrivée",
-        priority: "Prioritaire",
-        tags: ["logement", "résidence", "quartiers"],
+        title: "Finding Accommodations in Ottawa",
+        description: "Comprehensive guide to university residences and off-campus housing. Compare neighborhoods, average prices, and practical tips.",
+        articleBody: "Securing accommodation is one of the most important steps before arriving in Ottawa. The university offers several on-campus residences which are ideal for first-year students to integrate into campus life. If you prefer off-campus housing, neighborhoods like Sandy Hill, ByWard Market, and Centretown are very popular among students due to their proximity to the campus. When renting off-campus, always ensure you sign a standard Ontario lease and be cautious of scams—never send money before viewing the property or signing a contract.",
+        category: "Student Life",
+        step: "Before Arrival",
+        priority: "High",
+        tags: ["housing", "residence", "neighborhoods"],
       },
       {
-        title: "Préparer ses documents d'immigration",
-        description:
-          "Checklist des documents essentiels : permis d'études, visa, passeport, lettre d'admission, preuve de fonds financiers.",
-        category: "Administratif",
-        step: "Avant l'arrivée",
-        priority: "Prioritaire",
+        title: "Preparing Immigration Documents",
+        description: "Checklist of essential documents: study permit, visa, passport, admission letter, proof of financial funds.",
+        articleBody: "As an international student, having your immigration documents in order is critical. Before you book your flight, ensure your passport is valid for at least six months beyond your intended stay. You must hold a valid Letter of Acceptance from uOttawa, a valid Study Permit (or a letter of introduction from IRCC confirming approval), and optionally a Temporary Resident Visa (TRV) or eTA depending on your country of citizenship. Keep physical copies of these documents in your carry-on luggage, as border agents will ask to see them upon arrival.",
+        category: "Administrative",
+        step: "Before Arrival",
+        priority: "High",
         tags: ["visa", "immigration", "documents"],
       },
       {
-        title: "Souscrire à une assurance santé",
-        description:
-          "Le régime d'assurance santé RAÉO (UHIP) est obligatoire pour les étudiants internationaux. Voici comment s'inscrire.",
-        category: "Santé",
-        step: "Avant l'arrivée",
-        priority: "Moyen",
-        tags: ["assurance", "UHIP", "santé"],
+        title: "Enrolling in Health Insurance (UHIP)",
+        description: "The University Health Insurance Plan (UHIP) is mandatory for international students. Here is how to register.",
+        articleBody: "Healthcare in Canada can be extremely expensive without insurance. That is why uOttawa requires all international students to be enrolled in the University Health Insurance Plan (UHIP). The UHIP coverage provides access to basic medical services, including hospital visits, doctor consultations, and emergency care. Enrollment is usually automatic and the fee is added to your tuition statement, but you must download your coverage card online. Make sure to present this card every time you visit a clinic or hospital.",
+        category: "Health",
+        step: "Before Arrival",
+        priority: "Medium",
+        tags: ["insurance", "UHIP", "health"],
       },
       {
-        title: "Préparer son budget",
-        description:
-          "Estimation des coûts de la vie à Ottawa : loyer, transport, alimentation, manuels. Conseils pour gérer son budget.",
-        category: "Vie étudiante",
-        step: "Avant l'arrivée",
-        priority: "Moyen",
-        tags: ["budget", "finances", "coût de la vie"],
+        title: "Preparing Your Budget",
+        description: "Estimating living costs in Ottawa: rent, transportation, groceries, and textbooks. Tips for managing your budget effectively.",
+        articleBody: "Living in a new city requires careful financial planning. On average, you should budget between $1,500 and $2,000 CAD per month for living expenses in Ottawa. Rent will vary depending on if you have roommates or live alone, generally costing between $700 and $1,400 CAD per month. Groceries typically cost around $300 to $400 CAD per month. Don't forget to account for a phone plan, winter clothing, and textbooks. Remember, your U-Pass (transit pass) is already included in your tuition fees!",
+        category: "Student Life",
+        step: "Before Arrival",
+        priority: "Medium",
+        tags: ["budget", "finances", "cost of living"],
       },
 
-      // --- Semaine d'accueil ---
+      // --- Welcome Week ---
       {
-        title: "Activer sa carte étudiante",
-        description:
-          "Rendez-vous au Centre universitaire pour obtenir et activer ta carte étudiante. Elle sert de carte d'accès, de bibliothèque et de transport.",
-        category: "Administratif",
-        step: "Semaine d'accueil",
-        priority: "Prioritaire",
-        tags: ["carte étudiante", "uOttawa"],
+        title: "Activating Your Student Card",
+        description: "Visit the University Centre to obtain and activate your student card. It serves as your access, library, and transit card.",
+        articleBody: "Your uOttawa student card is your passport to the campus. It is used to access university buildings, borrow materials from the library, use the meal plan, and access the campus gym. Furthermore, your student card acts as your U-Pass for relying on Ottawa's public transit network. To get your card, upload your photo online in advance and pick it up at the University Centre (UCU) during Welcome Week. Do not lose it, as replacement fees will apply!",
+        category: "Administrative",
+        step: "Welcome Week",
+        priority: "High",
+        tags: ["student card", "uOttawa"],
       },
       {
-        title: "Configurer uoZone et Brightspace",
-        description:
-          "Guide pour accéder à uoZone (portail administratif), Brightspace (cours en ligne) et configurer ton email universitaire.",
-        category: "Académique",
-        step: "Semaine d'accueil",
-        priority: "Prioritaire",
+        title: "Setting Up uoZone and Brightspace",
+        description: "Guide to accessing uoZone (administrative portal), Brightspace (online courses), and setting up your university email.",
+        articleBody: "uoZone and Brightspace are the two most important online portals you will use during your studies. uoZone is the administrative hub where you register for courses, view your schedule, and check your tuition account. Brightspace is the academic platform where professors upload syllabuses, assignments, and grades. Furthermore, ensure you set up your @uottawa.ca email immediately and check it daily, as all official university communications are sent exclusively to this address.",
+        category: "Academic",
+        step: "Welcome Week",
+        priority: "High",
         tags: ["uoZone", "Brightspace", "email"],
       },
       {
-        title: "Événements d'orientation",
-        description:
-          "Calendrier des événements de la semaine 101 : visites du campus, rencontres avec les associations, foire aux clubs.",
-        category: "Vie étudiante",
-        step: "Semaine d'accueil",
-        priority: "Moyen",
-        tags: ["orientation", "semaine 101", "clubs"],
+        title: "Orientation Events (101 Week)",
+        description: "Calendar for 101 Week events: campus tours, meeting student associations, and the clubs fair.",
+        articleBody: "101 Week is the primary orientation week organized by the student union and faculty associations. It is the perfect opportunity to make friends, explore the campus, and discover Ottawa. Activities include campus scavenger hunts, faculty-specific networking events, and the clubs fair. Even if you are an introvert, participating in a few events can greatly help you ease into university life. Check out your faculty’s specific schedule and purchase an orientation kit early, as they sell out fast!",
+        category: "Student Life",
+        step: "Welcome Week",
+        priority: "Medium",
+        tags: ["orientation", "101 week", "clubs"],
       },
       {
-        title: "Transport à Ottawa",
-        description:
-          "Le U-Pass est inclus dans tes frais de scolarité. Voici comment utiliser OC Transpo et l'O-Train pour te déplacer.",
-        category: "Vie étudiante",
-        step: "Semaine d'accueil",
-        priority: "Bas",
-        tags: ["transport", "U-Pass", "OC Transpo"],
+        title: "Public Transit in Ottawa",
+        description: "The U-Pass is included in your tuition fees. Here is how to use OC Transpo buses and the O-Train to get around.",
+        articleBody: "Ottawa's public transit system, OC Transpo, consists of buses and the O-Train (Light Rail Transit). Your student U-Pass gives you unlimited access to this network throughout the academic year. The main campus is well-serviced by the O-Train (uOttawa Station and Rideau Station) and numerous bus routes. Download apps like Transit or Google Maps for real-time bus tracking. Remember to always tap your U-Pass on the scanner when boarding a bus or passing through train gates.",
+        category: "Student Life",
+        step: "Welcome Week",
+        priority: "Low",
+        tags: ["transit", "U-Pass", "OC Transpo"],
       },
 
-      // --- Premier mois ---
+      // --- First Month ---
       {
-        title: "Comprendre ton plan de cours",
-        description:
-          "Comment lire un syllabus, identifier les dates d'examens, les pondérations et les attendus des professeurs.",
-        category: "Académique",
-        step: "Premier mois",
-        priority: "Prioritaire",
-        tags: ["syllabus", "cours", "évaluation"],
+        title: "Understanding Your Syllabus",
+        description: "How to read a syllabus, identify exam dates, grade weightings, and professor expectations.",
+        articleBody: "A syllabus is essentially a contract between you and your professor. During the first week of classes, thoroughly review the syllabus for each of your courses. Pay close attention to the grading scheme—some courses might heavily weight final exams, while others rely on continuous assessments like essays and midterms. Note down all important deadlines in your personal calendar. Also, check the professor's office hours; attending these hours early in the semester is a great way to introduce yourself and seek help.",
+        category: "Academic",
+        step: "First Month",
+        priority: "High",
+        tags: ["syllabus", "courses", "evaluation"],
       },
       {
-        title: "Santé et Bien-être",
-        description:
-          "Services de la clinique universitaire, support psychologique gratuit et ressources de bien-être disponibles sur le campus.",
-        category: "Santé",
-        step: "Premier mois",
-        priority: "Prioritaire",
-        tags: ["clinique", "psychologue", "bien-être"],
+        title: "Health and Wellness Resources",
+        description: "Services of the campus health clinic, free psychological support, and wellness resources available on campus.",
+        articleBody: "University can be stressful, and prioritizing your health is essential. uOttawa provides a comprehensive health clinic on campus where you can consult doctors and nurses natively. Beyond physical health, the university also provides robust mental health services, including free counseling and 24/7 crisis lines. If you feel overwhelmed, do not hesitate to reach out. Wellness programs also include pet therapy, yoga sessions, and peer support groups operating across the campus.",
+        category: "Health",
+        step: "First Month",
+        priority: "High",
+        tags: ["clinic", "psychologist", "wellness"],
         details: {
           availableServices: [
-            "Clinique médicale du campus",
-            "Service de counseling",
-            "Ligne d'écoute 24/7",
+            "Campus Student Health Clinic",
+            "Counseling Services",
+            "24/7 Support Line",
           ],
           emergencyContacts: [
-            { name: "Urgences campus", phone: "613-562-5411" },
-            { name: "Ligne de crise", phone: "1-866-996-0991" },
+            { name: "Campus Security", phone: "613-562-5411" },
+            { name: "Crisis Line", phone: "1-866-996-0991" },
           ],
         },
       },
       {
-        title: "Services de tutorat et aide académique",
-        description:
-          "Le Centre d'aide à la rédaction, le mentorat par les pairs et les ateliers de méthodes d'étude sont disponibles gratuitement.",
-        category: "Académique",
-        step: "Premier mois",
-        priority: "Moyen",
-        tags: ["tutorat", "aide", "mentorat"],
+        title: "Tutoring and Academic Support",
+        description: "The Academic Writing Help Centre, peer mentoring, and study skills workshops are available for free.",
+        articleBody: "No matter your academic level, everyone can benefit from academic support. The Academic Writing Help Centre (AWHC) offers free consultations to help you structure essays, improve grammar, and correctly format citations. Additionally, many faculties run peer mentoring programs where senior students help freshmen understand difficult concepts in challenging subjects (like mathematics or programming). Don't wait until the midterm to seek help—utilize these free resources early in the semester to build a strong foundation.",
+        category: "Academic",
+        step: "First Month",
+        priority: "Medium",
+        tags: ["tutoring", "support", "mentoring"],
       },
       {
-        title: "Explorer les clubs et associations",
-        description:
-          "Plus de 250 clubs étudiants à uOttawa. Sport, culture, technologie, bénévolat — trouve ta communauté.",
-        category: "Vie étudiante",
-        step: "Premier mois",
-        priority: "Bas",
-        tags: ["clubs", "associations", "communauté"],
+        title: "Exploring Clubs and Associations",
+        description: "Over 250 student clubs at uOttawa. Sports, culture, technology, volunteering — find your community.",
+        articleBody: "University is not just about academics; it's about building a network and developing soft skills. With over 250 registered clubs, you're bound to find a community that shares your passions. From cultural organizations and competitive debate teams to robotics clubs and environmental activism groups, getting involved is a fantastic way to destress and boost your resume. Keep an eye out for Club Fairs happening in the main squares or check the online student portal's club directory.",
+        category: "Student Life",
+        step: "First Month",
+        priority: "Low",
+        tags: ["clubs", "associations", "community"],
       },
 
-      // --- Mi-session ---
+      // --- Mid-Term ---
       {
-        title: "Comprendre le calcul du GPA",
-        description:
-          "Le GPA (Grade Point Average) se calcule sur une échelle de 10 à uOttawa. Voici comment le calculer et ce que signifie la probation académique.",
-        category: "Académique",
-        step: "Mi-session",
-        priority: "Prioritaire",
-        tags: ["GPA", "notes", "probation"],
+        title: "Understanding GPA Calculation",
+        description: "GPA (Grade Point Average) is calculated on a 10-point scale at uOttawa. Here is how to calculate it and what academic probation means.",
+        articleBody: "uOttawa uses a 10-point grading scale, which can be confusing if you are used to the 4.0 scale or percentage grades. An A+ is worth 10 points, an A is 9 points, and so on. Your CGPA (Cumulative Grade Point Average) is the average of the grade points earned in all your courses. Maintaining a good CGPA is crucial for graduation, scholarships, and co-op eligibility. If your CGPA falls below a certain threshold (usually 4.0 or 5.0 depending on the program), you may be placed on academic probation.",
+        category: "Academic",
+        step: "Mid-Term",
+        priority: "High",
+        tags: ["GPA", "grades", "probation"],
       },
       {
-        title: "Intégrité académique et plagiat",
-        description:
-          "Les règles de l'uOttawa sur le plagiat, la fraude et la collaboration inappropriée. Conséquences et comment éviter les erreurs.",
-        category: "Académique",
-        step: "Mi-session",
-        priority: "Prioritaire",
-        tags: ["plagiat", "intégrité", "règlement"],
+        title: "Academic Integrity and Plagiarism",
+        description: "uOttawa's rules on plagiarism, fraud, and inappropriate collaboration. Consequences and how to avoid mistakes.",
+        articleBody: "Academic integrity is taken extremely seriously in Canadian universities. Plagiarism includes copying text without citation, submitting someone else's work as your own, and unapproved collaboration on individual assignments. The consequences for academic fraud range from a zero on the assignment to expulsion from the university. Always cite your sources meticulously using the format requested by your professor (APA, MLA, IEEE, etc.). If you are unsure whether an action constitutes plagiarism, ask your professor or consult the writing center.",
+        category: "Academic",
+        step: "Mid-Term",
+        priority: "High",
+        tags: ["plagiarism", "integrity", "regulations"],
       },
       {
-        title: "Planifier ses révisions",
-        description:
-          "Techniques de révision efficaces : méthode Pomodoro, cartes mémoire, groupes d'étude. Accès aux salles d'étude sur le campus.",
-        category: "Académique",
-        step: "Mi-session",
-        priority: "Moyen",
-        tags: ["révision", "examens", "étude"],
+        title: "Planning Your Revisions",
+        description: "Effective revision techniques: Pomodoro method, flashcards, study groups. Accessing study rooms on campus.",
+        articleBody: "Midterm season can quickly become overwhelming if you do not plan ahead. Start revising at least two weeks before your exams. Break your study sessions into manageable chunks using techniques like the Pomodoro method (25 minutes of studying followed by a 5-minute break). Active recall and formulating flashcards are scientifically proven to be more effective than simply re-reading notes. Also, take advantage of the quiet study rooms in Morisset Library or CRX, which can be booked online through the library portal.",
+        category: "Academic",
+        step: "Mid-Term",
+        priority: "Medium",
+        tags: ["revision", "exams", "studying"],
       },
       {
-        title: "Abandon de cours sans pénalité",
-        description:
-          "Date limite pour abandonner un cours sans mention au relevé de notes. Comment évaluer si tu devrais abandonner un cours.",
-        category: "Administratif",
-        step: "Mi-session",
-        priority: "Moyen",
-        tags: ["abandon", "cours", "date limite"],
+        title: "Dropping a Course Without Penalty",
+        description: "Deadline to drop a course without an academic penalty on your transcript. How to evaluate if you should drop a course.",
+        articleBody: "If you realize that a course is too difficult or overwhelming, you have the option to drop it before a specific deadline without it affecting your GPA. Dropping a course before this deadline means it will not appear on your transcript or it will appear with a 'W' (Withdrawal) instead of a failing grade. Always check the 'Important Dates and Deadlines' page on the university website to know these exact dates. Consult an academic advisor before making a decision, as dropping a course might delay your graduation or affect your full-time student status.",
+        category: "Administrative",
+        step: "Mid-Term",
+        priority: "Medium",
+        tags: ["drop", "courses", "deadline"],
       },
     ]);
 
-    console.log("Contenus créés (16 contenus, 4 par phase)...");
+    console.log("Contents created (16 contents, 4 per phase)...");
 
     // ===== NOTIFICATIONS PERSISTANTES =====
     await Notification.insertMany([
       {
-        title: "Bienvenue sur UO-Compagnon !",
-        message:
-          "Ta plateforme d'accompagnement est prête. Explore les contenus adaptés à ta phase actuelle.",
+        title: "Welcome to UO-Compagnon!",
+        message: "Your companion platform is ready. Explore the contents adapted to your current phase.",
         date: new Date().toISOString(),
         type: "success",
-        relatedStep: "Avant l'arrivée",
+        relatedStep: "Before Arrival",
       },
       {
-        title: "Date limite d'inscription aux cours",
-        message:
-          "N'oublie pas de finaliser ton choix de cours avant la date limite sur uoZone.",
+        title: "Course Registration Deadline",
+        message: "Don't forget to finalize your course selection before the deadline on uoZone.",
         date: new Date().toISOString(),
         type: "warning",
-        relatedStep: "Semaine d'accueil",
+        relatedStep: "Welcome Week",
       },
       {
-        title: "Premier devoir à remettre",
-        message:
-          "Vérifie les dates de remise sur Brightspace. La plupart des premiers devoirs sont dus dans les 2-3 premières semaines.",
+        title: "First Assignment Due",
+        message: "Check assignment deadlines on Brightspace. Most first assignments are due in the first 2-3 weeks.",
         date: new Date().toISOString(),
         type: "info",
-        relatedStep: "Premier mois",
+        relatedStep: "First Month",
       },
       {
-        title: "Examens de mi-session",
-        message:
-          "La période d'examens de mi-session commence bientôt. Consulte ton horaire d'examens sur uoZone.",
+        title: "Mid-Term Exams Approaching",
+        message: "The mid-term exam period is starting soon. Check your exam schedule on uoZone.",
         date: new Date().toISOString(),
         type: "warning",
-        relatedStep: "Mi-session",
+        relatedStep: "Mid-Term",
       },
     ]);
 
-    console.log("Notifications créées (4 notifications)...");
+    console.log("Notifications created (4 notifications)...");
 
-    console.log("\n Seed complet ! Données injectées avec succès.");
-    console.log("   → 2 utilisateurs (1 étudiant + 1 admin)");
-    console.log("   → 16 contenus (4 par phase)");
-    console.log("   → 4 notifications persistantes");
-    console.log("\n Comptes de test :");
-    console.log("   Étudiant : amara@uottawa.ca / password123");
-    console.log("   Admin    : admin@uottawa.ca / admin123");
+    console.log("\n Seed complete! Data successfully injected.");
+    console.log("   → 2 users (1 student + 1 admin)");
+    console.log("   → 16 contents (4 per phase)");
+    console.log("   → 4 persistent notifications");
+    console.log("\n Test accounts:");
+    console.log("   Student : amara@uottawa.ca / password123");
+    console.log("   Admin   : admin@uottawa.ca / admin123");
 
     process.exit();
   } catch (error) {
-    console.error(`Erreur : ${error.message}`);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };
