@@ -35,19 +35,34 @@ const AdminLogin = () => {
   return (
     <div className="auth-page">
       <div className="auth-topbar">
-        <button className="auth-toggle" onClick={toggleTheme}>
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+        <button
+          className="auth-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
         </button>
-        <button className="auth-toggle" onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}>
+        <button
+          className="auth-toggle"
+          onClick={() => setLang(lang === "fr" ? "en" : "fr")}
+          aria-label={lang === "fr" ? "Changer la langue en Anglais" : "Change language to French"}
+        >
           <Globe size={16} />
-          <span>{lang === 'fr' ? 'EN' : 'FR'}</span>
+          <span>{lang === "fr" ? "EN" : "FR"}</span>
         </button>
       </div>
 
       <div className="auth-container">
         <div className="auth-logo">
-          <img src={logoImg} alt="UO-Compagnon Logo" style={{ height: '120px', marginBottom: '0.5rem' }} />
+          <img
+            src={logoImg}
+            alt="UO-Compagnon Logo"
+            width="180"
+            height="120"
+            loading="eager"
+            style={{ width: "180px", height: "120px", marginBottom: "0.5rem" }}
+          />
         </div>
 
         <div className="auth-card">
@@ -78,6 +93,7 @@ const AdminLogin = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

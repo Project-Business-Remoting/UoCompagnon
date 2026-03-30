@@ -11,23 +11,41 @@ const Welcome = () => {
   return (
     <div className="welcome-page">
       <div className="welcome-topbar">
-        <button className="welcome-toggle" onClick={toggleTheme}>
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          <span>{theme === 'dark' ? t('welcome.lightMode') : t('welcome.darkMode')}</span>
+        <button
+          className="welcome-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          <span>
+            {theme === "dark" ? t("welcome.lightMode") : t("welcome.darkMode")}
+          </span>
         </button>
-        <button className="welcome-toggle" onClick={toggleLang}>
+        <button
+          className="welcome-toggle"
+          onClick={toggleLang}
+          aria-label={lang === "fr" ? "Changer la langue en Anglais" : "Change language to French"}
+        >
           <Globe size={16} />
-          <span>{lang === 'fr' ? 'EN' : 'FR'}</span>
+          <span>{lang === "fr" ? "EN" : "FR"}</span>
         </button>
       </div>
 
-      <div className="welcome-container">
+      <main className="welcome-container" aria-labelledby="welcome-title">
         
         {/* En-tête avec Logo animé */}
         <div className="welcome-header">
-          <img src={logoImg} alt="UO-Compagnon Logo" className="welcome-logo" />
-          <h1 className="welcome-title">{t('welcome.title')}</h1>
-          <p className="welcome-subtitle">{t('welcome.subtitle')}</p>
+          <img
+            src={logoImg}
+            alt="UO-Compagnon Home Logo"
+            className="welcome-logo"
+            width="180"
+            height="120"
+            loading="eager"
+            style={{ width: "180px", height: "120px" }}
+          />
+          <h1 className="welcome-title" id="welcome-title">{t("welcome.title")}</h1>
+          <p className="welcome-subtitle">{t("welcome.subtitle")}</p>
         </div>
 
         {/* Portails d'entrée */}
@@ -59,7 +77,7 @@ const Welcome = () => {
           <p>{t('welcome.footer')}</p>
         </div>
 
-      </div>
+      </main>
     </div>
   );
 };

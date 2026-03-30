@@ -68,8 +68,11 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
         >
           <img
             src={logoImg}
-            alt="UO-Compagnon Logo"
-            style={{ height: "40px", borderRadius: "8px" }}
+            alt="UO-Compagnon Home Logo"
+            width="60"
+            height="40"
+            loading="eager"
+            style={{ height: "40px", width: "60px", borderRadius: "8px" }}
           />
           <span
             className="sidebar-logo-text"
@@ -103,7 +106,11 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
 
         {/* Bottom Actions */}
         <div className="sidebar-bottom">
-          <button className="sidebar-action" onClick={toggleTheme}>
+          <button
+            className="sidebar-action"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             <span>
               {theme === "dark"
@@ -112,7 +119,11 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
             </span>
           </button>
 
-          <button className="sidebar-action" onClick={toggleLang}>
+          <button
+            className="sidebar-action"
+            onClick={toggleLang}
+            aria-label={lang === "fr" ? "Changer la langue en Anglais" : "Change language to French"}
+          >
             <Globe size={18} />
             <span>{lang === "fr" ? "EN" : "FR"}</span>
           </button>
@@ -120,6 +131,7 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
           <button
             className="sidebar-action sidebar-action--danger"
             onClick={logout}
+            aria-label="Logout from your account"
           >
             <LogOut size={18} />
             <span>{t("sidebar.logout")}</span>

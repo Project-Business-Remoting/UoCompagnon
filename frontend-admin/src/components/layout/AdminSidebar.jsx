@@ -37,8 +37,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         >
           <img
             src={logoImg}
-            alt="UO-Compagnon Logo"
-            style={{ height: "40px", borderRadius: "8px" }}
+            alt="UO-Admin Home Logo"
+            width="60"
+            height="40"
+            loading="eager"
+            style={{ height: "40px", width: "60px", borderRadius: "8px" }}
           />
           <span
             className="sidebar-logo-text"
@@ -69,7 +72,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         </nav>
 
         <div className="sidebar-bottom">
-          <button className="sidebar-action" onClick={toggleTheme}>
+          <button
+            className="sidebar-action"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
           </button>
@@ -79,6 +86,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
               logout();
               window.location.href = "http://localhost:5173/welcome";
             }}
+            aria-label="Logout from administrator account"
           >
             <LogOut size={18} />
             <span>Logout</span>
