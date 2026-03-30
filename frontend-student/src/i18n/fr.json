@@ -84,7 +84,10 @@
     "delete": "Supprimer la notification",
     "smartBadge": "Intelligent",
     "systemBadge": "Systeme",
-    "noNotifications": "Aucune notification pour le moment."
+    "noNotifications": "Aucune notification pour le moment.",
+    "unread": "non lue",
+    "unreadPlural": "non lue(s)",
+    "readBadge": "Lu"
   },
   "profile": {
     "title": "Mon Profil",

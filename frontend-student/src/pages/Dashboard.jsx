@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { fetchDashboard } from '../services/api';
+import { processNotifications } from '../utils/notificationUtils';
 import { useLang } from '../context/LangContext';
 import PhaseStepper from '../components/dashboard/PhaseStepper';
 import './Dashboard.css';
@@ -35,7 +36,12 @@ const Dashboard = () => {
         const dashboard = await fetchDashboard();
         setData(dashboard);
         if (setNotificationCount) {
-          setNotificationCount(dashboard.notifications?.total || 0);
+          const allNotifs = [
+            ...(dashboard.notifications?.system || []),
+            ...(dashboard.notifications?.smart || [])
+          ];
+          const { unreadCount } = processNotifications(allNotifs);
+          setNotificationCount(unreadCount);
         }
       } catch (err) {
         setError(err.message);
@@ -125,10 +131,10 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className="dashboard-list">
-            {notifications.smart.length > 0 ? (
-              notifications.smart.slice(0, 4).map((notif) => (
-                <div key={notif._id} className="dashboard-list-item dashboard-notif-item">
-                  <span className={`dashboard-notif-dot dashboard-notif-dot--${notif.type}`} />
+            {processNotifications(notifications.smart).processed.length > 0 ? (
+              processNotifications(notifications.smart).processed.slice(0, 4).map((notif) => (
+                <div key={notif._id} className={`dashboard-list-item dashboard-notif-item ${notif.isRead ? 'dashboard-notif-item--read' : ''}`}>
+                  {!notif.isRead && <span className={`dashboard-notif-dot dashboard-notif-dot--${notif.type}`} />}
                   <div className="dashboard-list-info">
                     <span className="dashboard-list-title">{notif.title}</span>
                     <span className="dashboard-list-category">{notif.message}</span>

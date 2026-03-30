@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import Sidebar from './Sidebar';
 import { fetchDashboard } from '../../services/api';
+import { processNotifications } from '../../utils/notificationUtils';
 import './Layout.css';
 
 const Layout = () => {
@@ -13,7 +14,13 @@ const Layout = () => {
     const loadNotifCount = async () => {
       try {
         const data = await fetchDashboard();
-        setNotificationCount(data.notifications?.total || 0);
+        // Combiner système (unread) et smart pour calculer le total réel
+        const allNotifs = [
+          ...(data.notifications?.system || []),
+          ...(data.notifications?.smart || [])
+        ];
+        const { unreadCount } = processNotifications(allNotifs);
+        setNotificationCount(unreadCount);
       } catch (err) {
         // Silencieux — le badge sera juste à 0
       }

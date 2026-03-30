@@ -1,16 +1,14 @@
 const API_BASE = '/api';
 
 const getHeaders = () => {
-  const token = localStorage.getItem('uo_admin_token');
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  return headers;
+  return { 'Content-Type': 'application/json' };
 };
 
 const request = async (endpoint, options = {}) => {
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers: getHeaders(),
+    credentials: 'include', // Important pour envoyer les cookies
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Erreur serveur');
@@ -23,6 +21,9 @@ export const loginUser = (email, password) =>
     method: 'POST',
     body: JSON.stringify({ email, password }),
   });
+
+export const logoutAdmin = () =>
+  request('/users/logout', { method: 'POST' });
 
 // Dashboard Admin
 export const fetchAdminDashboard = () => request('/dashboard/admin');

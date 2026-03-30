@@ -1,16 +1,14 @@
 const API_BASE = '/api';
 
 const getHeaders = () => {
-  const token = localStorage.getItem('uo_token');
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  return headers;
+  return { 'Content-Type': 'application/json' };
 };
 
 const request = async (endpoint, options = {}) => {
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers: getHeaders(),
+    credentials: 'include', // Important pour envoyer les cookies
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Erreur serveur');
@@ -29,6 +27,9 @@ export const registerUser = (userData) =>
     method: 'POST',
     body: JSON.stringify(userData),
   });
+
+export const logoutUser = () => 
+  request('/users/logout', { method: 'POST' });
 
 export const fetchProfile = () => request('/users/profile');
 

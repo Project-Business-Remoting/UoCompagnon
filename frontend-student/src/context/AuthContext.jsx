@@ -1,26 +1,23 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { loginUser as apiLogin, registerUser as apiRegister } from '../services/api';
+import { loginUser as apiLogin, registerUser as apiRegister, logoutUser as apiLogout } from '../services/api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('uo_token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('uo_user');
-    if (savedUser && token) {
+    if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
     setLoading(false);
-  }, [token]);
+  }, []);
 
   const login = async (email, password) => {
     const data = await apiLogin(email, password);
     setUser(data);
-    setToken(data.token);
-    localStorage.setItem('uo_token', data.token);
     localStorage.setItem('uo_user', JSON.stringify(data));
     return data;
   };
@@ -28,21 +25,22 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     const data = await apiRegister(userData);
     setUser(data);
-    setToken(data.token);
-    localStorage.setItem('uo_token', data.token);
     localStorage.setItem('uo_user', JSON.stringify(data));
     return data;
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
-    setToken(null);
-    localStorage.removeItem('uo_token');
     localStorage.removeItem('uo_user');
+    try {
+      await apiLogout();
+    } catch (e) {
+      console.error('Logout API failed', e);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
