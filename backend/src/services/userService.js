@@ -31,6 +31,7 @@ const registerUser = async (userData) => {
     program: user.program,
     arrivalDate: user.arrivalDate,
     classStartDate: user.classStartDate,
+    role: user.role,
     currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
     token: generateToken(user._id),
   };
@@ -46,6 +47,7 @@ const loginUser = async (email, password) => {
       program: user.program,
       arrivalDate: user.arrivalDate,
       classStartDate: user.classStartDate,
+      role: user.role,
       // Calcul dynamique à chaque connexion
       currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
       readNotifications: user.readNotifications,

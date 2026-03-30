@@ -1,0 +1,16 @@
+.layout { display: flex; min-height: 100vh; }
+.layout-main { flex: 1; margin-left: var(--sidebar-w); transition: margin-left 0.3s ease; }
+.layout-content { padding: 2rem 2.5rem; max-width: 1200px; }
+.layout-mobile-header {
+  display: none; align-items: center; gap: 1rem; padding: 1rem 1.25rem;
+  background: var(--bg-card); border-bottom: 1px solid var(--border-color);
+  position: sticky; top: 0; z-index: 50;
+}
+.layout-hamburger { display: flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: var(--radius-md); color: var(--text-main); }
+.layout-hamburger:hover { background: var(--bg-color); }
+.layout-mobile-logo { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
+@media (max-width: 768px) {
+  .layout-main { margin-left: 0; }
+  .layout-mobile-header { display: flex; }
+  .layout-content { padding: 1.25rem; }
+}
