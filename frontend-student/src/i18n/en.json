@@ -59,6 +59,12 @@
     "priorityContents": "Priority Contents",
     "recentNotifications": "Recent Notifications",
     "viewAll": "View all",
+    "phaseByStep": {
+      "Before Arrival": "Prepare for your arrival in Canada and at the University of Ottawa.",
+      "Welcome Week": "Discover the campus, activate your services and meet the community.",
+      "First Month": "Get settled into your courses, explore services, and build your routine.",
+      "Mid-Term": "Prepare for exams, check your GPA, and plan ahead."
+    },
     "phaseDescription": {
       "Avant l'arrivee": "Prepare for your arrival in Canada and at the University of Ottawa.",
       "Semaine d'accueil": "Discover the campus, activate your services and meet the community.",
@@ -75,7 +81,9 @@
   "hub": {
     "title": "My Contents",
     "filterAll": "All",
-    "noContents": "No content available at this time."
+    "noContents": "No content available at this time.",
+    "countSingular": "content",
+    "countPlural": "contents"
   },
   "notifications": {
     "title": "Notifications",
@@ -99,9 +107,122 @@
     "currentPhase": "Current phase",
     "preferences": "Preferences"
   },
+  "welcomeLanding": {
+    "navHow": "How it works",
+    "navFeatures": "Features",
+    "navAbout": "About",
+    "signIn": "Sign in",
+    "pill": "Built for international students",
+    "heroLine1": "Your smart guide",
+    "heroLine2": "to the University of Ottawa",
+    "heroDesc": "UO-Compagnon supports every step of your university journey from visa prep to midterms with the right information at the right time.",
+    "startFree": "Get started for free",
+    "featureLabel": "Features",
+    "featureTitle": "Everything you need, right when you need it",
+    "quote": "UO-Compagnon saved me so much stress. I always knew what to do each week without getting lost in emails and official websites.",
+    "quoteName": "Amara Diallo",
+    "quoteProg": "B.Sc. Computer Science - Senegal",
+    "ctaTitle": "Ready to start your Ottawa journey?",
+    "ctaText": "Join hundreds of international students already supported by UO-Compagnon.",
+    "ctaBtn": "Create my account",
+    "footerLeft": "2026 UO-Compagnon - University of Ottawa",
+    "footerRight": "Platform reserved for @uottawa.ca students",
+    "adminPortal": "Admin portal",
+    "themeDark": "Dark mode",
+    "themeLight": "Light mode",
+    "phases": [
+      {
+        "title": "Before arrival",
+        "desc": "Visa, housing, health insurance, budget everything you need before you leave."
+      },
+      {
+        "title": "Welcome week",
+        "desc": "Student card, uoZone, Brightspace, orientation your arrival guided step by step."
+      },
+      {
+        "title": "First month",
+        "desc": "Syllabi, tutoring, student clubs, health services make your transition smooth."
+      },
+      {
+        "title": "Midterm period",
+        "desc": "GPA, academic integrity, exams, dropping courses stay on track and confident."
+      }
+    ],
+    "features": [
+      {
+        "title": "Contextual content",
+        "desc": "Resources automatically adapt to your journey phase and your academic program."
+      },
+      {
+        "title": "Smart notifications",
+        "desc": "Personalized alerts based on your timeline never too early, never too late."
+      },
+      {
+        "title": "Progress tracking",
+        "desc": "See where you are in your journey and what is next at each stage."
+      },
+      {
+        "title": "Verified resources",
+        "desc": "All content is validated by uOttawa administration reliable and always up to date."
+      },
+      {
+        "title": "Designed for you",
+        "desc": "Built around the unique challenges international students face in Canada."
+      },
+      {
+        "title": "Secure access",
+        "desc": "Sign in with your @uottawa.ca address your platform, your private space."
+      }
+    ]
+  },
+  "questions": {
+    "directTitle": "Direct Questions",
+    "directDesc": "Ask your questions directly to administration. These questions are attached to your profile.",
+    "anonymousTitle": "Anonymous Questions",
+    "anonymousDesc": "Ask sensitive or confidential questions here. Admins cannot see your personal details, and answers are delivered back securely.",
+    "subjectPlaceholderDirect": "Subject (e.g., Missing document)",
+    "subjectPlaceholderAnonymous": "Subject (e.g., Harassment Policy)",
+    "contentPlaceholderDirect": "Describe your issue...",
+    "contentPlaceholderAnonymous": "Describe your situation completely anonymously...",
+    "sendDirect": "Send to administration",
+    "sendAnonymous": "Send anonymously",
+    "sending": "Submitting...",
+    "submittedDirect": "Question submitted successfully!",
+    "submittedAnonymous": "Anonymous question submitted successfully!",
+    "submitError": "Error submitting the question. Please try again.",
+    "historyDirect": "My question history",
+    "historyAnonymous": "My anonymous interactions",
+    "emptyDirect": "You have not asked any direct questions yet.",
+    "emptyAnonymous": "You have not asked any anonymous questions yet.",
+    "adminResponse": "Admin response",
+    "status": {
+      "Pending": "Pending",
+      "Answered": "Answered"
+    }
+  },
+  "faq": {
+    "title": "Admin FAQ",
+    "subtitle": "Here are the most common questions administrators receive from international students.",
+    "q1": "Can I change my arrival date or class start date?",
+    "a1": "Not yet. Date editing is not available in the application for now.",
+    "q2": "What is UHIP and why do I need it?",
+    "a2": "The University Health Insurance Plan is mandatory for international students and covers basic medical care in Ontario.",
+    "q3": "Who do I contact if I am late for Welcome Week?",
+    "a3": "Contact the International Mentoring Centre (mentoring@uottawa.ca) for remote support.",
+    "q4": "Can I switch my language preference permanently?",
+    "a4": "Yes. Use the EN/FR button in the sidebar to switch the whole interface dynamically."
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
+    "requestError": "Request failed",
+    "unexpectedResponse": "Unexpected server response",
+    "aria": {
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode",
+      "toEnglish": "Switch language to English",
+      "toFrench": "Switch language to French"
+    },
     "priority": {
       "High": "High",
       "Medium": "Medium",

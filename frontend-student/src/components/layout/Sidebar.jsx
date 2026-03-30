@@ -11,7 +11,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
 import { useAuth } from "../../context/AuthContext";
 import { useLang } from "../../context/LangContext";
@@ -22,7 +22,6 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
   const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { lang, toggleLang, t } = useLang();
-  const location = useLocation();
 
   const navItems = [
     {
@@ -88,18 +87,20 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-          {navItems.map(({ path, icon: Icon, label, badge }) => (
+          {navItems.map((item) => (
             <NavLink
-              key={path}
-              to={path}
+              key={item.path}
+              to={item.path}
               className={({ isActive }) =>
                 `sidebar-link ${isActive ? "sidebar-link--active" : ""}`
               }
               onClick={onClose}
             >
-              <Icon size={20} />
-              <span>{label}</span>
-              {badge > 0 && <span className="sidebar-badge">{badge}</span>}
+              <item.icon size={20} />
+              <span>{item.label}</span>
+              {item.badge > 0 && (
+                <span className="sidebar-badge">{item.badge}</span>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -109,7 +110,9 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
           <button
             className="sidebar-action"
             onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             <span>
@@ -122,7 +125,11 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
           <button
             className="sidebar-action"
             onClick={toggleLang}
-            aria-label={lang === "fr" ? "Changer la langue en Anglais" : "Change language to French"}
+            aria-label={
+              lang === "fr"
+                ? "Changer la langue en Anglais"
+                : "Change language to French"
+            }
           >
             <Globe size={18} />
             <span>{lang === "fr" ? "EN" : "FR"}</span>

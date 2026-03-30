@@ -2,8 +2,10 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { calculateCurrentStep } = require("../config/constants");
 
+const TOKEN_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
 };
 
 const registerUser = async (userData) => {

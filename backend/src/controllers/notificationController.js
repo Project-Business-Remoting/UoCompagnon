@@ -3,8 +3,10 @@ const notificationService = require("../services/notificationService");
 const getNotifications = async (req, res) => {
   try {
     const { step } = req.query;
-    const notifications =
-      await notificationService.getNotificationsByStep(step);
+    const notifications = await notificationService.getNotificationsByStep(
+      step,
+      req.user,
+    );
     res.json(notifications);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,7 +26,7 @@ const getSmartNotifications = async (req, res) => {
 
 const markAsRead = async (req, res) => {
   try {
-    const user = await notificationService.markAllAsRead(req.user._id);
+    const user = await notificationService.markAllAsRead(req.user);
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -34,18 +36,25 @@ const markAsRead = async (req, res) => {
 const markOneAsRead = async (req, res) => {
   try {
     const user = await notificationService.markOneAsRead(
-      req.user._id,
-      req.params.id
+      req.user,
+      req.params.id,
     );
     res.json(user);
   } catch (error) {
+    if (error.message === "Notification non autorisee") {
+      return res.status(403).json({ message: error.message });
+    }
+
     res.status(500).json({ message: error.message });
   }
 };
 
 const deleteNotification = async (req, res) => {
   try {
-    const deleted = await notificationService.deleteOneNotification(req.params.id);
+    const deleted = await notificationService.deleteOneNotification(
+      req.params.id,
+      req.user,
+    );
     if (!deleted) {
       return res.status(404).json({ message: "Notification non trouvée" });
     }

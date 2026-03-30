@@ -1,42 +1,43 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { loginUser as apiLogin, logoutAdmin as apiLogout } from '../services/api';
+import { createContext, useContext, useState } from "react";
+import {
+  loginUser as apiLogin,
+  logoutAdmin as apiLogout,
+} from "../services/api";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("uo_admin_user");
+    if (!savedUser) return null;
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('uo_admin_user');
-    if (savedUser) {
-      const parsed = JSON.parse(savedUser);
-      if (parsed.role === 'admin') {
-        setUser(parsed);
-      } else {
-        logout();
-      }
+    const parsed = JSON.parse(savedUser);
+    if (parsed.role !== "admin") {
+      localStorage.removeItem("uo_admin_user");
+      return null;
     }
-    setLoading(false);
-  }, []);
+
+    return parsed;
+  });
+  const [loading] = useState(false);
 
   const login = async (email, password) => {
     const data = await apiLogin(email, password);
-    if (data.role !== 'admin') {
-      throw new Error('Ce compte n\'a pas les droits administrateur');
+    if (data.role !== "admin") {
+      throw new Error("Ce compte n'a pas les droits administrateur");
     }
     setUser(data);
-    localStorage.setItem('uo_admin_user', JSON.stringify(data));
+    localStorage.setItem("uo_admin_user", JSON.stringify(data));
     return data;
   };
 
   const logout = async () => {
     setUser(null);
-    localStorage.removeItem('uo_admin_user');
+    localStorage.removeItem("uo_admin_user");
     try {
       await apiLogout();
     } catch (e) {
-      console.error('Logout admin failed', e);
+      console.error("Logout admin failed", e);
     }
   };
 
@@ -49,6 +50,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

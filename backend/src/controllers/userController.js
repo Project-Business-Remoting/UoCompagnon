@@ -1,19 +1,22 @@
 const userService = require("../services/userService");
 
+const COOKIE_MAX_AGE_MS =
+  Number(process.env.COOKIE_MAX_AGE_MS) || 7 * 24 * 60 * 60 * 1000;
+
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: COOKIE_MAX_AGE_MS,
+});
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.token;
   delete user.token; // Ne pas envoyer le token en clair dans le JSON
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 jours
-  };
-
   res
     .status(statusCode)
-    .cookie("uo_token", token, options)
+    .cookie("uo_token", token, getCookieOptions())
     .json(user);
 };
 
@@ -38,7 +41,11 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("uo_token");
+  res.clearCookie("uo_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 

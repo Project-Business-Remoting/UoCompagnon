@@ -59,6 +59,12 @@
     "priorityContents": "Contenus prioritaires",
     "recentNotifications": "Notifications recentes",
     "viewAll": "Tout voir",
+    "phaseByStep": {
+      "Before Arrival": "Prepare ton arrivee au Canada et a l'Universite d'Ottawa.",
+      "Welcome Week": "Decouvre le campus, active tes services et rencontre la communaute.",
+      "First Month": "Installe-toi dans tes cours, explore les services et construis ta routine.",
+      "Mid-Term": "Prepare tes examens, verifie ton GPA et planifie la suite."
+    },
     "phaseDescription": {
       "Avant l'arrivee": "Prepare ton arrivee au Canada et a l'Universite d'Ottawa.",
       "Semaine d'accueil": "Decouvre le campus, active tes services et rencontre la communaute.",
@@ -75,7 +81,9 @@
   "hub": {
     "title": "Mes Contenus",
     "filterAll": "Tous",
-    "noContents": "Aucun contenu disponible pour le moment."
+    "noContents": "Aucun contenu disponible pour le moment.",
+    "countSingular": "contenu",
+    "countPlural": "contenus"
   },
   "notifications": {
     "title": "Notifications",
@@ -99,9 +107,122 @@
     "currentPhase": "Phase actuelle",
     "preferences": "Preferences"
   },
+  "welcomeLanding": {
+    "navHow": "Comment ca marche",
+    "navFeatures": "Fonctionnalites",
+    "navAbout": "A propos",
+    "signIn": "Se connecter",
+    "pill": "Specialement concu pour les etudiants internationaux",
+    "heroLine1": "Ton guide intelligent",
+    "heroLine2": "a l'Universite d'Ottawa",
+    "heroDesc": "UO-Compagnon t'accompagne a chaque etape de ton parcours universitaire du visa a la mi-session avec les bonnes informations, au bon moment.",
+    "startFree": "Commencer gratuitement",
+    "featureLabel": "Fonctionnalites",
+    "featureTitle": "Tout ce dont tu as besoin, au bon moment",
+    "quote": "UO-Compagnon m'a evite tellement de stress. Je savais exactement quoi faire chaque semaine, sans me noyer dans les emails et les sites officiels.",
+    "quoteName": "Amara Diallo",
+    "quoteProg": "B.Sc. Computer Science - Senegal",
+    "ctaTitle": "Pret a commencer ton aventure a Ottawa ?",
+    "ctaText": "Rejoins des centaines detudiants internationaux deja accompagnes par UO-Compagnon.",
+    "ctaBtn": "Creer mon compte",
+    "footerLeft": "2026 UO-Compagnon - Universite d'Ottawa",
+    "footerRight": "Plateforme reservee aux etudiants @uottawa.ca",
+    "adminPortal": "Portail admin",
+    "themeDark": "Mode sombre",
+    "themeLight": "Mode clair",
+    "phases": [
+      {
+        "title": "Avant l'arrivee",
+        "desc": "Visa, logement, assurance sante, budget tout ce qu'il faut preparer avant de partir."
+      },
+      {
+        "title": "Semaine d'accueil",
+        "desc": "Carte etudiante, uoZone, Brightspace, orientation ton arrivee guidee pas a pas."
+      },
+      {
+        "title": "Premier mois",
+        "desc": "Plans de cours, tutorat, clubs etudiants, services de sante ton integration reussie."
+      },
+      {
+        "title": "Mi-session",
+        "desc": "GPA, integrite academique, examens, abandon de cours rester performant."
+      }
+    ],
+    "features": [
+      {
+        "title": "Contenu contextuel",
+        "desc": "Les ressources s'adaptent automatiquement a ta phase d'arrivee et a ton programme."
+      },
+      {
+        "title": "Notifications intelligentes",
+        "desc": "Des alertes personnalisees basees sur ton calendrier jamais trop tot, jamais trop tard."
+      },
+      {
+        "title": "Suivi de progression",
+        "desc": "Visualise ou tu en es dans ton parcours et ce qui t'attend a chaque etape."
+      },
+      {
+        "title": "Ressources verifiees",
+        "desc": "Tous les contenus sont valides par l'administration de uOttawa, fiables et a jour."
+      },
+      {
+        "title": "Concu pour toi",
+        "desc": "Specialement pense pour les defis uniques des etudiants internationaux au Canada."
+      },
+      {
+        "title": "Acces securise",
+        "desc": "Connecte-toi avec ton adresse @uottawa.ca ta plateforme, rien que pour toi."
+      }
+    ]
+  },
+  "questions": {
+    "directTitle": "Questions directes",
+    "directDesc": "Pose tes questions directement a l'administration. Ces questions sont rattachees a ton profil.",
+    "anonymousTitle": "Questions anonymes",
+    "anonymousDesc": "Pose ici des questions sensibles ou confidentielles. Les admins ne voient pas tes details personnels, et les reponses te reviennent en securite.",
+    "subjectPlaceholderDirect": "Sujet (ex: Document manquant)",
+    "subjectPlaceholderAnonymous": "Sujet (ex: Politique de harcelement)",
+    "contentPlaceholderDirect": "Decris ton probleme...",
+    "contentPlaceholderAnonymous": "Decris ta situation en toute anonymite...",
+    "sendDirect": "Envoyer a l'administration",
+    "sendAnonymous": "Envoyer anonymement",
+    "sending": "Envoi...",
+    "submittedDirect": "Question envoyee avec succes !",
+    "submittedAnonymous": "Question anonyme envoyee avec succes !",
+    "submitError": "Erreur lors de l'envoi de la question. Veuillez reessayer.",
+    "historyDirect": "Historique de mes questions",
+    "historyAnonymous": "Historique de mes interactions anonymes",
+    "emptyDirect": "Tu n'as pas encore pose de question directe.",
+    "emptyAnonymous": "Tu n'as pas encore pose de question anonyme.",
+    "adminResponse": "Reponse de l'administration",
+    "status": {
+      "Pending": "En attente",
+      "Answered": "Repondu"
+    }
+  },
+  "faq": {
+    "title": "FAQ Administration",
+    "subtitle": "Voici les questions les plus frequentes recues de la part des etudiants internationaux.",
+    "q1": "Puis-je modifier ma date d'arrivee ou de debut des cours ?",
+    "a1": "Pas pour le moment. La modification des dates n'est pas encore disponible dans l'application.",
+    "q2": "Qu'est-ce que l'UHIP et pourquoi est-ce obligatoire ?",
+    "a2": "Le University Health Insurance Plan est obligatoire pour les etudiants internationaux et couvre les soins de base en Ontario.",
+    "q3": "Qui contacter en cas de retard pendant la semaine d'accueil ?",
+    "a3": "Contacte le International Mentoring Centre (mentoring@uottawa.ca) pour etre accompagne a distance.",
+    "q4": "Puis-je changer ma langue de facon permanente ?",
+    "a4": "Oui. Utilise le bouton EN/FR dans le panneau lateral pour basculer toute l'interface dynamiquement."
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
+    "requestError": "Erreur de requete",
+    "unexpectedResponse": "Reponse serveur inattendue",
+    "aria": {
+      "switchToLight": "Basculer en mode clair",
+      "switchToDark": "Basculer en mode sombre",
+      "toEnglish": "Changer la langue en anglais",
+      "toFrench": "Changer la langue en francais"
+    },
     "priority": {
       "High": "Prioritaire",
       "Medium": "Moyen",

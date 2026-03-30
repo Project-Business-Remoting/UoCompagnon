@@ -2,8 +2,16 @@ const Notification = require("../models/Notification");
 const User = require("../models/User");
 const { getUserPhase, generateSmartNotifications } = require("./phaseService");
 
-const getNotificationsByStep = async (step) => {
-  return await Notification.find({ relatedStep: step });
+const getNotificationsByStep = async (step, user) => {
+  if (user.role === "admin") {
+    const filter = step ? { relatedStep: step } : {};
+    return await Notification.find(filter);
+  }
+
+  const currentStep = getUserPhase(user);
+  return await Notification.find({
+    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+  });
 };
 
 /**
@@ -20,10 +28,7 @@ const getSmartNotificationsForUser = async (user) => {
 
   // 2. Notifications persistantes de la base (filtrées par phase OU par utilisateur spécifique)
   const dbNotifs = await Notification.find({
-    $or: [
-      { relatedStep: currentStep, user: null },
-      { user: user._id }
-    ]
+    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
   });
 
   // 3. Marquer les notifications déjà lues
@@ -38,32 +43,53 @@ const getSmartNotificationsForUser = async (user) => {
   return [...smartNotifs, ...dbNotifsWithStatus];
 };
 
-const markAllAsRead = async (userId) => {
-  const notifications = await Notification.find();
+const markAllAsRead = async (user) => {
+  const currentStep = getUserPhase(user);
+  const notifications = await Notification.find({
+    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+  });
   const allIds = notifications.map((n) => n._id);
+
   return await User.findByIdAndUpdate(
-    userId,
+    user._id,
     { $addToSet: { readNotifications: { $each: allIds } } },
     { new: true },
   );
 };
 
-const markOneAsRead = async (userId, notificationId) => {
+const markOneAsRead = async (user, notificationId) => {
+  const currentStep = getUserPhase(user);
+  const notification = await Notification.findOne({
+    _id: notificationId,
+    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+  });
+
+  if (!notification) {
+    throw new Error("Notification non autorisee");
+  }
+
   return await User.findByIdAndUpdate(
-    userId,
+    user._id,
     { $addToSet: { readNotifications: notificationId } },
     { new: true },
   );
 };
 
-const deleteOneNotification = async (notificationId) => {
-  return await Notification.findByIdAndDelete(notificationId);
+const deleteOneNotification = async (notificationId, user) => {
+  if (user.role === "admin") {
+    return await Notification.findByIdAndDelete(notificationId);
+  }
+
+  return await Notification.findOneAndDelete({
+    _id: notificationId,
+    user: user._id,
+  });
 };
 
-module.exports = { 
-  getNotificationsByStep, 
+module.exports = {
+  getNotificationsByStep,
   getSmartNotificationsForUser,
   markAllAsRead,
   markOneAsRead,
-  deleteOneNotification
+  deleteOneNotification,
 };

@@ -12,6 +12,9 @@ import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import "./AdminSidebar.css";
 
+const studentPortalWelcomeUrl =
+  import.meta.env.VITE_STUDENT_PORTAL_URL || "http://localhost:5173/welcome";
+
 const AdminSidebar = ({ isOpen, onClose }) => {
   const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -56,17 +59,17 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         </div>
 
         <nav className="sidebar-nav">
-          {navItems.map(({ path, icon: Icon, label }) => (
+          {navItems.map((item) => (
             <NavLink
-              key={path}
-              to={path}
+              key={item.path}
+              to={item.path}
               className={({ isActive }) =>
                 `sidebar-link ${isActive ? "sidebar-link--active" : ""}`
               }
               onClick={onClose}
             >
-              <Icon size={20} />
-              <span>{label}</span>
+              <item.icon size={20} />
+              <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -75,7 +78,9 @@ const AdminSidebar = ({ isOpen, onClose }) => {
           <button
             className="sidebar-action"
             onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
@@ -84,7 +89,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             className="sidebar-action sidebar-action--danger"
             onClick={() => {
               logout();
-              window.location.href = "http://localhost:5173/welcome";
+              window.location.href = studentPortalWelcomeUrl;
             }}
             aria-label="Logout from administrator account"
           >

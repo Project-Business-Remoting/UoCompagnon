@@ -1,18 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { 
-  getContents, 
+const {
+  getContents,
   addContent,
   updateContent,
   deleteContent,
-  getRelevantContents
+  getRelevantContents,
 } = require("../controllers/contentController");
-const { protect } = require("../middleware/authMiddleware");
+const { protect, adminProtect } = require("../middleware/authMiddleware");
 
-router.get("/", getContents);
+router.get("/", protect, getContents);
 router.get("/relevant", protect, getRelevantContents); // Auto-filtre par phase du user
-router.post("/", addContent);
-router.put("/:id", updateContent);
-router.delete("/:id", deleteContent);
+router.post("/", protect, adminProtect, addContent);
+router.put("/:id", protect, adminProtect, updateContent);
+router.delete("/:id", protect, adminProtect, deleteContent);
 
 module.exports = router;

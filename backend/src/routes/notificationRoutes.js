@@ -9,7 +9,7 @@ const {
 } = require("../controllers/notificationController");
 const { protect } = require("../middleware/authMiddleware");
 
-router.get("/", getNotifications); // Route existante (filtrage par ?step=)
+router.get("/", protect, getNotifications); // Route existante (filtrage par ?step=)
 router.get("/smart", protect, getSmartNotifications); // Notifications intelligentes
 router.put("/mark-read", protect, markAsRead); // Marquer toutes comme lues
 router.put("/mark-read/:id", protect, markOneAsRead); // Marquer une comme lue

@@ -1,16 +1,68 @@
-# React + Vite
+# Frontend Admin - UO-Compagnon
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application React/Vite du portail administrateur UO-Compagnon.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- Vite 8
+- React Router
+- Lucide React
+- Context API (auth, theme)
 
-## React Compiler
+## Scripts
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+```
 
-## Expanding the ESLint configuration
+## Variables d'environnement
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ce frontend supporte la variable suivante :
+
+```bash
+VITE_STUDENT_PORTAL_URL=http://localhost:5173/welcome
+```
+
+Elle est utilisee au logout admin pour rediriger vers le portail etudiant sans URL localhost hardcodee.
+
+### Quick start env
+
+```bash
+cp .env.example .env
+```
+
+Ensuite, adaptez la valeur selon votre environnement :
+
+- Local : `VITE_STUDENT_PORTAL_URL=http://localhost:5173/welcome`
+- Production : `VITE_STUDENT_PORTAL_URL=https://app.votre-domaine.com/welcome`
+
+## URLs Locales
+
+- Frontend admin: http://localhost:5174
+- Backend API: http://localhost:5001
+- Frontend etudiant: http://localhost:5173
+
+## Authentification et securite
+
+- L'authentification est geree via cookies HttpOnly emis par le backend.
+- Toutes les requetes API utilisent `credentials: include`.
+- Le client API gere les reponses JSON et non-JSON de facon robuste.
+- Les routes backend de modification de contenus sont protegees par role admin (RBAC).
+
+## Fonctionnalites principales
+
+- Dashboard admin: metriques globales de la plateforme.
+- Gestion des contenus: CRUD complet des contenus (titre, categorie, etape, priorite).
+- Gestion des questions: visualisation des questions directes/anonymes et reponse aux etudiants.
+- Theme: mode clair/sombre pour le confort d'utilisation.
+
+## Structure principale
+
+- `src/pages`: ecrans admin (login, dashboard, contenus, questions)
+- `src/components/layout`: layout admin (sidebar, topbar)
+- `src/context`: AuthContext, ThemeContext
+- `src/services/api.js`: appels API

@@ -37,6 +37,10 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 - **Authentification par Cookies HttpOnly** : Les tokens JWT ont été migrés des `localStorage` vulnérables du frontend vers des cookies sécurisés `HttpOnly` / `SameSite=Strict`. C'est le backend qui injecte et lit ce cookie pour pré-venir toute faille XSS.
 - **CORS Sécurisé** : Le serveur accepte explicitement les credentials (`credentials: true`) des origines de nos deux frontends, rejetant toute requête externe.
 - **Validation d'entreprise** : Règle Regex stricte sur le domaine `@uottawa.ca` pour les inscriptions académiques.
+- **Protection API** : Middleware `helmet` actif, limitation de débit (`express-rate-limit`) sur login/register, et limite de taille JSON (`100kb`).
+- **RBAC stricte** : Les routes de contenus en écriture (POST/PUT/DELETE) sont réservées aux admins. Les étudiants restent en lecture seule.
+- **Isolation des notifications** : Un étudiant ne peut supprimer que ses notifications personnelles, jamais celles d'un autre utilisateur.
+- **Audit dépendances backend** : Vérifié sans vulnérabilité connue via `npm audit --omit=dev`.
 
 ---
 
@@ -54,6 +58,33 @@ docker-compose up --build -d
 Cela démarrera le Backend sur le port `5001` et une instance MongoDB liée.
 
 ### Lancement en mode Développement (Local)
+
+Configurez d'abord les variables backend :
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Variables importantes : `JWT_SECRET`, `JWT_EXPIRES_IN`, `COOKIE_MAX_AGE_MS`, `CORS_ORIGINS`, `MONGO_URI`
+
+Configurez ensuite les variables frontend :
+
+```bash
+# frontend-student/.env
+VITE_ADMIN_PORTAL_URL=http://localhost:5174
+
+# frontend-admin/.env
+VITE_STUDENT_PORTAL_URL=http://localhost:5173/welcome
+```
+
+Resume rapide (copier/coller) :
+
+```bash
+cd backend && cp .env.example .env
+cd ../frontend-student && cp .env.example .env
+cd ../frontend-admin && cp .env.example .env
+```
 
 Pour lancer l'ensemble du projet avec Hot-Reload, ouvrez **3 terminaux** :
 
@@ -84,6 +115,30 @@ Pour créer un administrateur sur mesure de façon sécurisée (sans route publi
 node backend/scripts/create-admin.js <email> <password> "<Nom_Complet>"
 ```
 
+### Passage en Production (Checklist)
+
+1. **Configurer les environnements**
+   - Backend : `NODE_ENV=production`, `JWT_SECRET` fort, `MONGO_URI` managé, `CORS_ORIGINS` limité aux domaines réels.
+   - Frontends : définir `VITE_ADMIN_PORTAL_URL` et `VITE_STUDENT_PORTAL_URL` selon vos URLs publiques.
+2. **Build des frontends**
+   - `cd frontend-student && npm ci && npm run build`
+   - `cd frontend-admin && npm ci && npm run build`
+3. **Lancer le backend en service**
+   - `cd backend && npm ci && npm start` (ou via PM2/systemd selon votre infra).
+4. **Mettre un reverse proxy (Nginx/Caddy)**
+   - Terminaison TLS (HTTPS), routage `/api` vers backend, et cache statique pour `dist/`.
+5. **Valider la sécurité avant go-live**
+   - Vérifier CORS, cookies `Secure` en production, et refaire `npm audit --omit=dev`.
+
+### Scalabilité (Etat actuel et recommandations)
+
+- **Ce qui est déjà prêt** : architecture séparée backend + 2 frontends, RBAC route-level, rate limiting auth, CORS configurable, cookie auth sécurisée.
+- **Pour monter en charge** :
+  - Ajouter Redis pour cache et sessions techniques.
+  - Ajouter/valider les index MongoDB sur les champs les plus filtrés (step, user, status, dates).
+  - Activer monitoring + alerting (latence API, erreurs 5xx, charge DB).
+  - Placer le backend derrière un process manager et, à terme, un autoscaling horizontal.
+
 ---
 
 ## Frontend Administrateur
@@ -111,6 +166,7 @@ L'application étudiante (`/frontend-student`) propose une UI/UX dynamique, esth
 - **Support & Interaction (Q&A)** : FAQ, et module interactif "Poser une question" avec option d'anonymat pour préserver la confiance des nouveaux arrivants. Historique des échanges avec la scolarité.
 - **Centre de Notifications** : Notifications d'informations pures (Créées manuellement par l'admin) mixées avec des alertes Smart chronologiques. Badge de suivi non-lu/lu dynamique sur le panneau latéral.
 - **Options de Confort** : Application bilingue (FR/EN) à la volée via React Context API (sans rechargement) et Dark mode paramétrable par l'étudiant.
+- **Permissions renforcees** : Les etudiants ont un acces en lecture sur les contenus; les operations d'ecriture (CRUD) sont reservees aux administrateurs. Un etudiant peut supprimer uniquement ses notifications personnelles.
 
 ---
 
