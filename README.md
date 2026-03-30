@@ -1,188 +1,116 @@
-#  UO-Compagnon : L'Assistant Intelligent uOttawa
+# UO-Compagnon : L'Assistant Intelligent uOttawa
 
-UO-Compagnon est une plateforme numérique d'accompagnement conçue spécifiquement pour les étudiants internationaux de l’Université d'Ottawa. 
+UO-Compagnon est une plateforme numérique d'accompagnement conçue spécifiquement pour les étudiants internationaux de l’Université d'Ottawa.
 
 Contrairement à un portail classique, **UO-Compagnon est un système contextuel** : il réduit la surcharge cognitive en filtrant et en délivrant l'information de manière chronologique, selon le cycle de vie réel de l’étudiant.
 
 ---
 
-##  Le Moteur d'Intelligence (Phase System)
+## Le Moteur d'Intelligence (Phase System)
 
 L'application s'appuie sur un **Phase Engine** centralisé qui calcule en temps réel la position de l'étudiant dans son parcours universitaire.
 
 ### Les 4 Phases du Parcours :
+
 1.  **Avant l'arrivée** : Préparation, visa, logement, budget.
 2.  **Semaine d'accueil** : Arrivée à Ottawa, carte étudiante, uoZone, orientation.
 3.  **Premier mois** : Intégration académique, tutorat, vie sociale.
 4.  **Mi-session** : Réussite, GPA, examens, intégrité académique.
 
 ### Fonctionnement Intelligent :
-*   **Contenus Pertinents** : Chaque route API auto-détecte la phase de l'utilisateur via son token JWT et filtre les ressources pour ne montrer que ce qui est utile *maintenant* (avec historique de rattrapage).
-*   **Notifications Smart** : Le système génère des alertes dynamiques basées sur le timing (ex: *"Tes cours commencent dans 3 jours"*) fusionnées avec les notifications administratives de la base de données.
-*   **Progression Dynamique** : Un calcul précis en pourcentage (0-100%) suit l'évolution de l'étudiant tout au long du trimestre.
+
+- **Contenus Pertinents** : Chaque route API auto-détecte la phase de l'utilisateur (depuis son cookie de session) et filtre les ressources pour ne montrer que ce qui est utile _maintenant_ (avec historique de rattrapage).
+- **Notifications Smart** : Le système génère des alertes dynamiques basées sur le timing (ex: _"Tes cours commencent dans 3 jours"_), synchronisées parfaitement et persistées localement entre les différentes vues (Dashboard & Inbox).
 
 ---
 
-##  Architecture Technique
+## Architecture Technique & Sécurité
 
-Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) structurée en **3-tiers** pour une séparation nette des responsabilités :
-*   **Models** : Schémas Mongoose validés (dont validation `@uottawa.ca`).
-*   **Services** : Toute la logique métier et l'intelligence (PhaseService, DashboardService).
-*   **Controllers** : Gestion des requêtes et réponses API.
-*   **Middlewares** : Sécurité JWT et gestion des rôles (Student vs Admin).
+Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) structurée en **3-tiers** de manière professionnelle, séparant netement les espaces utilisateurs :
 
----
+- **Backend API** (`/backend`) : Logique métier, algorithme de phasing, et base de données.
+- **Frontend Étudiant** (`/frontend-student`) : Portail d'accompagnement dédié.
+- **Frontend Admin** (`/frontend-admin`) : Panneau de contrôle réservé au personnel uOttawa.
 
-##  Installation et Démarrage rapide
+### Sécurité Renforcée (Production-Grade)
 
-### 1. Configuration du Backend
-1.  `cd backend`
-2.  `npm install`
-3.  Crée un fichier `.env` :
-    ```env
-    PORT=5001
-    MONGODB_URI=mongodb://127.0.0.1:27017/uo_compagnon
-    JWT_SECRET=votre_cle_secrete_jwt
-    ```
-4.  **Initialiser la base intelligente** :
-    ```bash
-    node seed.js
-    ```
-
-### 2. Comptes de Test (Seed Data)
-| Rôle | Email | Mot de passe |
-|---|---|---|
-| **Étudiant** | `amara@uottawa.ca` | `password123` |
-| **Admin** | `admin@uottawa.ca` | `admin123` |
+- **Authentification par Cookies HttpOnly** : Les tokens JWT ont été migrés des `localStorage` vulnérables du frontend vers des cookies sécurisés `HttpOnly` / `SameSite=Strict`. C'est le backend qui injecte et lit ce cookie pour pré-venir toute faille XSS.
+- **CORS Sécurisé** : Le serveur accepte explicitement les credentials (`credentials: true`) des origines de nos deux frontends, rejetant toute requête externe.
+- **Validation d'entreprise** : Règle Regex stricte sur le domaine `@uottawa.ca` pour les inscriptions académiques.
 
 ---
 
-##  Documentation API
+## Installation & Déploiement
 
-###  Authentification & Utilisateurs
-| Méthode | Route | Description |
-|---|---|---|
-| `POST` | `/api/users/register` | Inscription d'un nouvel étudiant (validation @uottawa.ca). |
-| `POST` | `/api/users/login` | Connexion et génération du token JWT. |
-| `GET` | `/api/users/profile` | Récupère les infos du profil connecté (JWT requis). |
+### Déploiement Serveur (Docker)
 
-###  Endpoints Intelligents (Student Context)
-| Méthode | Route | Description |
-|---|---|---|
-| `GET` | `/api/dashboard` | **Endpoint central** : phase, progression, notifications et actions recommandé. |
-| `GET` | `/api/contents/relevant` | Liste de contenus auto-filtrée par phase et triée par priorité. |
-| `GET` | `/api/notifications/smart` | Mix de notifications dynamiques (calculées) et persistantes (DB). |
-
-###  Gestion des Contenus (CRUD)
-| Méthode | Route | Description |
-|---|---|---|
-| `GET` | `/api/contents` | Récupère tous les contenus (filtre optionnel `?step=`). |
-| `POST` | `/api/contents` | Création d'un contenu (**Admin requis**). |
-| `PUT` | `/api/contents/:id` | Modification d'un contenu (**Admin requis**). |
-| `DELETE` | `/api/contents/:id` | Suppression d'un contenu (**Admin requis**). |
-
-###  Notifications
-| Méthode | Route | Description |
-|---|---|---|
-| `GET` | `/api/notifications` | Récupère les notifications persistantes. |
-| `PUT` | `/api/notifications/mark-read` | Marque toutes les notifications comme lues pour le user. |
-| `PUT` | `/api/notifications/mark-read/:id` | Marque une notification spécifique comme lue. |
-
-###  Administration & Support
-| Méthode | Route | Description |
-|---|---|---|
-| `GET` | `/api/dashboard/admin` | Statistiques globales et fil d'actualité des questions récentes (**Admin requis**). |
-| `GET` | `/api/questions` | Liste de toutes les questions posées par les étudiants. |
-| `PUT` | `/api/questions/:id/answer` | Permet à l'admin de répondre à une question étudiante. |
-
----
-
-##  Developpement
-
-*   **Backend** : Node.js / Express / Mongoose
-*   **Frontend** : React 19 / Vite 8 / Vanilla CSS
-*   **Securite** : JWT (stockage localStorage), Bcryptjs
-*   **Validation** : Regex stricte sur le domaine @uottawa.ca
-*   **Localisation** : Application nativement en Anglais avec support bilingue FR/EN (Context API).
-*   **Theming** : Dark mode / Light mode avec persistance localStorage
-
----
-
-##  Frontend Student
-
-### Installation
-```bash
-cd frontend-student
-npm install
-npm run dev    # Demarre sur http://localhost:5173
-```
-
-### Architecture
-```
-src/
-  services/api.js              # Wrapper API avec injection JWT
-  context/AuthContext.jsx       # Gestion authentification
-  context/LangContext.jsx       # Systeme i18n FR/EN
-  context/ThemeContext.jsx      # Dark mode / Light mode
-  components/layout/Sidebar.jsx # Navigation laterale
-  components/layout/Layout.jsx  # Layout principal (sidebar + contenu)
-  components/dashboard/PhaseStepper.jsx # Stepper visuel des 4 phases
-  pages/Login.jsx               # Page de connexion
-  pages/Register.jsx            # Page d'inscription
-  pages/Dashboard.jsx           # Dashboard intelligent
-  pages/JourneyHub.jsx          # Hub des contenus filtres par phase
-  pages/ContentDetail.jsx       # Page de detail d'un contenu
-  pages/Notifications.jsx       # Notifications smart + systeme
-  pages/Profile.jsx             # Profil utilisateur et preferences
-  i18n/fr.json                  # Traductions francaises
-  i18n/en.json                  # Traductions anglaises
-  index.css                     # Design System "Garnet & Glass"
-```
-
-### Pages disponibles
-| Route | Page | Description |
-|---|---|---|
-| `/login` | Connexion | Email + mot de passe, lien admin, lien inscription |
-| `/register` | Inscription | Nom, email, programme, dates, mot de passe |
-| `/dashboard` | Tableau de bord | Stepper phases, progression, contenus prioritaires, notifications |
-| `/hub` | Mes Contenus | Grille filtrable par categorie, clic vers detail |
-| `/hub/:id` | Detail Contenu | Description complete, services, contacts, tags |
-| `/notifications` | Notifications | Smart (dynamiques) + Systeme (DB), marquer comme lu |
-| `/profile` | Mon Profil | Infos, dates, phase actuelle, preferences (theme, langue) |
-
-### Design System "Garnet & Glass"
-| Token | Hex | Usage |
-|---|---|---|
-| Primary | `#D0103A` | Boutons, accents, stepper |
-| Secondary | `#424242` | Textes, sidebar |
-| Tertiary | `#007574` | Badges, liens |
-| Neutral | `#F5F5F5` | Fonds de page |
-
-Le proxy Vite redirige automatiquement `/api` vers le backend (port 5001).
-
----
-
-##  Lancement complet
-
-Pour lancer l'ensemble du projet, ouvrir **3 terminaux** :
+L'application backend est dockerisée et orchestrable.
+À la racine du projet, lancez MongoDB et le Backend en un clic :
 
 ```bash
-# Terminal 1 : Backend
+docker-compose up --build -d
+```
+
+Cela démarrera le Backend sur le port `5001` et une instance MongoDB liée.
+
+### Lancement en mode Développement (Local)
+
+Pour lancer l'ensemble du projet avec Hot-Reload, ouvrez **3 terminaux** :
+
+```bash
+# Terminal 1 : Backend  (http://localhost:5001)
 cd backend && npm start
 
-# Terminal 2 : Frontend Student
+# Terminal 2 : Frontend Étudiant (http://localhost:5173)
 cd frontend-student && npm run dev
 
-# Terminal 3 : Frontend Admin
+# Terminal 3 : Frontend Admin (http://localhost:5174)
 cd frontend-admin && npm run dev
 ```
 
-### Script de Création d'Administrateur
-Pour des raisons de sécurité, l'inscription "Admin" n'est pas ouverte au public. Utilisez ce script interactif depuis le terminal (dans le dossier `backend`) :
+### Comptes de Test (Seed Data)
+
+Pour initialiser la base avec des données de test (contenus et comptes), exécutez dans le `backend/` :
+`node seed.js`
+
+| Rôle                | Email              | Mot de passe  |
+| ------------------- | ------------------ | ------------- |
+| **Étudiant (Test)** | `amara@uottawa.ca` | `password123` |
+| **Admin (Test)**    | `admin@uottawa.ca` | `admin123`    |
+
+Pour créer un administrateur sur mesure de façon sécurisée (sans route publique) :
+
 ```bash
-node scripts/create-admin.js <email> <password> "<Nom_Complet>"
+node backend/scripts/create-admin.js <email> <password> "<Nom_Complet>"
 ```
 
 ---
-*Projet developpe pour l'integration numerique des etudiants internationaux a l'Universite d'Ottawa.*
 
+## Frontend Administrateur
+
+Le portail (`/frontend-admin`) est dédié au personnel de uOttawa pour piloter la plateforme en temps réel, analyser les statistiques et répondre aux étudiants.
+
+### Fonctionnalités
+
+- **Dashboard** : Vue globale sur les métriques (étudiants inscrits, nouveaux utilisateurs de la journée, récapitulatif des questions posées).
+- **Content Management** : Hub complet (CRUD) intuitif pour créer, éditer et classifier les fiches d'information associées aux phases des étudiants et leur assigner une priorité (`High/Medium/Low`).
+- **Questions Management** : Interface de support permettant de répondre aux interrogations (Qu'elles soient "Directes" ou "Anonymes" par choix de l'étudiant). Lorsqu'une réponse est soumise, l'étudiant reçoit immédiatement une Notification web.
+- **Interface Moderne** : Design system épuré propre à l'administration, incluant Dark Mode persistant et gestion de session via cookies de la même manière que pour l'étudiant.
+
+---
+
+## Frontend Étudiant
+
+L'application étudiante (`/frontend-student`) propose une UI/UX dynamique, esthétique et rassurante ("Garnet & Glass").
+
+### Fonctionnalités Clés
+
+- **Dashboard Contextuel** : Barre de progression (Stepper graphique 0-100%), mise en avant des "Contenus Prioritaires" selon la phase actuelle détectée, et alertes urgentes (ex: Rappel d'intégrité académique à la mi-session).
+- **Hub d'Information** : Librairie de la totalité des fiches administratives/académiques indexées.
+- **Support & Interaction (Q&A)** : FAQ, et module interactif "Poser une question" avec option d'anonymat pour préserver la confiance des nouveaux arrivants. Historique des échanges avec la scolarité.
+- **Centre de Notifications** : Notifications d'informations pures (Créées manuellement par l'admin) mixées avec des alertes Smart chronologiques. Badge de suivi non-lu/lu dynamique sur le panneau latéral.
+- **Options de Confort** : Application bilingue (FR/EN) à la volée via React Context API (sans rechargement) et Dark mode paramétrable par l'étudiant.
+
+---
+
+_Projet développé pour faciliter l'intégration numérique et culturelle des étudiants internationaux à l'Université d'Ottawa._
