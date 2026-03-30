@@ -123,7 +123,7 @@ const Notifications = () => {
                 <span className={`notifs-dot notifs-dot--${notif.type}`} />
                 <div className="notifs-item-content">
                   <div className="notifs-item-top">
-                    <h3 className="notifs-item-title">{notif.title}</h3>
+                    <h2 className="notifs-item-title">{notif.title}</h2>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       <span className={`badge ${notif.isSmartNotification ? 'badge-tertiary' : 'badge-info'}`}>
                         {notif.isSmartNotification

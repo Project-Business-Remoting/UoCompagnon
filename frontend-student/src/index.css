@@ -1,10 +1,10 @@
 /* ===== UO-Compagnon Design System — Garnet & Glass ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* --- Light Mode (default) --- */
 :root {
-  --primary: #8F001A;
+  --primary: #8f001a;
   --primary-hover: #700014;
   --primary-light: rgba(143, 0, 26, 0.08);
   --primary-border: rgba(143, 0, 26, 0.2);
@@ -13,24 +13,26 @@
   --tertiary: #007574;
   --tertiary-light: rgba(0, 117, 116, 0.08);
 
-  --bg-color: #F5F5F5;
-  --bg-card: #FFFFFF;
-  --bg-input: #FFFFFF;
+  --bg-color: #f5f5f5;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
 
-  --text-main: #1f2937;
-  --text-muted: #5e6675;
-  --text-inverse: #FFFFFF;
+  --text-main: #111827;
+  --text-muted: #4b5563;
+  --text-inverse: #ffffff;
 
   --border-color: #e5e7eb;
   --border-input: #d1d5db;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
 
   --sidebar-bg: var(--primary);
-  --sidebar-text: rgba(255, 255, 255, 0.65);
-  --sidebar-text-active: #FFFFFF;
+  --sidebar-text: rgba(255, 255, 255, 0.85);
+  --sidebar-text-active: #ffffff;
   --sidebar-active-bg: #6a0013;
   --sidebar-w: 260px;
 
@@ -42,41 +44,52 @@
   --transition: all 0.2s ease;
 
   /* Notification colors */
-  --info: #3b82f6;
-  --info-light: rgba(59, 130, 246, 0.1);
-  --warning: #f59e0b;
-  --warning-light: rgba(245, 158, 11, 0.1);
-  --success: #10b981;
-  --success-light: rgba(16, 185, 129, 0.1);
+  --info: #1d4ed8;
+  --info-light: rgba(29, 78, 216, 0.1);
+  --warning: #b45309;
+  --warning-light: rgba(180, 83, 9, 0.1);
+  --success: #059669;
+  --success-light: rgba(5, 150, 105, 0.1);
 }
 
 /* --- Dark Mode --- */
 .dark {
-  --bg-color: #0f0f1a;
-  --bg-card: #1a1a2e;
-  --bg-input: #1e1e36;
+  --bg-color: #06080d;
+  --bg-card: #11151d;
+  --bg-input: #0c1017;
 
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
+  --text-main: #e4e7ee;
+  --text-muted: #97a0af;
 
-  --border-color: #2e303a;
-  --border-input: #3f4156;
+  --border-color: #232a36;
+  --border-input: #2e3745;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
 
-  --sidebar-bg: linear-gradient(180deg, #4A000D 0%, #1A0005 100%);
+  --sidebar-bg: #0d1118;
+  --sidebar-active-bg: #1a2130;
 
-  --primary-light: rgba(143, 0, 26, 0.15);
-  --tertiary-light: rgba(0, 117, 116, 0.15);
-  --info-light: rgba(59, 130, 246, 0.15);
-  --warning-light: rgba(245, 158, 11, 0.15);
-  --success-light: rgba(16, 185, 129, 0.15);
+  --primary: #8f001a;
+  --primary-hover: #b00020;
+  --primary-light: rgba(143, 0, 26, 0.24);
+  --primary-border: rgba(143, 0, 26, 0.45);
+  --tertiary-light: rgba(0, 117, 116, 0.2);
+  --info: #3b82f6;
+  --info-light: rgba(59, 130, 246, 0.2);
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.2);
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.2);
 }
 
 /* --- Reset & Base --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -88,13 +101,21 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 a {
@@ -110,12 +131,28 @@ button {
   transition: var(--transition);
 }
 
-img { max-width: 100%; }
+img {
+  max-width: 100%;
+}
 
 /* --- Typography --- */
-h1 { font-size: 1.875rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
-h2 { font-size: 1.25rem; font-weight: 600; color: var(--text-main); line-height: 1.3; }
-h3 { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
 
 /* --- Utility Classes --- */
 .card {
@@ -289,6 +326,10 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-main); }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  h1 { font-size: 1.5rem; }
-  .card { padding: 1rem; }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 1rem;
+  }
 }

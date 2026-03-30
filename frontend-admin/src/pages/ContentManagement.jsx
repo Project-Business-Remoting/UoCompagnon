@@ -149,10 +149,10 @@ const ContentManagement = () => {
                     </span>
                   </td>
                   <td className="td-actions">
-                    <button className="action-btn action-edit" onClick={() => openEditModal(content)} title="Edit">
+                    <button className="action-btn action-edit" onClick={() => openEditModal(content)} aria-label="Edit Content" title="Edit">
                       <Edit size={16} />
                     </button>
-                    <button className="action-btn action-delete" onClick={() => handleDelete(content._id)} title="Delete">
+                    <button className="action-btn action-delete" onClick={() => handleDelete(content._id)} aria-label="Delete Content" title="Delete">
                       <Trash2 size={16} />
                     </button>
                   </td>
@@ -169,7 +169,7 @@ const ContentManagement = () => {
           <div className="modal-content card">
             <div className="modal-header">
               <h2>{editingId ? 'Edit Content' : 'New Content'}</h2>
-              <button className="modal-close" onClick={closeModal}><X size={20} /></button>
+              <button className="modal-close" aria-label="Close modal" onClick={closeModal}><X size={20} /></button>
             </div>
             
             {error && <div className="error-message mb-4">{error}</div>}

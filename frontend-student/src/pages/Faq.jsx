@@ -43,7 +43,7 @@ const Faq = () => {
             onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)' }}>{faq.q}</h3>
+              <h2 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)' }}>{faq.q}</h2>
               {openIndex === idx ? <ChevronUp size={20} color="var(--primary)" /> : <ChevronDown size={20} color="var(--text-muted)" />}
             </div>
             {openIndex === idx && (

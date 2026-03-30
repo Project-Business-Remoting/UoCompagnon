@@ -72,7 +72,7 @@ const JourneyHub = () => {
               onClick={() => navigate(`/hub/${content._id}`)}
             >
               <div className="hub-card-header">
-                <h3 className="hub-card-title">{content.title}</h3>
+                <h2 className="hub-card-title">{content.title}</h2>
                 <span className={`badge ${content.priority === 'High' ? 'badge-primary' : content.priority === 'Medium' ? 'badge-warning' : 'badge-tertiary'}`}>
                   {content.priority}
                 </span>

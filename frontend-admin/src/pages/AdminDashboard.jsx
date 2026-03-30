@@ -117,7 +117,7 @@ const AdminDashboard = () => {
           <div className="modal-content card admin-user-modal">
             <div className="modal-header">
               <h2>Student Profile</h2>
-              <button className="modal-close" onClick={() => setSelectedUser(null)}><X size={20} /></button>
+              <button className="modal-close" aria-label="Close modal" onClick={() => setSelectedUser(null)}><X size={20} /></button>
             </div>
             <div className="admin-user-details">
               <div className="admin-user-avatar">{selectedUser.name.charAt(0)}</div>

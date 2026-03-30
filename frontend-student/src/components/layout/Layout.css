@@ -42,9 +42,19 @@
 }
 
 .layout-mobile-logo {
-  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-main);
+}
+
+.layout-mobile-logo-image {
+  width: 36px;
+  height: 24px;
+  border-radius: 7px;
+  object-fit: cover;
 }
 
 /* --- Responsive --- */

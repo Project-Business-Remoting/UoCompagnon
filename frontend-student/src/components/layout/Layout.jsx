@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Menu } from 'lucide-react';
-import Sidebar from './Sidebar';
-import { fetchDashboard } from '../../services/api';
-import { processNotifications } from '../../utils/notificationUtils';
-import './Layout.css';
+import { Menu } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import logoImg from "../../assets/logo.png";
+import { fetchDashboard } from "../../services/api";
+import { processNotifications } from "../../utils/notificationUtils";
+import "./Layout.css";
+import Sidebar from "./Sidebar";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,10 +18,11 @@ const Layout = () => {
         // Combiner système (unread) et smart pour calculer le total réel
         const allNotifs = [
           ...(data.notifications?.system || []),
-          ...(data.notifications?.smart || [])
+          ...(data.notifications?.smart || []),
         ];
         const { unreadCount } = processNotifications(allNotifs);
         setNotificationCount(unreadCount);
+      // eslint-disable-next-line no-unused-vars
       } catch (err) {
         // Silencieux — le badge sera juste à 0
       }
@@ -47,7 +49,12 @@ const Layout = () => {
             <Menu size={24} />
           </button>
           <span className="layout-mobile-logo">
-            <span style={{ color: 'var(--primary)' }}>UO</span>-Compagnon
+            <img
+              src={logoImg}
+              alt="UO-Compagnon logo"
+              className="layout-mobile-logo-image"
+            />
+            <span>UO-Compagnon</span>
           </span>
         </header>
 
