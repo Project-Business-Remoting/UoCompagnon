@@ -105,6 +105,7 @@ L'application étudiante (`/frontend-student`) propose une UI/UX dynamique, esth
 
 ### Fonctionnalités Clés
 
+- **Welcome Page Refontee** : Landing moderne avec acces direct a la connexion et a l'inscription. Le bouton "See demo" a ete retire car aucune demo n'est exposee dans l'application.
 - **Dashboard Contextuel** : Barre de progression (Stepper graphique 0-100%), mise en avant des "Contenus Prioritaires" selon la phase actuelle détectée, et alertes urgentes (ex: Rappel d'intégrité académique à la mi-session).
 - **Hub d'Information** : Librairie de la totalité des fiches administratives/académiques indexées.
 - **Support & Interaction (Q&A)** : FAQ, et module interactif "Poser une question" avec option d'anonymat pour préserver la confiance des nouveaux arrivants. Historique des échanges avec la scolarité.

@@ -7,13 +7,12 @@ import {
   Lock,
   MapPin,
   Moon,
-  Play,
   Sun,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoImg from "../assets/logo.png";
 import { useLang } from "../context/LangContext";
 import { useTheme } from "../context/ThemeContext";
-import logoImg from "../assets/logo.png";
 import "./Welcome.css";
 
 const copy = {
@@ -28,7 +27,6 @@ const copy = {
     heroDesc:
       "UO-Compagnon t'accompagne a chaque etape de ton parcours universitaire du visa a la mi-session avec les bonnes informations, au bon moment.",
     startFree: "Commencer gratuitement",
-    seeDemo: "Voir la demo",
     phases: [
       {
         title: "Avant l'arrivee",
@@ -99,7 +97,6 @@ const copy = {
     heroDesc:
       "UO-Compagnon supports every step of your university journey from visa prep to midterms with the right information at the right time.",
     startFree: "Get started for free",
-    seeDemo: "See demo",
     phases: [
       {
         title: "Before arrival",
@@ -239,9 +236,6 @@ const Welcome = () => {
             <Link className="lp-btn-primary" to="/register">
               {ui.startFree} <ArrowRight size={16} />
             </Link>
-            <a className="lp-btn-secondary" href="#features">
-              <Play size={16} /> {ui.seeDemo}
-            </a>
           </div>
         </section>
 
