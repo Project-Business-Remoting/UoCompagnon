@@ -95,4 +95,16 @@
 @media (max-width: 768px) {
   .admin-stats { grid-template-columns: 1fr; }
   .admin-grid { grid-template-columns: 1fr; }
+  .admin-grid-v2 { grid-template-columns: 1fr; }
+
+  .admin-stat-card {
+    gap: 1rem;
+  }
+
+  .admin-list-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
 }
+

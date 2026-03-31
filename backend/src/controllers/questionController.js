@@ -1,6 +1,7 @@
 const Question = require('../models/Question');
 const Notification = require('../models/Notification');
 const User = require('../models/User');
+const { getIO } = require('../config/socket');
 
 const createQuestion = async (req, res) => {
   try {
@@ -16,6 +17,21 @@ const createQuestion = async (req, res) => {
       author: req.user._id,
       isAnonymous: Boolean(isAnonymous)
     });
+
+ 
+    try {
+      const io = getIO();
+      io.to('admins').emit('new-question', {
+        _id: question._id,
+        subject: question.subject,
+        author: isAnonymous ? 'Anonymous' : req.user.name,
+        type: isAnonymous ? 'Anonymous' : 'Direct',
+        status: 'Pending',
+        createdAt: question.createdAt,
+      });
+    } catch (socketErr) {
+      console.error('[Socket.IO] Failed to emit new-question:', socketErr.message);
+    }
 
     res.status(201).json(question);
   } catch (err) {
@@ -39,9 +55,7 @@ const getAllQuestions = async (req, res) => {
       .populate('author', 'name email program')
       .sort({ createdAt: -1 });
     
-    // For anonymous questions, we can choose to mask the author on the backend optionally.
-    // However, it's easier to fetch everything and mask it on the frontend admin UI 
-    // to keep the frontend logic clean and allow DB consistency.
+ 
     res.json(questions);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch all questions', error: err.message });
@@ -66,14 +80,31 @@ const replyToQuestion = async (req, res) => {
     question.status = 'Answered';
     await question.save();
 
-    // Create a private notification for the student
-    await Notification.create({
+  
+    const notification = await Notification.create({
       user: question.author,
       title: 'Reply to your question',
       message: `An administrator has answered your question: "${question.subject}"`,
       type: 'info',
-      relatedStep: 'Support'
+      relatedStep: 'Support',
+      actionUrl: question.isAnonymous ? '/anonymous-questions' : '/direct-questions'
     });
+
+    // Envoyer les notifications aux étudiants en temp-réel
+    try {
+      const io = getIO();
+      io.to(`user:${question.author}`).emit('new-notification', {
+        _id: notification._id,
+        title: notification.title,
+        message: notification.message,
+        type: notification.type,
+        relatedStep: notification.relatedStep,
+        date: notification.date,
+        actionUrl: notification.actionUrl,
+      });
+    } catch (socketErr) {
+      console.error('[Socket.IO] Failed to emit new-notification:', socketErr.message);
+    }
 
     res.json(question);
   } catch (err) {

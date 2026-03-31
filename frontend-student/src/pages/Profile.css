@@ -124,4 +124,18 @@
   .profile-grid {
     grid-template-columns: 1fr;
   }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    margin: 0 auto;
+  }
+
+  .profile {
+    padding: 1.25rem 0.75rem;
+  }
 }
+

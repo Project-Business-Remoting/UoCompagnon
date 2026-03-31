@@ -120,4 +120,20 @@
   .notifs-header {
     flex-direction: column;
   }
+
+  .notifs-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .notifs-item-actions {
+    align-self: flex-end;
+  }
+
+  .notifs-item-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
+

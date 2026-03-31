@@ -20,7 +20,8 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error(error);
+      // On ne loggue pas l'erreur complète pour ne pas spammer la console avec "invalid signature"
+      // lors des conflits de cookies entre étudiant/admin sur localhost.
       return res.status(401).json({ message: "Non autorisé, token invalide" });
     }
   } else {

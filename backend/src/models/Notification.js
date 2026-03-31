@@ -12,6 +12,7 @@ const notificationSchema = new mongoose.Schema(
       default: "info",
     },
     relatedStep: { type: String, required: true },
+    actionUrl: { type: String },
   },
   { timestamps: true },
 );

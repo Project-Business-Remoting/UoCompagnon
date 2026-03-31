@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, FileText, Bell, X, Calendar, BookOpen, Clock, ArrowRight } from 'lucide-react';
 import { fetchAdminDashboard } from '../services/api';
+import useSocket from '../hooks/useSocket';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -23,6 +24,24 @@ const AdminDashboard = () => {
     };
     load();
   }, []);
+
+  // Écoute des nouvelles questions pour mettre à jour la liste en temps réel
+  useSocket({
+    onQuestion: (newQuestion) => {
+      setData((prevData) => {
+        // Si les données ne sont pas encore chargées, on ne fait rien
+        if (!prevData) return prevData;
+        // Éviter les doublons
+        if (prevData.recentQuestions?.some(q => q._id === newQuestion._id)) {
+          return prevData;
+        }
+        return {
+          ...prevData,
+          recentQuestions: [newQuestion, ...(prevData.recentQuestions || [])],
+        };
+      });
+    },
+  });
 
   if (loading) return <div className="loading-screen">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;

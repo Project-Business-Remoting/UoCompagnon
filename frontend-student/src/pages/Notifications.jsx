@@ -1,6 +1,6 @@
 import { CheckCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { useLang } from "../context/LangContext";
 import {
   deleteNotification,
@@ -23,6 +23,7 @@ const Notifications = () => {
   const { t } = useLang();
   const contextParams = useOutletContext();
   const setNotificationCount = contextParams?.setNotificationCount;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -133,6 +134,12 @@ const Notifications = () => {
             <div
               key={notif._id}
               className={`card notifs-item ${notif.isRead ? "notifs-item--read" : ""}`}
+              style={{ cursor: notif.actionUrl ? 'pointer' : 'default', transition: 'transform 0.2s, box-shadow 0.2s' }}
+              onClick={() => {
+                if (notif.actionUrl) {
+                  navigate(notif.actionUrl);
+                }
+              }}
             >
               <div className="notifs-item-left">
                 <span className={`notifs-dot notifs-dot--${notif.type}`} />
@@ -199,7 +206,10 @@ const Notifications = () => {
                 {!notif.isRead && (
                   <button
                     className="notifs-mark-btn"
-                    onClick={() => handleMarkRead(notif._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMarkRead(notif._id);
+                    }}
                     title={t("notifications.markRead")}
                   >
                     <CheckCircle size={18} />
@@ -211,7 +221,10 @@ const Notifications = () => {
                     color: "var(--danger)",
                     background: "var(--danger-light)",
                   }}
-                  onClick={() => handleDelete(notif._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(notif._id);
+                  }}
                   title={t("notifications.delete")}
                 >
                   <Trash2 size={16} />

@@ -1,10 +1,12 @@
 const express = require("express");
+const http = require("http");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("./src/config/db");
+const { initSocket } = require("./src/config/socket");
 
 // Chargement des variables d'environnement
 dotenv.config();
@@ -13,6 +15,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const httpServer = http.createServer(app);
 
 const allowedOrigins = (
   process.env.CORS_ORIGINS || "http://localhost:5173,http://localhost:5174"
@@ -20,6 +23,9 @@ const allowedOrigins = (
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+
+// Initialisation de Socket.IO
+initSocket(httpServer, allowedOrigins);
 
 const authRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -59,6 +65,8 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`[Socket.IO] WebSocket server ready`);
 });
+

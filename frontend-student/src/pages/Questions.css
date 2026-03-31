@@ -55,3 +55,29 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .questions-page {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .questions-title {
+    font-size: 1.35rem;
+  }
+
+  .questions-desc {
+    font-size: 0.9rem;
+  }
+
+  .form-card {
+    padding: 1rem;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+

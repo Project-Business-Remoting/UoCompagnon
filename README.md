@@ -42,6 +42,19 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 - **Isolation des notifications** : Un étudiant ne peut supprimer que ses notifications personnelles, jamais celles d'un autre utilisateur.
 - **Audit dépendances backend** : Vérifié sans vulnérabilité connue via `npm audit --omit=dev`.
 
+### Temps Réel & WebSockets (Socket.IO)
+
+- **Bidirectionnel & Instantané** : Intégration d'un serveur natif HTTP Node.js couplé à `Socket.IO` permettant la communication immédiate (full-duplex) entre les étudiants et les administrateurs.
+- **Système de "Rooms" Privées** : Dès la connexion, chaque étudiant rejoint automatiquement une *Room Socket* sécurisée par son ID (`user:<id>`), garantissant que les réponses sensibles (Directes) ne sont émises qu'au destinataire. Tous les administrateurs écoutent la "Room" globale `admins`.
+- **Alertes Sonores & Visuelles** : Web Audio API embarquée dans le Frontend générant des sons de confirmation non-intrusifs à la réception d'une notification (combinant un pop-up "Toast" dynamique avec navigation interactive).
+- **Auto-Synchronisation React** : Hooks personnalisés (`useSocket`) empêchant les "stale closures" (rafraîchissement direct des tableaux de bord Dashboard/Questions sans aucun rechargement de page Web ni polling intensif).
+
+### Responsive Design (Mobile-First approach adaptatif)
+
+- **Audit Multi-écrans** : Les deux plateformes frontends garantissent une interface fluide sur appareils mobiles (Tablettes & Smartphones).
+- **Interface Admin Hybride** : Le panneau de gestion des questions s'adapte contextuellement (Tableau classique sur grand écran, et affichage en "Cartes tactiles empilées" sur très petits écrans).
+- **Grilles Dynamiques** : Les dashboards (étudiant et admin) passent gracieusement d'un système multi-colonnes à une vue en flux de données unique (`1fr`) sous la barre des `768px`.
+
 ---
 
 ## Installation & Déploiement
