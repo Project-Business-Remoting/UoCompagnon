@@ -126,7 +126,7 @@ const getAdminDashboard = async () => {
     recentQuestions: recentQuestions.map(q => ({
       _id: q._id,
       subject: q.subject,
-      author: q.isAnonymous ? 'Anonymous' : (q.author?.name || 'Unknown'),
+      author: q.isAnonymous ? { name: 'Anonymous' } : { name: q.author?.name || 'Unknown' },
       status: q.status,
       createdAt: q.createdAt,
       type: q.isAnonymous ? 'Anonymous' : 'Direct'

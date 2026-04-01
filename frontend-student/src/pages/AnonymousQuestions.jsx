@@ -2,6 +2,7 @@ import { ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLang } from "../context/LangContext";
 import { createQuestion, getMyQuestions } from "../services/api";
+import useSocket from "../hooks/useSocket";
 import "./Questions.css";
 
 const AnonymousQuestions = () => {
@@ -12,6 +13,18 @@ const AnonymousQuestions = () => {
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
   const { t } = useLang();
+
+  useSocket({
+    onQuestionReplied: (updatedQuestion) => {
+      // Ignorer si la question reçue d'un websocket n'est pas anonyme (car on est sur la page anonyme)
+      if (!updatedQuestion.isAnonymous) return;
+      setQuestions((prevQuestions) =>
+        prevQuestions.map((q) =>
+          q._id === updatedQuestion._id ? updatedQuestion : q
+        )
+      );
+    },
+  });
 
   useEffect(() => {
     loadQuestions();

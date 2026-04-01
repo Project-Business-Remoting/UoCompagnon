@@ -25,9 +25,10 @@ const Layout = () => {
   // WebSocket: listen for new questions from students
   useSocket({
     onQuestion: (data) => {
+      const displayAuthor = data.authorName || data.author?.name || (typeof data.author === 'string' ? data.author : 'Étudiant');
       addToast({
         title: "Nouveau message",
-        message: `De : ${data.author}`,
+        message: `De : ${displayAuthor}`,
         type: data.type === "Anonymous" ? "warning" : "info",
         onClick: () => navigate("/questions"),
       });

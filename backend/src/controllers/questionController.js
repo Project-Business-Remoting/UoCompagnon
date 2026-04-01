@@ -18,16 +18,17 @@ const createQuestion = async (req, res) => {
       isAnonymous: Boolean(isAnonymous)
     });
 
+    await question.populate('author', 'name email program');
  
     try {
       const io = getIO();
+      // On envoie l'objet en format compatible avec ce que le frontend attend (peuplé)
       io.to('admins').emit('new-question', {
-        _id: question._id,
-        subject: question.subject,
-        author: isAnonymous ? 'Anonymous' : req.user.name,
+        ...question.toObject(),
+        author: isAnonymous ? { name: 'Anonymous' } : question.author,
+        authorName: isAnonymous ? 'Anonymous' : (question.author?.name || 'Étudiant'),
         type: isAnonymous ? 'Anonymous' : 'Direct',
-        status: 'Pending',
-        createdAt: question.createdAt,
+        status: 'Pending'
       });
     } catch (socketErr) {
       console.error('[Socket.IO] Failed to emit new-question:', socketErr.message);
@@ -102,6 +103,9 @@ const replyToQuestion = async (req, res) => {
         date: notification.date,
         actionUrl: notification.actionUrl,
       });
+      
+      // On émet aussi la question modifiée pour la mise à jour instantanée de la vue
+      io.to(`user:${question.author}`).emit('question-replied', question);
     } catch (socketErr) {
       console.error('[Socket.IO] Failed to emit new-notification:', socketErr.message);
     }

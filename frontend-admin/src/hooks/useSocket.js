@@ -9,6 +9,12 @@ import { io } from "socket.io-client";
 const useSocket = ({ onNotification, onQuestion } = {}) => {
   const socketRef = useRef(null);
 
+  const callbacksRef = useRef({ onNotification, onQuestion });
+
+  useEffect(() => {
+    callbacksRef.current = { onNotification, onQuestion };
+  }, [onNotification, onQuestion]);
+
   useEffect(() => {
     const socket = io(window.location.origin, {
       withCredentials: true,
@@ -23,12 +29,12 @@ const useSocket = ({ onNotification, onQuestion } = {}) => {
 
     socket.on("new-notification", (data) => {
       console.log("[Socket.IO] New notification:", data);
-      if (onNotification) onNotification(data);
+      if (callbacksRef.current.onNotification) callbacksRef.current.onNotification(data);
     });
 
     socket.on("new-question", (data) => {
       console.log("[Socket.IO] New question:", data);
-      if (onQuestion) onQuestion(data);
+      if (callbacksRef.current.onQuestion) callbacksRef.current.onQuestion(data);
     });
 
     socket.on("connect_error", (err) => {

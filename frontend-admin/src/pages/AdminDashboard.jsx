@@ -92,7 +92,7 @@ const AdminDashboard = () => {
                         {q.type}
                       </span>
                     </div>
-                    <span className="admin-list-author">From: {q.author || 'Anonymous'}</span>
+                    <span className="admin-list-author">From: {q.author?.name || q.author || 'Anonymous'}</span>
                   </div>
                 </div>
               ))

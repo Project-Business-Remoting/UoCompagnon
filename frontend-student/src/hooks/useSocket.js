@@ -5,9 +5,16 @@ import { io } from "socket.io-client";
  * Custom hook that connects to the Socket.IO server and listens for real-time events.
  * @param {Function} onNotification 
  * @param {Function} onQuestion 
+ * @param {Function} onQuestionReplied 
  */
-const useSocket = ({ onNotification, onQuestion } = {}) => {
+const useSocket = ({ onNotification, onQuestion, onQuestionReplied } = {}) => {
   const socketRef = useRef(null);
+
+  const callbacksRef = useRef({ onNotification, onQuestion, onQuestionReplied });
+
+  useEffect(() => {
+    callbacksRef.current = { onNotification, onQuestion, onQuestionReplied };
+  }, [onNotification, onQuestion, onQuestionReplied]);
 
   useEffect(() => {
    
@@ -24,12 +31,17 @@ const useSocket = ({ onNotification, onQuestion } = {}) => {
 
     socket.on("new-notification", (data) => {
       console.log("[Socket.IO] New notification:", data);
-      if (onNotification) onNotification(data);
+      if (callbacksRef.current.onNotification) callbacksRef.current.onNotification(data);
     });
 
     socket.on("new-question", (data) => {
       console.log("[Socket.IO] New question:", data);
-      if (onQuestion) onQuestion(data);
+      if (callbacksRef.current.onQuestion) callbacksRef.current.onQuestion(data);
+    });
+
+    socket.on("question-replied", (data) => {
+      console.log("[Socket.IO] Question replied:", data);
+      if (callbacksRef.current.onQuestionReplied) callbacksRef.current.onQuestionReplied(data);
     });
 
     socket.on("connect_error", (err) => {
