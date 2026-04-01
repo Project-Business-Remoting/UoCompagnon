@@ -42,6 +42,16 @@ Le projet utilise une architecture **MERN** (MongoDB, Express, React, Node.js) s
 - **Isolation des notifications** : Un étudiant ne peut supprimer que ses notifications personnelles, jamais celles d'un autre utilisateur.
 - **Audit dépendances backend** : Vérifié sans vulnérabilité connue via `npm audit --omit=dev`.
 
+### Assurance Qualité & Tests Automatisés (QA)
+
+Pour garantir une livraison robuste et sans régression, l'application est couverte par une suite de tests multi-niveaux :
+- **Backend (Vitest & Supertest)** : Tests unitaires sur le moteur d'intelligence (`phaseService.test.js`) pour valider les calculs de dates, et tests d'intégration simulant les requêtes HTTP sur l'API d'authentification (`auth.test.js`). (Taux de succès : 100%)
+- **Frontends (Playwright E2E)** : Tests End-to-End validant de bout en bout l'interface Étudiant et Administrateur sur des vrais navigateurs (Chromium, Mobile Chrome, Mobile Safari).
+  - Validation du responsive design (gestion dynamique `table` vs `cards` en mobile).
+  - Vérification complète de la navigation (Dashboards, Listes, Menus Hamburger).
+  - Contournement sécurisé des strict policies de navigateurs (comme ITP Safari avec `SameSite: lax` en dev).
+  - Optimisation des performances via le WebServer Playwright embarqué et l'attente passive réseau (`networkidle`).
+
 ### Temps Réel & WebSockets (Socket.IO)
 
 - **Bidirectionnel & Instantané** : Intégration d'un serveur natif HTTP Node.js couplé à `Socket.IO` permettant la communication immédiate (full-duplex) entre les étudiants et les administrateurs.
