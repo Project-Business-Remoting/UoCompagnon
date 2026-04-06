@@ -1,14 +1,19 @@
 import {
   FileText,
+  Globe,
+  HelpCircle,
   LayoutDashboard,
   LogOut,
   MessageSquare,
   Moon,
   Sun,
+  Bell,
+  Users
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
 import { useAuth } from "../../context/AuthContext";
+import { useLang } from "../../context/LangContext";
 import { useTheme } from "../../context/ThemeContext";
 import "./AdminSidebar.css";
 
@@ -18,11 +23,15 @@ const studentPortalWelcomeUrl =
 const AdminSidebar = ({ isOpen, onClose }) => {
   const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { lang, toggleLang, t } = useLang();
 
   const navItems = [
-    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/contents", icon: FileText, label: "Content Management" },
-    { path: "/questions", icon: MessageSquare, label: "Questions Mgt" },
+    { path: "/dashboard", icon: LayoutDashboard, label: t("sidebar.dashboard") },
+    { path: "/students", icon: Users, label: t("admin.studentsDirectory") },
+    { path: "/contents", icon: FileText, label: t("admin.contentManagement") },
+    { path: "/questions", icon: MessageSquare, label: t("sidebar.directQuestions") },
+    { path: "/notifications", icon: Bell, label: t("admin.notifications") },
+    { path: "/faq", icon: HelpCircle, label: t("admin.faqManagement") },
   ];
 
   return (
@@ -79,12 +88,26 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             className="sidebar-action"
             onClick={toggleTheme}
             aria-label={
-              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+              theme === "dark" ? t("common.aria.switchToLight") : t("common.aria.switchToDark")
             }
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+            <span>{theme === "dark" ? t("sidebar.lightMode") : t("sidebar.darkMode")}</span>
           </button>
+
+          <button
+            className="sidebar-action"
+            onClick={toggleLang}
+            aria-label={
+              lang === "fr"
+                ? t("common.aria.toEnglish")
+                : t("common.aria.toFrench")
+            }
+          >
+            <Globe size={18} />
+            <span>{lang === "fr" ? "EN" : "FR"}</span>
+          </button>
+
           <button
             className="sidebar-action sidebar-action--danger"
             onClick={() => {
@@ -94,7 +117,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             aria-label="Logout from administrator account"
           >
             <LogOut size={18} />
-            <span>Logout</span>
+            <span>{t("sidebar.logout")}</span>
           </button>
         </div>
       </aside>

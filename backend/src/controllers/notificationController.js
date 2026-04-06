@@ -1,4 +1,5 @@
 const notificationService = require("../services/notificationService");
+const { getIO } = require("../config/socket");
 
 const getNotifications = async (req, res) => {
   try {
@@ -64,10 +65,31 @@ const deleteNotification = async (req, res) => {
   }
 };
 
+
+
+const createNotification = async (req, res) => {
+  try {
+    const notification = await notificationService.createNotification(req.body);
+    
+    // Notifications emitted to all users
+    try {
+      const io = getIO();
+      io.emit("new-notification", notification);
+    } catch (socketErr) {
+      console.error("[Socket.IO] Failed to emit admin notification:", socketErr.message);
+    }
+    
+    res.status(201).json(notification);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getNotifications,
   getSmartNotifications,
   markAsRead,
   markOneAsRead,
   deleteNotification,
+  createNotification,
 };

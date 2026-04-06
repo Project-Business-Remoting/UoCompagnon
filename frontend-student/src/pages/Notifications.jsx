@@ -20,7 +20,7 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const contextParams = useOutletContext();
   const setNotificationCount = contextParams?.setNotificationCount;
   const navigate = useNavigate();
@@ -29,7 +29,15 @@ const Notifications = () => {
     const load = async () => {
       try {
         const data = await fetchSmartNotifications();
-        const { processed, unreadCount } = processNotifications(data);
+        // Add actionUrl for phase-related notifications (redirect to /hub)
+        const PHASE_STEPS = ["Before Arrival", "Welcome Week", "First Month", "Mid-Term", "All Students"];
+        const enriched = data.map(n => {
+          if (!n.actionUrl && n.relatedStep && PHASE_STEPS.includes(n.relatedStep)) {
+            return { ...n, actionUrl: '/hub' };
+          }
+          return n;
+        });
+        const { processed, unreadCount } = processNotifications(enriched);
         setNotifications(processed);
         setNotificationCount?.(unreadCount);
       } catch (err) {
@@ -145,7 +153,7 @@ const Notifications = () => {
                 <span className={`notifs-dot notifs-dot--${notif.type}`} />
                 <div className="notifs-item-content">
                   <div className="notifs-item-top">
-                    <h2 className="notifs-item-title">{notif.title}</h2>
+                    <h2 className="notifs-item-title">{notif.title?.[lang] || notif.title?.en || notif.title}</h2>
                     <div
                       style={{
                         display: "flex",
@@ -178,7 +186,7 @@ const Notifications = () => {
                       )}
                     </div>
                   </div>
-                  <p className="notifs-item-message">{notif.message}</p>
+                  <p className="notifs-item-message">{notif.message?.[lang] || notif.message?.en || notif.message}</p>
                   <div
                     className="notifs-item-footer"
                     style={{

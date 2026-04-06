@@ -10,7 +10,11 @@ const getNotificationsByStep = async (step, user) => {
 
   const currentStep = getUserPhase(user);
   return await Notification.find({
-    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+    $or: [
+      { relatedStep: currentStep, user: null },
+      { relatedStep: "All Students", user: null },
+      { user: user._id },
+    ],
   });
 };
 
@@ -26,9 +30,13 @@ const getSmartNotificationsForUser = async (user) => {
   // 1. Notifications dynamiques (générées à la volée)
   const smartNotifs = generateSmartNotifications(user);
 
-  // 2. Notifications persistantes de la base (filtrées par phase OU par utilisateur spécifique)
+  // 2. Notifications persistantes de la base (filtrées par phase, "All Students", OU par utilisateur spécifique)
   const dbNotifs = await Notification.find({
-    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+    $or: [
+      { relatedStep: currentStep, user: null },
+      { relatedStep: "All Students", user: null },
+      { user: user._id },
+    ],
   });
 
   // 3. Marquer les notifications déjà lues
@@ -46,7 +54,11 @@ const getSmartNotificationsForUser = async (user) => {
 const markAllAsRead = async (user) => {
   const currentStep = getUserPhase(user);
   const notifications = await Notification.find({
-    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+    $or: [
+      { relatedStep: currentStep, user: null },
+      { relatedStep: "All Students", user: null },
+      { user: user._id },
+    ],
   });
   const allIds = notifications.map((n) => n._id);
 
@@ -61,7 +73,11 @@ const markOneAsRead = async (user, notificationId) => {
   const currentStep = getUserPhase(user);
   const notification = await Notification.findOne({
     _id: notificationId,
-    $or: [{ relatedStep: currentStep, user: null }, { user: user._id }],
+    $or: [
+      { relatedStep: currentStep, user: null },
+      { relatedStep: "All Students", user: null },
+      { user: user._id },
+    ],
   });
 
   if (!notification) {
@@ -86,10 +102,16 @@ const deleteOneNotification = async (notificationId, user) => {
   });
 };
 
+const createNotification = async (data) => {
+  const notification = new Notification(data);
+  return await notification.save();
+};
+
 module.exports = {
   getNotificationsByStep,
   getSmartNotificationsForUser,
   markAllAsRead,
   markOneAsRead,
   deleteOneNotification,
+  createNotification,
 };

@@ -1,22 +1,55 @@
-import { Globe, Moon, Sun } from "lucide-react";
+import { Edit, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLang } from "../context/LangContext";
-import { useTheme } from "../context/ThemeContext";
-import { fetchProfile } from "../services/api";
+import { fetchProfile, updateProfile } from "../services/api";
 import "./Profile.css";
+
+const PROGRAMS = [
+  "B.Sc. Computer Science",
+  "B.Sc. Software Engineering",
+  "B.A. Economics",
+  "B.A. Political Science",
+  "B.Sc. Biology",
+  "B.Sc. Mathematics",
+  "B.Eng. Mechanical Engineering",
+  "B.Eng. Civil Engineering",
+  "B.Eng. Electrical Engineering",
+  "B.A. Psychology",
+  "B.A. Communication",
+  "B.Com. Management",
+  "LL.B. Common Law",
+  "LL.B. Civil Law",
+  "M.Sc. Computer Science",
+  "M.A. Education",
+  "MBA",
+];
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { theme, toggleTheme } = useTheme();
-  const { lang, toggleLang, t } = useLang();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    program: "",
+    arrivalDate: "",
+    classStartDate: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  const { lang, t } = useLang();
 
   useEffect(() => {
     const load = async () => {
       try {
         const data = await fetchProfile();
         setProfile(data);
+        if (data) {
+          setEditForm({
+            program: data.program || "",
+            arrivalDate: data.arrivalDate ? data.arrivalDate.split('T')[0] : "",
+            classStartDate: data.classStartDate ? data.classStartDate.split('T')[0] : "",
+          });
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -25,6 +58,38 @@ const Profile = () => {
     };
     load();
   }, []);
+
+  const handleEditChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      const updatedProfile = await updateProfile({
+        program: editForm.program,
+        arrivalDate: editForm.arrivalDate,
+        classStartDate: editForm.classStartDate,
+      });
+      setProfile(updatedProfile);
+      setIsEditing(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (profile) {
+      setEditForm({
+        program: profile.program || "",
+        arrivalDate: profile.arrivalDate ? profile.arrivalDate.split('T')[0] : "",
+        classStartDate: profile.classStartDate ? profile.classStartDate.split('T')[0] : "",
+      });
+    }
+    setIsEditing(false);
+  };
 
   if (loading)
     return <div className="loading-screen">{t("common.loading")}</div>;
@@ -45,7 +110,23 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <h1>{t("profile.title")}</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+        <h1 style={{ margin: 0 }}>{t("profile.title")}</h1>
+        {!isEditing ? (
+          <button className="btn btn-outline" onClick={() => setIsEditing(true)}>
+            <Edit size={16} /> Éditer
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button className="btn btn-outline" onClick={handleCancel} disabled={saving} style={{ color: "var(--danger)" }}>
+              <X size={16} /> Annuler
+            </button>
+            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+              <Save size={16} /> {saving ? "Enregistrement..." : "Enregistrer"}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Avatar + Name */}
       <div className="card profile-header">
@@ -65,48 +146,52 @@ const Profile = () => {
       <div className="profile-grid">
         <div className="card profile-info-card">
           <h3>{t("profile.program")}</h3>
-          <p>{profile.program}</p>
+          {isEditing ? (
+            <select
+              name="program"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid var(--border-color)", background: "var(--bg-color)", color: "var(--text-color)" }}
+              value={editForm.program}
+              onChange={handleEditChange}
+            >
+              {PROGRAMS.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          ) : (
+            <p>{profile.program}</p>
+          )}
         </div>
         <div className="card profile-info-card">
           <h3>{t("profile.arrivalDate")}</h3>
-          <p>{formatDate(profile.arrivalDate)}</p>
+          {isEditing ? (
+            <input
+              type="date"
+              name="arrivalDate"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid var(--border-color)", background: "var(--bg-color)", color: "var(--text-color)" }}
+              value={editForm.arrivalDate}
+              onChange={handleEditChange}
+            />
+          ) : (
+            <p>{formatDate(profile.arrivalDate)}</p>
+          )}
         </div>
         <div className="card profile-info-card">
           <h3>{t("profile.classStartDate")}</h3>
-          <p>{formatDate(profile.classStartDate)}</p>
+          {isEditing ? (
+            <input
+              type="date"
+              name="classStartDate"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid var(--border-color)", background: "var(--bg-color)", color: "var(--text-color)" }}
+              value={editForm.classStartDate}
+              onChange={handleEditChange}
+            />
+          ) : (
+            <p>{formatDate(profile.classStartDate)}</p>
+          )}
         </div>
         <div className="card profile-info-card">
           <h3>{t("profile.currentPhase")}</h3>
           <p>{profile.currentStep || "-"}</p>
-        </div>
-      </div>
-
-      {/* Preferences */}
-      <div className="card profile-prefs">
-        <h2>{t("profile.preferences")}</h2>
-        <div className="profile-prefs-list">
-          <div className="profile-pref-item" onClick={toggleTheme}>
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-            <div>
-              <span className="profile-pref-label">
-                {theme === "dark"
-                  ? t("sidebar.lightMode")
-                  : t("sidebar.darkMode")}
-              </span>
-              <span className="profile-pref-value">
-                {theme === "dark" ? "Dark" : "Light"}
-              </span>
-            </div>
-          </div>
-          <div className="profile-pref-item" onClick={toggleLang}>
-            <Globe size={20} />
-            <div>
-              <span className="profile-pref-label">Langue / Language</span>
-              <span className="profile-pref-value">
-                {lang === "fr" ? "Francais" : "English"}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

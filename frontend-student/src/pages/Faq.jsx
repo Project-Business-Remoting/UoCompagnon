@@ -1,30 +1,29 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLang } from "../context/LangContext";
+import { fetchAllFAQs } from "../services/api";
 import "./Faq.css";
 
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const { t } = useLang();
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { t, lang } = useLang();
 
-  const faqs = [
-    {
-      q: t("faq.q1"),
-      a: t("faq.a1"),
-    },
-    {
-      q: t("faq.q2"),
-      a: t("faq.a2"),
-    },
-    {
-      q: t("faq.q3"),
-      a: t("faq.a3"),
-    },
-    {
-      q: t("faq.q4"),
-      a: t("faq.a4"),
-    },
-  ];
+  useEffect(() => {
+    const loadFaqs = async () => {
+      try {
+        const data = await fetchAllFAQs();
+        setFaqs(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFaqs();
+  }, []);
 
   return (
     <div
@@ -50,57 +49,67 @@ const Faq = () => {
         {t("faq.subtitle")}
       </p>
 
-      <div
-        className="faq-list"
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
-        {faqs.map((faq, idx) => (
-          <div
-            key={idx}
-            className="card faq-item"
-            style={{
-              padding: "1.25rem",
-              cursor: "pointer",
-              transition: "box-shadow 0.2s",
-            }}
-            onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-          >
+      {loading ? (
+        <div style={{ textAlign: "center" }}>{t("common.loading")}</div>
+      ) : error ? (
+        <div className="error-message" style={{ textAlign: "center" }}>{error}</div>
+      ) : faqs.length === 0 ? (
+        <p style={{ textAlign: "center", color: "var(--text-muted)" }}>
+          Aucune question trouvée / No questions found.
+        </p>
+      ) : (
+        <div
+          className="faq-list"
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
+          {faqs.map((faq, idx) => (
             <div
+              key={faq._id}
+              className="card faq-item"
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                padding: "1.25rem",
+                cursor: "pointer",
+                transition: "box-shadow 0.2s",
               }}
+              onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
             >
-              <h2
+              <div
                 style={{
-                  margin: 0,
-                  fontSize: "1.05rem",
-                  color: "var(--text-main)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                {faq.q}
-              </h2>
-              {openIndex === idx ? (
-                <ChevronUp size={20} color="var(--primary)" />
-              ) : (
-                <ChevronDown size={20} color="var(--text-muted)" />
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "1.05rem",
+                    color: "var(--text-main)",
+                  }}
+                >
+                  {faq.question?.[lang] || faq.question?.en || ""}
+                </h2>
+                {openIndex === idx ? (
+                  <ChevronUp size={20} color="var(--primary)" />
+                ) : (
+                  <ChevronDown size={20} color="var(--text-muted)" />
+                )}
+              </div>
+              {openIndex === idx && (
+                <p
+                  style={{
+                    marginTop: "1rem",
+                    color: "var(--text-muted)",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {faq.answer?.[lang] || faq.answer?.en || ""}
+                </p>
               )}
             </div>
-            {openIndex === idx && (
-              <p
-                style={{
-                  marginTop: "1rem",
-                  color: "var(--text-muted)",
-                  lineHeight: "1.6",
-                }}
-              >
-                {faq.a}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

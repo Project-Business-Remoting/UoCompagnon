@@ -1,7 +1,7 @@
 import { Menu } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import useSocket from "../../hooks/useSocket";
+import { useSocketContext } from "../../context/SocketContext";
 import { Toast, playNotifSound } from "../ui/Toast";
 import AdminSidebar from "./AdminSidebar";
 import "./Layout.css";
@@ -22,18 +22,31 @@ const Layout = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // WebSocket: listen for new questions from students
-  useSocket({
-    onQuestion: (data) => {
-      const displayAuthor = data.authorName || data.author?.name || (typeof data.author === 'string' ? data.author : 'Étudiant');
+  // WebSocket: listen for new questions from students via the global context
+  const { lastMessage, lastNotification } = useSocketContext();
+
+  useEffect(() => {
+    if (lastMessage) {
+      const displayAuthor = lastMessage.authorName || lastMessage.author?.name || (typeof lastMessage.author === 'string' ? lastMessage.author : 'Étudiant');
       addToast({
         title: "Nouveau message",
         message: `De : ${displayAuthor}`,
-        type: data.type === "Anonymous" ? "warning" : "info",
+        type: lastMessage.type === "Anonymous" ? "warning" : "info",
         onClick: () => navigate("/questions"),
       });
-    },
-  });
+    }
+  }, [lastMessage, addToast, navigate]);
+
+  useEffect(() => {
+    if (lastNotification) {
+      addToast({
+        title: lastNotification.title,
+        message: lastNotification.message,
+        type: lastNotification.type || "info",
+        onClick: () => navigate("/notifications"),
+      });
+    }
+  }, [lastNotification, addToast, navigate]);
 
   return (
     <div className="layout">

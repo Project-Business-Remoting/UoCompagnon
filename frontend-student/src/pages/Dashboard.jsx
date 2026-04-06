@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const navigate = useNavigate();
   const { setNotificationCount } = useOutletContext() || {};
 
@@ -108,14 +108,14 @@ const Dashboard = () => {
                 >
                   <div className="dashboard-list-info">
                     <span className="dashboard-list-title">
-                      {content.title}
+                      {content.title?.[lang] || content.title?.en || content.title}
                     </span>
                     <span className="dashboard-list-category">
                       {content.category}
                     </span>
                   </div>
                   <span
-                    className={`badge ${content.priority === "Prioritaire" ? "badge-primary" : "badge-tertiary"}`}
+                    className={`badge ${content.priority === "High" ? "badge-primary" : "badge-tertiary"}`}
                   >
                     {t(`common.priority.${content.priority}`)}
                   </span>
@@ -142,7 +142,8 @@ const Dashboard = () => {
                 .map((notif) => (
                   <div
                     key={notif._id}
-                    className={`dashboard-list-item dashboard-notif-item ${notif.isRead ? "dashboard-notif-item--read" : ""}`}
+                    className={`dashboard-list-item dashboard-list-item--clickable dashboard-notif-item ${notif.isRead ? "dashboard-notif-item--read" : ""}`}
+                    onClick={() => navigate('/notifications')}
                   >
                     {!notif.isRead && (
                       <span
@@ -151,10 +152,10 @@ const Dashboard = () => {
                     )}
                     <div className="dashboard-list-info">
                       <span className="dashboard-list-title">
-                        {notif.title}
+                        {notif.title?.[lang] || notif.title?.en || notif.title}
                       </span>
                       <span className="dashboard-list-category">
-                        {notif.message}
+                        {notif.message?.[lang] || notif.message?.en || notif.message}
                       </span>
                     </div>
                   </div>

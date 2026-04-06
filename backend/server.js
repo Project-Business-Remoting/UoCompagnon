@@ -54,6 +54,7 @@ app.use("/api/contents", require("./src/routes/contentRoutes"));
 app.use("/api/notifications", require("./src/routes/notificationRoutes"));
 app.use("/api/dashboard", require("./src/routes/dashboardRoutes"));
 app.use("/api/questions", require("./src/routes/questionRoutes"));
+app.use("/api/faqs", require("./src/routes/faqRoutes"));
 
 app.get("/", (req, res) => {
   res.send("API UO-Compagnon is running...");

@@ -84,8 +84,14 @@ const replyToQuestion = async (req, res) => {
   
     const notification = await Notification.create({
       user: question.author,
-      title: 'Reply to your question',
-      message: `An administrator has answered your question: "${question.subject}"`,
+      title: {
+        fr: 'Réponse à votre question',
+        en: 'Reply to your question'
+      },
+      message: {
+        fr: `Un administrateur a répondu à votre question : "${question.subject}"`,
+        en: `An administrator has answered your question: "${question.subject}"`
+      },
       type: 'info',
       relatedStep: 'Support',
       actionUrl: question.isAnonymous ? '/anonymous-questions' : '/direct-questions'

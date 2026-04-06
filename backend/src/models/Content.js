@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
+const textSchema = {
+  fr: { type: String, required: true },
+  en: { type: String, required: true },
+};
+
 const contentSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    articleBody: { type: String, required: true },
+    title: textSchema,
+    description: textSchema,
+    articleBody: textSchema,
     category: { type: String, required: true },
     step: {
       type: String,

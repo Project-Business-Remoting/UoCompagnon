@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, logout } = require("../controllers/userController");
-const { protect } = require("../middleware/authMiddleware");
+const { register, login, logout, updateProfile, getAllStudents } = require("../controllers/userController");
+const { protect, adminProtect } = require("../middleware/authMiddleware");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -15,5 +15,11 @@ router.get("/profile", protect, (req, res) => {
   userObj.currentStep = calculateCurrentStep(req.user.arrivalDate, req.user.classStartDate);
   res.json(userObj);
 });
+
+// Route de mise à jour du profil
+router.put("/profile", protect, updateProfile);
+
+// Route pour l'admin : récupérer tous les étudiants
+router.get("/students", protect, adminProtect, getAllStudents);
 
 module.exports = router;

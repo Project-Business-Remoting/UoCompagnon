@@ -77,3 +77,27 @@ export const replyToQuestion = (id, answer) =>
     method: "PUT",
     body: JSON.stringify({ answer }),
   });
+
+// Notifications Admin API
+export const fetchNotifications = () => request("/notifications");
+export const createNotificationApi = (data) =>
+  request("/notifications", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+export const deleteNotificationApi = (id) =>
+  request(`/notifications/${id}`, {
+    method: "DELETE",
+  });
+
+// Students Directory Admin API
+export const fetchAllStudents = () => request("/users/students");
+
+// FAQ Admin API
+export const fetchAllFAQs = () => request("/faqs");
+export const createFAQ = (data) =>
+  request("/faqs", { method: "POST", body: JSON.stringify(data) });
+export const updateFAQ = (id, data) =>
+  request(`/faqs/${id}`, { method: "PUT", body: JSON.stringify(data) });
+export const deleteFAQ = (id) =>
+  request(`/faqs/${id}`, { method: "DELETE" });

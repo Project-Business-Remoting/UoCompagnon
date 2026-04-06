@@ -30,12 +30,15 @@ const Layout = () => {
   useSocket({
     onNotification: (data) => {
       setNotificationCount((prev) => prev + 1);
+      // Determine redirect target based on notification type
+      const PHASE_STEPS = ["Before Arrival", "Welcome Week", "First Month", "Mid-Term", "All Students"];
+      const redirectUrl = data.relatedStep && PHASE_STEPS.includes(data.relatedStep) ? '/hub' : '/notifications';
       addToast({
         title: data.title,
         message: data.message,
         type: data.type || "info",
         onClick: () => {
-          navigate('/notifications');
+          navigate(redirectUrl);
         }
       });
     },

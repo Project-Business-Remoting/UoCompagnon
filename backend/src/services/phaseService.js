@@ -70,7 +70,7 @@ const getRelevantContents = async (user) => {
   const contents = await Content.find({ step: { $in: relevantPhases } });
 
   // Tri par priorité puis par phase (phase courante en premier)
-  const priorityWeight = { Prioritaire: 0, Moyen: 1, Bas: 2 };
+  const priorityWeight = { High: 0, Medium: 1, Low: 2 };
 
   return contents.sort((a, b) => {
     // D'abord par phase (phase courante en premier)
@@ -81,7 +81,7 @@ const getRelevantContents = async (user) => {
     if (phaseDiff !== 0) return phaseDiff;
 
     // Ensuite par priorité
-    return (priorityWeight[a.priority] || 1) - (priorityWeight[b.priority] || 1);
+    return (priorityWeight[a.priority] ?? 1) - (priorityWeight[b.priority] ?? 1);
   });
 };
 
@@ -105,8 +105,14 @@ const generateSmartNotifications = (user) => {
   if (diffToArrival > 7 && diffToArrival <= 30) {
     smartNotifs.push({
       _id: "smart_arrival_30",
-      title: "Prepare your arrival",
-      message: `You're arriving in ${diffToArrival} days in Canada. Start preparing your departure checklist!`,
+      title: { 
+        fr: "Préparez votre arrivée", 
+        en: "Prepare your arrival" 
+      },
+      message: { 
+        fr: `Vous arrivez dans ${diffToArrival} jours au Canada. Commencez votre check-list !`, 
+        en: `You're arriving in ${diffToArrival} days in Canada. Start preparing your departure checklist!` 
+      },
       type: "info",
       relatedStep: "Before Arrival",
       isSmartNotification: true,
@@ -116,8 +122,14 @@ const generateSmartNotifications = (user) => {
   if (diffToArrival > 3 && diffToArrival <= 7) {
     smartNotifs.push({
       _id: "smart_arrival_7",
-      title: "Your arrival is approaching!",
-      message: `Only ${diffToArrival} days left! Check your immigration documents, flight ticket, and housing.`,
+      title: { 
+        fr: "Votre arrivée approche !", 
+        en: "Your arrival is approaching!" 
+      },
+      message: { 
+        fr: `Plus que ${diffToArrival} jours ! Vérifiez vos documents d'immigration et logement.`, 
+        en: `Only ${diffToArrival} days left! Check your immigration documents, flight ticket, and housing.` 
+      },
       type: "warning",
       relatedStep: "Before Arrival",
       isSmartNotification: true,
@@ -127,8 +139,14 @@ const generateSmartNotifications = (user) => {
   if (diffToArrival >= 0 && diffToArrival <= 3) {
     smartNotifs.push({
       _id: "smart_arrival_3",
-      title: "Final Stretch!",
-      message: `You're arriving in ${diffToArrival} day(s)! Make sure you have your passport, admission letter, and health insurance.`,
+      title: { 
+        fr: "Dernière ligne droite !", 
+        en: "Final Stretch!" 
+      },
+      message: { 
+        fr: `Vous arrivez dans ${diffToArrival} jour(s) ! Assurez-vous d'avoir votre passeport et lettre d'admission.`, 
+        en: `You're arriving in ${diffToArrival} day(s)! Make sure you have your passport, admission letter, and health insurance.` 
+      },
       type: "warning",
       relatedStep: "Before Arrival",
       isSmartNotification: true,
@@ -139,8 +157,14 @@ const generateSmartNotifications = (user) => {
   if (currentStep === "Welcome Week") {
     smartNotifs.push({
       _id: "smart_welcome",
-      title: "Welcome to Ottawa!",
-      message: "You have arrived! Check out the welcome week events and activate your student card.",
+      title: { 
+        fr: "Bienvenue à Ottawa !", 
+        en: "Welcome to Ottawa!" 
+      },
+      message: { 
+        fr: "Vous êtes arrivé ! Profitez de la semaine d'accueil et activez votre carte étudiante.", 
+        en: "You have arrived! Check out the welcome week events and activate your student card." 
+      },
       type: "success",
       relatedStep: "Welcome Week",
       isSmartNotification: true,
@@ -149,8 +173,14 @@ const generateSmartNotifications = (user) => {
     if (diffToClasses > 0 && diffToClasses <= 7) {
       smartNotifs.push({
         _id: "smart_classes_soon",
-        title: "Classes are starting soon!",
-        message: `Classes start in ${diffToClasses} day(s). Check your schedule on uoZone and find your classrooms.`,
+        title: { 
+          fr: "Les cours commencent bientôt !", 
+          en: "Classes are starting soon!" 
+        },
+        message: { 
+          fr: `Les cours débutent dans ${diffToClasses} jour(s). Vérifiez votre horaire sur uoZone.`, 
+          en: `Classes start in ${diffToClasses} day(s). Check your schedule on uoZone and find your classrooms.` 
+        },
         type: "info",
         relatedStep: "Welcome Week",
         isSmartNotification: true,
@@ -163,8 +193,14 @@ const generateSmartNotifications = (user) => {
     if (diffFromClasses <= 7) {
       smartNotifs.push({
         _id: "smart_first_week",
-        title: "First week of classes",
-        message: "Take time to understand your course syllabi and identify important dates (exams, assignments).",
+        title: { 
+          fr: "Première semaine de cours", 
+          en: "First week of classes" 
+        },
+        message: { 
+          fr: "Prenez le temps de comprendre vos plans de cours et notez les dates importantes.", 
+          en: "Take time to understand your course syllabi and identify important dates (exams, assignments)." 
+        },
         type: "info",
         relatedStep: "First Month",
         isSmartNotification: true,
@@ -174,8 +210,14 @@ const generateSmartNotifications = (user) => {
     if (diffFromClasses >= 14 && diffFromClasses <= 21) {
       smartNotifs.push({
         _id: "smart_mid_month",
-        title: "Mid-way through the first month",
-        message: "You're halfway through your first month! Check your notes and don't hesitate to consult tutoring services.",
+        title: { 
+          fr: "Mi-parcours du premier mois", 
+          en: "Mid-way through the first month" 
+        },
+        message: { 
+          fr: "Déjà deux semaines ! N'hésitez pas à consulter les services de tutorat si besoin.", 
+          en: "You're halfway through your first month! Check your notes and don't hesitate to consult tutoring services." 
+        },
         type: "info",
         relatedStep: "First Month",
         isSmartNotification: true,
@@ -185,8 +227,14 @@ const generateSmartNotifications = (user) => {
     if (diffFromClasses >= 25) {
       smartNotifs.push({
         _id: "smart_gpa_reminder",
-        title: "⚡ Think about your GPA",
-        message: "Midterms are approaching. Understand GPA calculation and academic probation to avoid surprises.",
+        title: { 
+          fr: "⚡ Pensez à votre moyenne (GPA)", 
+          en: "⚡ Think about your GPA" 
+        },
+        message: { 
+          fr: "Les examens partiels approchent. Comprenez le calcul du GPA pour éviter les surprises.", 
+          en: "Midterms are approaching. Understand GPA calculation and academic probation to avoid surprises." 
+        },
         type: "warning",
         relatedStep: "First Month",
         isSmartNotification: true,
@@ -198,8 +246,14 @@ const generateSmartNotifications = (user) => {
   if (currentStep === "Mid-Term") {
     smartNotifs.push({
       _id: "smart_mid_session",
-      title: "Mid-Term!",
-      message: "It's the midterm exam period. Plan your revisions and use the available academic resources.",
+      title: { 
+        fr: "Mi-session !", 
+        en: "Mid-Term!" 
+      },
+      message: { 
+        fr: "C'est la période des examens. Planifiez vos révisions et utilisez les ressources académiques.", 
+        en: "It's the midterm exam period. Plan your revisions and use the available academic resources." 
+      },
       type: "warning",
       relatedStep: "Mid-Term",
       isSmartNotification: true,
@@ -207,8 +261,14 @@ const generateSmartNotifications = (user) => {
 
     smartNotifs.push({
       _id: "smart_plagiat",
-      title: "Reminder: Academic Integrity",
-      message: "Beware of plagiarism! Familiarize yourself with uOttawa's academic integrity rules before your submissions.",
+      title: { 
+        fr: "Rappel : Intégrité Académique", 
+        en: "Reminder: Academic Integrity" 
+      },
+      message: { 
+        fr: "Attention au plagiat ! Familiarisez-vous avec les règles de l'uOttawa avant vos remises.", 
+        en: "Beware of plagiarism! Familiarize yourself with uOttawa's academic integrity rules before your submissions." 
+      },
       type: "warning",
       relatedStep: "Mid-Term",
       isSmartNotification: true,

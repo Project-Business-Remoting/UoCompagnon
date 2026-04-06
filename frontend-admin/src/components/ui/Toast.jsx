@@ -2,25 +2,43 @@ import { useEffect, useState } from "react";
 import { Bell, X } from "lucide-react";
 import "./Toast.css";
 
-// Simple notification sound (short beep using Web Audio API)
+let audioCtx = null;
+
+// Initialiser le contexte au premier clic de l'utilisateur pour contourner la politique d'autoplay
+const initAudio = () => {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+};
+
+if (typeof window !== "undefined") {
+  window.addEventListener("click", initAudio, { once: true });
+}
+
 const playNotifSound = () => {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
+    if (!audioCtx) return; // Pas encore cliqué / autorisé
+    initAudio(); // Assure que le contexte est 'running'
+    if (audioCtx.state === "suspended") return;
+
+    const oscillator = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
     oscillator.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(audioCtx.destination);
 
     oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(880, ctx.currentTime); // A5
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
 
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.5);
-  } catch {
-    // Silently fail if AudioContext is not available
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.5);
+  } catch (error) {
+    console.warn("Audio play blocked by browser sandbox:", error);
   }
 };
 
@@ -36,6 +54,7 @@ const Toast = ({ toasts, onDismiss }) => {
 
 const ToastItem = ({ toast, onDismiss }) => {
   const [exiting, setExiting] = useState(false);
+  const lang = localStorage.getItem('uo_lang') || 'en';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,6 +76,10 @@ const ToastItem = ({ toast, onDismiss }) => {
     }
   };
 
+  // Resolve bilingual objects
+  const titleText = typeof toast.title === 'object' ? (toast.title[lang] || toast.title.en || toast.title.fr || '') : (toast.title || '');
+  const messageText = typeof toast.message === 'object' ? (toast.message[lang] || toast.message.en || toast.message.fr || '') : (toast.message || '');
+
   return (
     <div 
       className={`toast-item toast-item--${toast.type || "info"} ${exiting ? "toast-item--exit" : ""} ${toast.onClick ? "toast-item--clickable" : ""}`}
@@ -66,8 +89,8 @@ const ToastItem = ({ toast, onDismiss }) => {
         <Bell size={16} />
       </div>
       <div className="toast-body">
-        <span className="toast-title">{toast.title}</span>
-        <span className="toast-message">{toast.message}</span>
+        <span className="toast-title">{titleText}</span>
+        <span className="toast-message">{messageText}</span>
       </div>
       <button
         className="toast-close"

@@ -54,6 +54,11 @@ export const registerUser = (userData) =>
 export const logoutUser = () => request("/users/logout", { method: "POST" });
 
 export const fetchProfile = () => request("/users/profile");
+export const updateProfile = (profileData) =>
+  request("/users/profile", {
+    method: "PUT",
+    body: JSON.stringify(profileData),
+  });
 
 // Dashboard
 export const fetchDashboard = () => request("/dashboard");
@@ -83,3 +88,6 @@ export const replyToQuestion = (id, answer) =>
     method: "PUT",
     body: JSON.stringify({ answer }),
   });
+
+// FAQs API
+export const fetchAllFAQs = () => request("/faqs");

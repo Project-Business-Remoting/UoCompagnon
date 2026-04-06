@@ -11,7 +11,7 @@ const ContentDetail = () => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   useEffect(() => {
     const load = async () => {
@@ -49,7 +49,7 @@ const ContentDetail = () => {
       </Link>
 
       {/* Title */}
-      <h1 className="content-detail-title">{content.title}</h1>
+      <h1 className="content-detail-title">{content.title?.[lang] || content.title?.en || content.title}</h1>
 
       {/* Meta */}
       <div className="content-detail-meta">
@@ -62,13 +62,13 @@ const ContentDetail = () => {
 
       {/* Description / Introduction */}
       <div className="content-detail-intro">
-        <p><strong>{content.description}</strong></p>
+        <p><strong>{content.description?.[lang] || content.description?.en || content.description}</strong></p>
       </div>
 
       {/* Article Body */}
       {content.articleBody && (
         <div className="card content-detail-body">
-          <p>{content.articleBody}</p>
+          <p>{content.articleBody?.[lang] || content.articleBody?.en || content.articleBody}</p>
         </div>
       )}
 

@@ -59,4 +59,39 @@ const loginUser = async (email, password) => {
   throw new Error("Email ou mot de passe invalide");
 };
 
-module.exports = { registerUser, loginUser };
+const updateUserProfile = async (userId, data) => {
+  const { program, arrivalDate, classStartDate } = data;
+  const user = await User.findById(userId);
+  if (!user) throw new Error("Utilisateur non trouvé");
+
+  if (program) user.program = program;
+  if (arrivalDate) user.arrivalDate = arrivalDate;
+  if (classStartDate) user.classStartDate = classStartDate;
+
+  await user.save();
+
+  return {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    program: user.program,
+    arrivalDate: user.arrivalDate,
+    classStartDate: user.classStartDate,
+    role: user.role,
+    currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
+    readNotifications: user.readNotifications,
+  };
+};
+
+const getAllStudents = async () => {
+  const students = await User.find({ role: "student" }).select("-password");
+  
+  // Calculate dynamic currentStep for each student
+  return students.map(student => {
+    const studentObj = student.toObject();
+    studentObj.currentStep = calculateCurrentStep(student.arrivalDate, student.classStartDate);
+    return studentObj;
+  });
+};
+
+module.exports = { registerUser, loginUser, updateUserProfile, getAllStudents };

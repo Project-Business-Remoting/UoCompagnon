@@ -48,4 +48,22 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 
-module.exports = { register, login, logout };
+const updateProfile = async (req, res) => {
+  try {
+    const updatedUser = await userService.updateUserProfile(req.user._id, req.body);
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await userService.getAllStudents();
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { register, login, logout, updateProfile, getAllStudents };

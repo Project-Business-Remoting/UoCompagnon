@@ -36,6 +36,7 @@ const Toast = ({ toasts, onDismiss }) => {
 
 const ToastItem = ({ toast, onDismiss }) => {
   const [exiting, setExiting] = useState(false);
+  const lang = localStorage.getItem('uo_lang') || 'en';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,6 +58,10 @@ const ToastItem = ({ toast, onDismiss }) => {
     }
   };
 
+  // Resolve bilingual objects
+  const titleText = typeof toast.title === 'object' ? (toast.title[lang] || toast.title.en || toast.title.fr || '') : (toast.title || '');
+  const messageText = typeof toast.message === 'object' ? (toast.message[lang] || toast.message.en || toast.message.fr || '') : (toast.message || '');
+
   return (
     <div 
       className={`toast-item toast-item--${toast.type || "info"} ${exiting ? "toast-item--exit" : ""} ${toast.onClick ? "toast-item--clickable" : ""}`}
@@ -66,8 +71,8 @@ const ToastItem = ({ toast, onDismiss }) => {
         <Bell size={16} />
       </div>
       <div className="toast-body">
-        <span className="toast-title">{toast.title}</span>
-        <span className="toast-message">{toast.message}</span>
+        <span className="toast-title">{titleText}</span>
+        <span className="toast-message">{messageText}</span>
       </div>
       <button
         className="toast-close"
