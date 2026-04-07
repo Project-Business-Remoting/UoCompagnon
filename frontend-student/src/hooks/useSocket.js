@@ -27,7 +27,10 @@ const useSocket = ({ onNotification, onQuestion, onQuestionReplied, onPhotoStatu
       } catch {}
     }
 
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+    // Socket.IO must connect to server root, not /api
+    const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin;
+    const socketUrl = rawUrl.replace(/\/api\/?$/, "");
+    console.log("[Socket.IO] Connecting to:", socketUrl);
     const socket = io(socketUrl, {
       auth: { token },
       withCredentials: true,

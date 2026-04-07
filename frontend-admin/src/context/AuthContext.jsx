@@ -8,16 +8,21 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("uo_admin_user");
-    if (!savedUser) return null;
+    try {
+      const savedUser = localStorage.getItem("uo_admin_user");
+      if (!savedUser) return null;
 
-    const parsed = JSON.parse(savedUser);
-    if (parsed.role !== "admin") {
+      const parsed = JSON.parse(savedUser);
+      if (!parsed || parsed.role !== "admin" || !parsed.token) {
+        localStorage.removeItem("uo_admin_user");
+        return null;
+      }
+
+      return parsed;
+    } catch (e) {
       localStorage.removeItem("uo_admin_user");
       return null;
     }
-
-    return parsed;
   });
   const [loading] = useState(false);
 

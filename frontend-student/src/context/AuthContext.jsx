@@ -9,8 +9,18 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("uo_user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem("uo_user");
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        // If saved data doesn't include a token (from before auth migration), clear it
+        if (parsed && parsed.token) return parsed;
+        localStorage.removeItem("uo_user");
+      }
+    } catch (e) {
+      localStorage.removeItem("uo_user");
+    }
+    return null;
   });
   const [loading] = useState(false);
 

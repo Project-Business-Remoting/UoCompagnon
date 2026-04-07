@@ -2,12 +2,16 @@ const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const getHeaders = () => {
   const headers = { "Content-Type": "application/json" };
-  const savedUser = localStorage.getItem("uo_user");
-  if (savedUser) {
-    try {
+  try {
+    const savedUser = localStorage.getItem("uo_user");
+    if (savedUser) {
       const user = JSON.parse(savedUser);
-      if (user.token) headers["Authorization"] = `Bearer ${user.token}`;
-    } catch {}
+      if (user && user.token) {
+        headers["Authorization"] = `Bearer ${user.token}`;
+      }
+    }
+  } catch (e) {
+    // Ignore parse errors from corrupted localStorage
   }
   return headers;
 };
