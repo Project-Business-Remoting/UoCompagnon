@@ -1,7 +1,15 @@
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const getHeaders = () => {
-  return { "Content-Type": "application/json" };
+  const headers = { "Content-Type": "application/json" };
+  const savedUser = localStorage.getItem("uo_user");
+  if (savedUser) {
+    try {
+      const user = JSON.parse(savedUser);
+      if (user.token) headers["Authorization"] = `Bearer ${user.token}`;
+    } catch {}
+  }
+  return headers;
 };
 
 const request = async (endpoint, options = {}) => {

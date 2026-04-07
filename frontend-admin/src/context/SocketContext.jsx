@@ -10,8 +10,14 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Obtenir le token pour l'authentification (pour que le backend nous identifie comme admin)
-    const token = localStorage.getItem('uo_token');
+    // Obtenir le token pour l'authentification (depuis le localStorage "uo_user")
+    const savedUser = localStorage.getItem('uo_user');
+    let token = null;
+    if (savedUser) {
+      try {
+        token = JSON.parse(savedUser).token;
+      } catch {}
+    }
     
     // Si pas de token (user pas connecté), on ne tente pas de se connecter au socket
     if (!token) return;
@@ -23,6 +29,7 @@ export const SocketProvider = ({ children }) => {
     
     // Initialisation
     const newSocket = io(socketUrl, {
+      auth: { token },
       withCredentials: true,
       transports: ['websocket', 'polling'], // Fallback polling si websocket pur échoue
     });

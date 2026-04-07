@@ -16,10 +16,9 @@ const initSocket = (httpServer, allowedOrigins) => {
   // --- Authentication middleware ---
   io.use(async (socket, next) => {
     try {
-      // Extraire le token du header
-      const cookieHeader = socket.handshake.headers.cookie || "";
-      const tokenMatch = cookieHeader.match(/uo_token=([^;]+)/);
-      const token = tokenMatch ? tokenMatch[1] : null;
+      // Extraire le token passé depuis le client (LocalStorage)
+      const token = socket.handshake.auth?.token;
+
 
       if (!token) {
         return next(new Error("Authentication required"));

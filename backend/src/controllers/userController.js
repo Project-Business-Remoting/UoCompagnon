@@ -16,13 +16,7 @@ const getCookieOptions = () => ({
 });
 
 const sendTokenResponse = (user, statusCode, res) => {
-  const token = user.token;
-  delete user.token; // Ne pas envoyer le token en clair dans le JSON
-
-  res
-    .status(statusCode)
-    .cookie("uo_token", token, getCookieOptions())
-    .json(user);
+  res.status(statusCode).json(user);
 };
 
 const register = async (req, res, next) => {
@@ -45,10 +39,6 @@ const login = async (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("uo_token", {
-    ...getCookieOptions(),
-    maxAge: 0,
-  });
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 

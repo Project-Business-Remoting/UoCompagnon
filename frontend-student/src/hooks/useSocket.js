@@ -19,8 +19,17 @@ const useSocket = ({ onNotification, onQuestion, onQuestionReplied, onPhotoStatu
 
   useEffect(() => {
    
+    let token = null;
+    const savedUser = localStorage.getItem("uo_user");
+    if (savedUser) {
+      try {
+        token = JSON.parse(savedUser).token;
+      } catch {}
+    }
+
     const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
     const socket = io(socketUrl, {
+      auth: { token },
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
