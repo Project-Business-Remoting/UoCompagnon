@@ -223,20 +223,22 @@ const Notifications = () => {
                     <CheckCircle size={18} />
                   </button>
                 )}
-                <button
-                  className="notifs-mark-btn"
-                  style={{
-                    color: "var(--danger)",
-                    background: "var(--danger-light)",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(notif._id);
-                  }}
-                  title={t("notifications.delete")}
-                >
-                  <Trash2 size={16} />
-                </button>
+                {!notif.isSystem && (
+                  <button
+                    className="notifs-mark-btn"
+                    style={{
+                      color: "var(--danger)",
+                      background: "var(--danger-light)",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(notif._id);
+                    }}
+                    title={t("notifications.delete")}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
               </div>
             </div>
           ))}

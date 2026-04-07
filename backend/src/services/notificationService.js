@@ -91,7 +91,15 @@ const markOneAsRead = async (user, notificationId) => {
   );
 };
 
-const deleteOneNotification = async (notificationId, user) => {
+const deleteOneNotification = async (notificationId, user, next) => {
+  const notification = await Notification.findById(notificationId);
+  
+  if (notification && notification.isSystem && user.role !== "admin") {
+    const error = new Error("Cette notification est protégée et ne peut pas être supprimée par un étudiant.");
+    error.statusCode = 403;
+    throw error;
+  }
+
   if (user.role === "admin") {
     return await Notification.findByIdAndDelete(notificationId);
   }

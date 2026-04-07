@@ -93,7 +93,8 @@ const replyToQuestion = async (req, res, next) => {
       },
       type: 'info',
       relatedStep: 'Support',
-      actionUrl: question.isAnonymous ? '/anonymous-questions' : '/direct-questions'
+      actionUrl: question.isAnonymous ? '/anonymous-questions' : '/direct-questions',
+      isSystem: true
     });
 
     // Envoyer les notifications aux étudiants en temp-réel

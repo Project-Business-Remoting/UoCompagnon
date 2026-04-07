@@ -60,21 +60,28 @@ const Sidebar = ({ notificationCount = 0, isOpen, onClose }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "0.5rem 0",
+            gap: "0.45rem",
             marginBottom: "2rem",
+            marginLeft: "-0.5rem"
           }}
         >
+          <img
+            src={logoImg}
+            alt="UO-Compagnon Logo"
+            width="45"
+            height="32"
+            style={{ borderRadius: "8px", objectFit: "cover" }}
+          />
           <span
             className="sidebar-logo-text"
             style={{
-              fontSize: "1.25rem",
+              fontSize: "1.2rem",
               fontWeight: "700",
               whiteSpace: "nowrap",
-              color: "var(--text-color)",
-              letterSpacing: "-0.02em"
+              color: "white"
             }}
           >
-            <span style={{ color: "var(--primary)" }}>UO</span>-Compagnon
+            UO-Compagnon
           </span>
         </div>
 

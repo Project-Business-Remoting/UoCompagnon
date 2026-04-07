@@ -18,6 +18,7 @@ const notificationSchema = new mongoose.Schema(
     },
     relatedStep: { type: String, required: true },
     actionUrl: { type: String },
+    isSystem: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

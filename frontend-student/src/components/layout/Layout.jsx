@@ -111,13 +111,8 @@ const Layout = () => {
           >
             <Menu size={24} />
           </button>
-          <span className="layout-mobile-logo">
-            <img
-              src={logoImg}
-              alt="UO-Compagnon logo"
-              className="layout-mobile-logo-image"
-            />
-            <span>UO-Compagnon</span>
+          <span className="layout-mobile-logo" style={{ fontSize: '1.2rem', fontWeight: '700' }}>
+            <span style={{ color: 'var(--primary)' }}>UO</span>-Compagnon
           </span>
         </header>
 

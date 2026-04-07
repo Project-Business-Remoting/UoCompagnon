@@ -30,6 +30,7 @@ const addContent = async (req, res, next) => {
       type: "info",
       relatedStep: content.step,
       date: new Date().toISOString(),
+      isSystem: true,
     };
     const notification = await notificationService.createNotification(notifData);
 

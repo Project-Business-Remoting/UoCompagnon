@@ -167,7 +167,8 @@ const updatePhotoStatus = async (req, res, next) => {
         title,
         message,
         type: status === "verified" ? "success" : "warning",
-        relatedStep: "All Students"
+        relatedStep: "All Students",
+        isSystem: true
       });
     } catch (notifErr) {
       console.error("[Backend Notification Error]:", notifErr.message);
