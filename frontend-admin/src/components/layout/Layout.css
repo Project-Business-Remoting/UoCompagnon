@@ -2,7 +2,7 @@
 .layout-main { flex: 1; margin-left: var(--sidebar-w); transition: margin-left 0.3s ease; }
 .layout-content { padding: 2rem 2.5rem; max-width: 1200px; }
 .layout-mobile-header {
-  display: none; align-items: center; gap: 1rem; padding: 1rem 1.25rem;
+  display: none; align-items: center; gap: 1rem; padding: max(1rem, env(safe-area-inset-top)) 1.25rem 1rem;
   background: var(--bg-card); border-bottom: 1px solid var(--border-color);
   position: sticky; top: 0; z-index: 50;
 }

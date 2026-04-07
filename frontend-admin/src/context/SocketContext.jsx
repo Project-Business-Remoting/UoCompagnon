@@ -10,8 +10,8 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Obtenir le token pour l'authentification (depuis le localStorage "uo_user")
-    const savedUser = localStorage.getItem('uo_user');
+    // Obtenir le token pour l'authentification (depuis le localStorage "uo_admin_user")
+    const savedUser = localStorage.getItem('uo_admin_user');
     let token = null;
     if (savedUser) {
       try {

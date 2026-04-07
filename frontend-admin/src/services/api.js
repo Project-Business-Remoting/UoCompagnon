@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const getHeaders = () => {
   const headers = { "Content-Type": "application/json" };
-  const savedUser = localStorage.getItem("uo_user");
+  const savedUser = localStorage.getItem("uo_admin_user");
   if (savedUser) {
     try {
       const user = JSON.parse(savedUser);
