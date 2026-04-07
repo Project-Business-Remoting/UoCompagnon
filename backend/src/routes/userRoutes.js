@@ -22,4 +22,12 @@ router.put("/profile", protect, updateProfile);
 // Route pour l'admin : récupérer tous les étudiants
 router.get("/students", protect, adminProtect, getAllStudents);
 
+const { uploadProfilePicture, uploadMiddleware, updatePhotoStatus } = require("../controllers/userController");
+
+// Route pour l'upload photo (Côté serveur pour éviter les soucis CORS)
+router.post("/profile-picture", protect, uploadMiddleware, uploadProfilePicture);
+
+// Route Admin : Valider/Refuser une photo
+router.put("/students/:id/photo-status", protect, adminProtect, updatePhotoStatus);
+
 module.exports = router;

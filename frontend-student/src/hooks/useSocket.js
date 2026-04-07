@@ -6,15 +6,16 @@ import { io } from "socket.io-client";
  * @param {Function} onNotification 
  * @param {Function} onQuestion 
  * @param {Function} onQuestionReplied 
+ * @param {Function} onPhotoStatusUpdated
  */
-const useSocket = ({ onNotification, onQuestion, onQuestionReplied } = {}) => {
+const useSocket = ({ onNotification, onQuestion, onQuestionReplied, onPhotoStatusUpdated } = {}) => {
   const socketRef = useRef(null);
 
-  const callbacksRef = useRef({ onNotification, onQuestion, onQuestionReplied });
+  const callbacksRef = useRef({ onNotification, onQuestion, onQuestionReplied, onPhotoStatusUpdated });
 
   useEffect(() => {
-    callbacksRef.current = { onNotification, onQuestion, onQuestionReplied };
-  }, [onNotification, onQuestion, onQuestionReplied]);
+    callbacksRef.current = { onNotification, onQuestion, onQuestionReplied, onPhotoStatusUpdated };
+  }, [onNotification, onQuestion, onQuestionReplied, onPhotoStatusUpdated]);
 
   useEffect(() => {
    
@@ -42,6 +43,11 @@ const useSocket = ({ onNotification, onQuestion, onQuestionReplied } = {}) => {
     socket.on("question-replied", (data) => {
       console.log("[Socket.IO] Question replied:", data);
       if (callbacksRef.current.onQuestionReplied) callbacksRef.current.onQuestionReplied(data);
+    });
+
+    socket.on("photo-status-updated", (data) => {
+      console.log("[Socket.IO] Photo status updated:", data);
+      if (callbacksRef.current.onPhotoStatusUpdated) callbacksRef.current.onPhotoStatusUpdated(data);
     });
 
     socket.on("connect_error", (err) => {

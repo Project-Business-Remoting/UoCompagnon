@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Search, Mail, BookOpen, Clock, Calendar } from 'lucide-react';
-import { fetchAllStudents } from '../services/api';
+import { Search, Mail, BookOpen, Clock, Calendar, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { fetchAllStudents, updateStudentPhotoStatus } from '../services/api';
 import { useLang } from '../context/LangContext';
 import './ContentManagement.css'; // On réutilise le style de liste
 
@@ -10,6 +10,7 @@ const StudentsDirectory = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [updating, setUpdating] = useState(false);
   
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,6 +35,31 @@ const StudentsDirectory = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      setUpdating(true);
+      await updateStudentPhotoStatus(id, status);
+      
+      // Mettre à jour localement
+      setStudents(prev => prev.map(s => s._id === id ? { ...s, profilePictureStatus: status } : s));
+      if (selectedStudent?._id === id) {
+        setSelectedStudent(prev => ({ ...prev, profilePictureStatus: status }));
+      }
+    } catch (err) {
+      alert("Erreur: " + err.message);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'verified': return <span className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><CheckCircle size={10} /> Validée</span>;
+      case 'rejected': return <span className="badge badge-error" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><XCircle size={10} /> Refusée</span>;
+      default: return <span className="badge badge-warning" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={10} /> Photo de profil à vérifier</span>;
     }
   };
 
@@ -115,10 +141,10 @@ const StudentsDirectory = () => {
               <thead>
                 <tr>
                   <th>{t('admin.studentName')}</th>
+                  <th>Photo</th>
                   <th>{t('admin.email')}</th>
                   <th>{t('admin.program')}</th>
                   <th>{t('admin.currentPhase')}</th>
-                  <th>{t('admin.registrationDate')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,7 +160,25 @@ const StudentsDirectory = () => {
                       style={{ cursor: 'pointer' }}
                       className="admin-table-row-clickable"
                     >
-                      <td className="font-semibold">{student.name}</td>
+                      <td className="font-semibold">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <div style={{
+                            width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden',
+                            background: 'var(--primary)', color: 'white', display: 'flex',
+                            alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem'
+                          }}>
+                            {student.profilePicture ? (
+                              <img src={student.profilePicture} alt={student.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              student.name.charAt(0).toUpperCase()
+                            )}
+                          </div>
+                          {student.name}
+                        </div>
+                      </td>
+                      <td>
+                        {student.profilePicture ? getStatusBadge(student.profilePictureStatus) : <span className="badge badge-outline">Aucune</span>}
+                      </td>
                       <td>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <Mail size={14} color="var(--text-muted)" />
@@ -145,7 +189,6 @@ const StudentsDirectory = () => {
                       <td>
                         <span className="badge badge-primary">{student.currentStep}</span>
                       </td>
-                      <td>{new Date(student.createdAt).toLocaleDateString('en-CA')}</td>
                     </tr>
                   ))
                 )}
@@ -158,28 +201,71 @@ const StudentsDirectory = () => {
       {/* Modal Détails Étudiant */}
       {selectedStudent && (
         <div className="modal-overlay" onClick={() => setSelectedStudent(null)}>
-          <div className="modal-content card" onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+          <div className="modal-content card" onClick={e => e.stopPropagation()} style={{ maxWidth: '450px' }}>
             <div className="modal-header">
               <h2>{t('admin.studentProfile')}</h2>
               <button className="modal-close" aria-label="Close modal" onClick={() => setSelectedStudent(null)}>
                 <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>&times;</span>
               </button>
             </div>
+            
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
               <div 
                 style={{ 
-                  width: '64px', height: '64px', borderRadius: '50%', 
+                  width: '96px', height: '96px', borderRadius: '50%', 
                   background: 'var(--primary)', color: 'white', 
                   display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                  fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' 
+                  fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem',
+                  overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}
               >
-                {selectedStudent.name.charAt(0)}
+                {selectedStudent.profilePicture ? (
+                  <img src={selectedStudent.profilePicture} alt={selectedStudent.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  selectedStudent.name.charAt(0).toUpperCase()
+                )}
               </div>
-              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem' }}>{selectedStudent.name}</h3>
-              <a href={`mailto:${selectedStudent.email}`} style={{ color: 'var(--primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Mail size={16} /> {selectedStudent.email}
-              </a>
+              
+              <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem' }}>{selectedStudent.name}</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>{selectedStudent.email}</p>
+              
+              {selectedStudent.profilePicture && (
+                <div style={{ width: '100%', textAlign: 'center' }}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    {getStatusBadge(selectedStudent.profilePictureStatus)}
+                  </div>
+                  
+                  {selectedStudent.profilePictureStatus === 'pending' ? (
+                    <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+                      <button 
+                        className="btn btn-outline" 
+                        style={{ color: 'var(--danger)', borderColor: 'var(--danger)', flex: 1 }}
+                        onClick={() => handleUpdateStatus(selectedStudent._id, 'rejected')}
+                        disabled={updating}
+                      >
+                        Refuser
+                      </button>
+                      <button 
+                        className="btn btn-primary" 
+                        style={{ background: 'var(--success)', borderColor: 'var(--success)', flex: 1 }}
+                        onClick={() => handleUpdateStatus(selectedStudent._id, 'verified')}
+                        disabled={updating}
+                      >
+                        Valider
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      className="btn btn-text" 
+                      onClick={() => handleUpdateStatus(selectedStudent._id, 'pending')}
+                      style={{ fontSize: '0.8rem' }}
+                      disabled={updating}
+                    >
+                      Réinitialiser le statut
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

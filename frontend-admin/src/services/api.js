@@ -92,6 +92,11 @@ export const deleteNotificationApi = (id) =>
 
 // Students Directory Admin API
 export const fetchAllStudents = () => request("/users/students");
+export const updateStudentPhotoStatus = (id, status) => 
+  request(`/users/students/${id}/photo-status`, {
+    method: "PUT",
+    body: JSON.stringify({ status })
+  });
 
 // FAQ Admin API
 export const fetchAllFAQs = () => request("/faqs");

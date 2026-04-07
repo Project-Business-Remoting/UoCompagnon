@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema(
     program: { type: String, required: true },
     arrivalDate: { type: Date, required: true }, // Arrivée au pays
     classStartDate: { type: Date, required: true }, // Premier jour de cours
+    profilePicture: { type: String, default: "" }, // Photo de profil hébergée sur Vercel
+    profilePictureStatus: { 
+      type: String, 
+      enum: ["pending", "verified", "rejected"], 
+      default: "pending" 
+    },
     readNotifications: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
     ],

@@ -33,6 +33,7 @@ const registerUser = async (userData) => {
     program: user.program,
     arrivalDate: user.arrivalDate,
     classStartDate: user.classStartDate,
+    profilePicture: user.profilePicture,
     role: user.role,
     currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
     token: generateToken(user._id),
@@ -49,6 +50,7 @@ const loginUser = async (email, password) => {
       program: user.program,
       arrivalDate: user.arrivalDate,
       classStartDate: user.classStartDate,
+      profilePicture: user.profilePicture,
       role: user.role,
       // Calcul dynamique à chaque connexion
       currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
@@ -60,13 +62,14 @@ const loginUser = async (email, password) => {
 };
 
 const updateUserProfile = async (userId, data) => {
-  const { program, arrivalDate, classStartDate } = data;
+  const { program, arrivalDate, classStartDate, profilePicture } = data;
   const user = await User.findById(userId);
   if (!user) throw new Error("Utilisateur non trouvé");
 
   if (program) user.program = program;
   if (arrivalDate) user.arrivalDate = arrivalDate;
   if (classStartDate) user.classStartDate = classStartDate;
+  if (profilePicture !== undefined) user.profilePicture = profilePicture;
 
   await user.save();
 
@@ -77,6 +80,7 @@ const updateUserProfile = async (userId, data) => {
     program: user.program,
     arrivalDate: user.arrivalDate,
     classStartDate: user.classStartDate,
+    profilePicture: user.profilePicture,
     role: user.role,
     currentStep: calculateCurrentStep(user.arrivalDate, user.classStartDate),
     readNotifications: user.readNotifications,
