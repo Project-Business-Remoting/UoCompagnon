@@ -7,6 +7,7 @@ import { processNotifications } from "../../utils/notificationUtils";
 import { Toast, playNotifSound } from "../ui/Toast";
 import { useAuth } from "../../context/AuthContext";
 import useSocket from "../../hooks/useSocket";
+import { useLang } from "../../context/LangContext";
 import "./Layout.css";
 import Sidebar from "./Sidebar";
 
@@ -17,6 +18,7 @@ const Layout = () => {
   const [photoUpdateTrigger, setPhotoUpdateTrigger] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { lang } = useLang();
 
   const addToast = useCallback((toast) => {
     const id = Date.now() + Math.random();
@@ -43,13 +45,31 @@ const Layout = () => {
       });
     },
     onPhotoStatusUpdated: (data) => {
-      if (user && data.userId === user._id) {
+      if (user && String(data.userId) === String(user._id)) {
+        // Handle multilingual object or fallback to string
+        const titleStr = typeof data.title === 'object' ? (data.title[lang] || data.title.fr) : data.title;
+        const messageStr = typeof data.message === 'object' ? (data.message[lang] || data.message.fr) : data.message;
+        
+        // Define default title based on status
+        let defaultTitle = "Mise à jour de la photo";
+        let defaultType = "info";
+        if (data.status === "verified") {
+          defaultTitle = "Photo validée !";
+          defaultType = "success";
+        } else if (data.status === "rejected") {
+          defaultTitle = "Photo refusée";
+          defaultType = "error";
+        } else if (data.status === "pending") {
+          defaultTitle = "Photo envoyée";
+          defaultType = "info";
+        }
+
         addToast({
-          title: data.status === "verified" ? "Photo validée !" : "Photo refusée",
-          message: data.message,
-          type: data.status === "verified" ? "success" : "error",
+          title: titleStr || defaultTitle,
+          message: messageStr || (data.status === "pending" ? "Votre photo est en cours de vérification." : ""),
+          type: defaultType,
           onClick: () => {
-            navigate("/profile");
+            navigate("/notifications");
           }
         });
         setPhotoUpdateTrigger(prev => prev + 1);

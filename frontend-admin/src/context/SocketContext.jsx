@@ -16,7 +16,8 @@ export const SocketProvider = ({ children }) => {
     // Si pas de token (user pas connecté), on ne tente pas de se connecter au socket
     if (!token) return;
 
-    const socketUrl = import.meta.env.VITE_WEBSOCKET_URL || 'http://localhost:5000';
+    const socketUrl = import.meta.env.VITE_WEBSOCKET_URL || window.location.origin;
+    console.log("[Socket.IO] Attempting connection to:", socketUrl);
     
     console.log("Initialisation DU SOCKET GLOBALE (1 seule fois)");
     
@@ -30,7 +31,7 @@ export const SocketProvider = ({ children }) => {
 
     // Écoute des événements standards
     newSocket.on('connect', () => {
-      console.log('Socket global connecté !');
+      console.log('[Socket.IO] Admin Connected! Socket ID:', newSocket.id);
       setIsConnected(true);
     });
 

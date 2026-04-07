@@ -1,4 +1,9 @@
 const userService = require("../services/userService");
+const { put } = require("@vercel/blob");
+const multer = require("multer");
+const User = require("../models/User");
+const { getIO } = require("../config/socket");
+const notificationService = require("../services/notificationService");
 
 const COOKIE_MAX_AGE_MS =
   Number(process.env.COOKIE_MAX_AGE_MS) || 7 * 24 * 60 * 60 * 1000;
@@ -22,7 +27,6 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 const register = async (req, res) => {
   try {
-    // req.body contiendra nom, email, password, programme, arrivalDate, classStartDate
     const user = await userService.registerUser(req.body);
     sendTokenResponse(user, 201, res);
   } catch (error) {
@@ -69,18 +73,12 @@ const getAllStudents = async (req, res) => {
   }
 };
 
-const { put } = require("@vercel/blob");
-const multer = require("multer");
-const User = require("../models/User");
-
 // Configuration Multer pour stockage en mémoire
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
-
-const { getIO } = require("../config/socket");
 
 const uploadProfilePicture = async (req, res) => {
   try {
@@ -97,15 +95,28 @@ const uploadProfilePicture = async (req, res) => {
     });
 
     // Mettre à jour l'utilisateur dans la base de données
-    // On réinitialise le statut à 'pending' lors d'un nouvel upload
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { 
         profilePicture: blob.url,
         profilePictureStatus: "pending"
       },
-      { new: true },
+      { returnDocument: "after" },
     ).select("-password");
+
+    // Émettre l'événement pour que l'admin le voit instantanément
+    try {
+      const io = getIO();
+      if (io) {
+        io.emit("photo-status-updated", {
+          userId: req.user._id,
+          status: "pending",
+          profilePicture: blob.url
+        });
+      }
+    } catch (socketErr) {
+      console.error("[Socket.IO] Failed to emit photo status update on upload:", socketErr.message);
+    }
 
     res.status(200).json({
       message: "Photo mise à jour avec succès",
@@ -132,26 +143,50 @@ const updatePhotoStatus = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { profilePictureStatus: status },
-      { new: true }
+      { returnDocument: 'after' }
     ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Émettre un événement Socket pour notifier l'étudiant
+    const title = {
+      fr: status === "verified" ? "Photo de profil validée" : "Photo de profil refusée",
+      en: status === "verified" ? "Profile picture verified" : "Profile picture rejected"
+    };
+    const message = {
+      fr: status === "verified" 
+        ? "Votre photo de profil a été validée par un administrateur." 
+        : "Votre photo de profil a été refusée. Veuillez en soumettre une nouvelle.",
+      en: status === "verified"
+        ? "Your profile picture has been verified by an administrator."
+        : "Your profile picture has been rejected. Please submit a new one."
+    };
+
+    // Créer une notification persistante en base de données
+    try {
+      await notificationService.createNotification({
+        user: id, 
+        title,
+        message,
+        type: status === "verified" ? "success" : "warning",
+        relatedStep: "All Students"
+      });
+    } catch (notifErr) {
+      console.error("[Backend Notification Error]:", notifErr.message);
+    }
+
+    // Émettre un événement Socket pour notifier l'étudiant en temps réel
     try {
       const io = getIO();
-      // On envoie un événement spécifique à l'utilisateur (userId)
-      // On utilise une room 'user_:id' si existante, ou un broadcast filtré côté client
-      // Ici, on broadcast et le client filtrera par son ID, ou on peut utiliser les rooms socket.io
-      io.emit("photo-status-updated", {
-        userId: id,
-        status: status,
-        message: status === "verified" 
-          ? "Votre photo de profil a été validée !" 
-          : "Votre photo de profil a été refusée. Veuillez en soumettre une nouvelle."
-      });
+      if (io) {
+        io.emit("photo-status-updated", {
+          userId: id,
+          status: status,
+          title: title,
+          message: message
+        });
+      }
     } catch (socketErr) {
       console.error("[Socket.IO] Failed to emit photo status update:", socketErr.message);
     }

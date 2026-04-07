@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Search, Mail, BookOpen, Clock, Calendar, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Search, Mail, BookOpen, Clock, Calendar, CheckCircle, XCircle, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import { fetchAllStudents, updateStudentPhotoStatus } from '../services/api';
 import { useLang } from '../context/LangContext';
-import './ContentManagement.css'; // On réutilise le style de liste
+import { useSocketContext } from '../context/SocketContext';
+import './ContentManagement.css'; 
 
 const PHASES = ["Toutes", "Before Arrival", "Welcome Week", "First Month", "Mid-Term"];
 
@@ -17,14 +18,69 @@ const StudentsDirectory = () => {
   const [programFilter, setProgramFilter] = useState('Tous');
   const [phaseFilter, setPhaseFilter] = useState('Toutes');
   
+  // Custom Dropdowns State
+  const [isProgramOpen, setIsProgramOpen] = useState(false);
+  const [isPhaseOpen, setIsPhaseOpen] = useState(false);
+  const programRef = useRef(null);
+  const phaseRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (programRef.current && !programRef.current.contains(event.target)) setIsProgramOpen(false);
+      if (phaseRef.current && !phaseRef.current.contains(event.target)) setIsPhaseOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  
   // Modal pour détails
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+  const { socket } = useSocketContext();
   const { t } = useLang();
 
   useEffect(() => {
     loadStudents();
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    
+    const handlePhotoUpdate = (data) => {
+      console.log("[Socket.IO] Processing photo-status-updated:", data);
+      
+      setStudents(prev => prev.map(s => {
+        if (String(s._id) === String(data.userId)) {
+          console.log("[Socket.IO] Updating student in table:", s.name);
+          return {
+            ...s,
+            profilePictureStatus: data.status,
+            profilePicture: data.profilePicture || s.profilePicture 
+          };
+        }
+        return s;
+      }));
+
+      // Update modal if open
+      setSelectedStudent(prev => {
+        if (prev && String(prev._id) === String(data.userId)) {
+          console.log("[Socket.IO] Updating selected student in modal:", prev.name);
+          return {
+            ...prev,
+            profilePictureStatus: data.status,
+            profilePicture: data.profilePicture || prev.profilePicture
+          };
+        }
+        return prev;
+      });
+    };
+
+    socket.on("photo-status-updated", handlePhotoUpdate);
+
+    return () => {
+      socket.off("photo-status-updated", handlePhotoUpdate);
+    };
+  }, [socket]);
 
   const loadStudents = async () => {
     try {
@@ -86,53 +142,76 @@ const StudentsDirectory = () => {
     <div className="admin-contents">
       <div className="admin-header-row">
         <h1>{t('admin.studentsDirectory')}</h1>
-        <span className="badge badge-primary">{filteredStudents.length} {t('admin.totalStudents')}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span className="badge badge-primary" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
+            {filteredStudents.length} {t('admin.totalStudents')}
+          </span>
+        </div>
       </div>
 
       {error ? (
         <div className="error-message">{error}</div>
       ) : (
         <>
-          {/* Barre d'outils de filtres */}
-          <div className="card" style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1', minWidth: '250px', position: 'relative' }}>
-              <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          {/* Premium Filter Bar */}
+          <div className="admin-filter-bar">
+            <div className="admin-search-wrapper">
+              <Search className="admin-search-icon" size={18} />
               <input
                 type="text"
+                className="admin-search-input"
                 placeholder={t('admin.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ 
-                  width: '100%', 
-                  padding: '0.75rem 1rem 0.75rem 2.5rem', 
-                  borderRadius: '8px', 
-                  border: '1px solid var(--border-color)', 
-                  background: 'var(--bg-color)', 
-                  color: 'var(--text-color)' 
-                }}
               />
             </div>
             
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('admin.program')} :</label>
-              <select 
-                value={programFilter} 
-                onChange={(e) => setProgramFilter(e.target.value)}
-                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-color)' }}
+            <div className="admin-dropdown-container" ref={programRef}>
+              <div 
+                className="admin-dropdown-trigger" 
+                onClick={() => { setIsProgramOpen(!isProgramOpen); setIsPhaseOpen(false); }}
               >
-                {programsList.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
+                <span>{programFilter}</span>
+                <ChevronDown size={16} style={{ transform: isProgramOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease' }} />
+              </div>
+              {isProgramOpen && (
+                <div className="admin-dropdown-menu">
+                  {programsList.map(p => (
+                    <div 
+                      key={p} 
+                      className={`admin-dropdown-item ${programFilter === p ? 'active' : ''}`}
+                      onClick={() => { setProgramFilter(p); setIsProgramOpen(false); }}
+                    >
+                      {p}
+                      {programFilter === p && <Check size={14} />}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('admin.phase')} :</label>
-              <select 
-                value={phaseFilter} 
-                onChange={(e) => setPhaseFilter(e.target.value)}
-                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-color)' }}
+
+            <div className="admin-dropdown-container" ref={phaseRef}>
+              <div 
+                className="admin-dropdown-trigger" 
+                onClick={() => { setIsPhaseOpen(!isPhaseOpen); setIsProgramOpen(false); }}
               >
-                {PHASES.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
+                <span>{phaseFilter}</span>
+                <ChevronDown size={16} style={{ transform: isPhaseOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease' }} />
+              </div>
+              {isPhaseOpen && (
+                <div className="admin-dropdown-menu">
+                  {PHASES.map(p => (
+                    <div 
+                      key={p} 
+                      className={`admin-dropdown-item ${phaseFilter === p ? 'active' : ''}`}
+                      onClick={() => { setPhaseFilter(p); setIsPhaseOpen(false); }}
+                    >
+                      {p}
+                      {phaseFilter === p && <Check size={14} />}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
