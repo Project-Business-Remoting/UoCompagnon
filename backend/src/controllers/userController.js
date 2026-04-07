@@ -11,7 +11,7 @@ const COOKIE_MAX_AGE_MS =
 const getCookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   maxAge: COOKIE_MAX_AGE_MS,
 });
 
