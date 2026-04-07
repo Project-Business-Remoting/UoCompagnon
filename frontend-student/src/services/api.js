@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const envUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : null;
+const API_BASE = envUrl || "/api";
 
 const getHeaders = () => {
   const headers = { "Content-Type": "application/json" };
@@ -7,7 +8,8 @@ const getHeaders = () => {
     if (savedUser) {
       const user = JSON.parse(savedUser);
       if (user && user.token) {
-        headers["Authorization"] = `Bearer ${user.token}`;
+        const cleanToken = user.token.replace(/[\r\n\t]/g, '').trim();
+        headers["Authorization"] = `Bearer ${cleanToken}`;
       }
     }
   } catch (e) {
