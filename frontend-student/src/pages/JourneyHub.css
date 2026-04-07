@@ -104,8 +104,14 @@
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .custom-option {
@@ -118,7 +124,7 @@
   gap: 0.75rem;
   font-size: 0.95rem;
   font-weight: 500;
-  white-space: nowrap; /* Prevent wrapping */
+  word-break: break-word;
 }
 
 .custom-option:hover {
@@ -283,7 +289,7 @@
 }
 
 .hub-card-details li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -332,5 +338,97 @@
 
   .hub-search-input {
     font-size: 1rem; /* Prevent iOS zoom */
+  }
+}
+
+@media (max-width: 480px) {
+  .hub {
+    gap: 1rem;
+  }
+
+  .hub-header {
+    padding: 0 0.5rem;
+  }
+
+  .hub-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .hub-controls {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .hub-search-wrapper {
+    flex: 1;
+  }
+
+  .hub-search-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.75rem;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .hub-search-icon {
+    left: 0.8rem;
+  }
+
+  .custom-select-container {
+    flex: 0.6;
+    min-width: 120px;
+  }
+
+  .custom-select-trigger {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .custom-option {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .custom-option:hover {
+    padding-left: 0.75rem;
+  }
+
+  .hub-filters {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem 0.125rem;
+  }
+
+  .hub-filter {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 10px;
+  }
+
+  .hub-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .hub-card {
+    gap: 0.5rem;
+  }
+
+  .hub-card-title {
+    font-size: 0.85rem;
+  }
+
+  .hub-card-desc {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .hub-card-meta {
+    gap: 0.4rem;
+  }
+
+  .hub-card-step {
+    font-size: 0.65rem;
   }
 }
