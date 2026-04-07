@@ -58,11 +58,11 @@ function App() {
   return (
     <ThemeProvider>
       <LangProvider>
-        <SocketProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <SocketProvider>
             <AppRoutes />
-          </AuthProvider>
-        </SocketProvider>
+          </SocketProvider>
+        </AuthProvider>
       </LangProvider>
     </ThemeProvider>
   );

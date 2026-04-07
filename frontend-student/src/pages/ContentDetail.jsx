@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Tag } from 'lucide-react';
 import { useLang } from '../context/LangContext';
+import { fetchAllContents } from '../services/api';
 import './ContentDetail.css';
-
-const API_BASE = '/api';
 
 const ContentDetail = () => {
   const { id } = useParams();
@@ -16,12 +15,8 @@ const ContentDetail = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const token = localStorage.getItem('uo_token');
-        const res = await fetch(`${API_BASE}/contents`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        const found = data.find((c) => c._id === id);
+        const data = await fetchAllContents();
+        const found = (Array.isArray(data) ? data : []).find((c) => c._id === id);
         if (found) {
           setContent(found);
         } else {

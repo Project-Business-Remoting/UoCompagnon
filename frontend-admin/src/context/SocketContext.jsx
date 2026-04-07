@@ -1,39 +1,38 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { useAuth } from './AuthContext';
 
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
+  const { user } = useAuth();
   const [socket, setSocket] = useState(null);
   const [lastMessage, setLastMessage] = useState(null);
   const [lastNotification, setLastNotification] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Obtenir le token pour l'authentification (depuis le localStorage "uo_admin_user")
-    const savedUser = localStorage.getItem('uo_admin_user');
-    let token = null;
-    if (savedUser) {
-      try {
-        token = JSON.parse(savedUser).token;
-      } catch {}
+    // Si pas de user connecté (ou pas de token), pas de socket
+    if (!user || !user.token) {
+      // Disconnect existing socket if user logs out
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+        setIsConnected(false);
+      }
+      return;
     }
-    
-    // Si pas de token (user pas connecté), on ne tente pas de se connecter au socket
-    if (!token) return;
 
     // Socket.IO must connect to server root, not /api
     const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin;
     const socketUrl = rawUrl.replace(/\/api\/?$/, "");
-    console.log("[Socket.IO] Attempting connection to:", socketUrl);
-    
-    console.log("Initialisation DU SOCKET GLOBALE (1 seule fois)");
-    
+    console.log("[Socket.IO] Admin attempting connection to:", socketUrl);
+
     // Initialisation
     const newSocket = io(socketUrl, {
-      auth: { token },
+      auth: { token: user.token },
       withCredentials: true,
-      transports: ['websocket', 'polling'], // Fallback polling si websocket pur échoue
+      transports: ['websocket', 'polling'],
     });
 
     setSocket(newSocket);
@@ -45,7 +44,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('disconnect', () => {
-      console.log('Socket global déconnecté !');
+      console.log('[Socket.IO] Admin disconnected');
       setIsConnected(false);
     });
 
@@ -61,16 +60,21 @@ export const SocketProvider = ({ children }) => {
       setLastNotification(data);
     });
 
-    // Cleanup à la destruction du context
+    newSocket.on('connect_error', (err) => {
+      console.warn('[Socket.IO] Admin connection error:', err.message);
+    });
+
+    // Cleanup à la destruction ou changement de user
     return () => {
-      console.log("Déconnexion du Socket Global");
+      console.log("Déconnexion du Socket Global Admin");
       newSocket.off('connect');
       newSocket.off('disconnect');
       newSocket.off('new-question');
       newSocket.off('new-notification');
+      newSocket.off('connect_error');
       newSocket.disconnect();
     };
-  }, []); // [] = Le socket est initialisé 1 seule fois, au montage de l'application
+  }, [user]); // Re-run when user changes (login/logout)
 
   return (
     <SocketContext.Provider value={{ socket, lastMessage, setLastMessage, lastNotification, setLastNotification, isConnected }}>
