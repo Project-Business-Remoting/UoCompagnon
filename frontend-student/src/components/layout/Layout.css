@@ -11,8 +11,10 @@
 }
 
 .layout-content {
+  width: 100%;
   padding: 2rem 2.5rem;
   max-width: 1200px;
+  box-sizing: border-box;
 }
 
 /* --- Mobile Header --- */
@@ -69,5 +71,20 @@
 
   .layout-content {
     padding: 1.25rem;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-content {
+    padding: 0.75rem;
+  }
+
+  .layout-mobile-header {
+    padding: max(0.5rem, env(safe-area-inset-top)) 0.75rem 0.75rem;
+  }
+
+  .layout-mobile-logo {
+    font-size: 0.95rem;
   }
 }
