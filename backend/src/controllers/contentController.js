@@ -2,21 +2,21 @@ const contentService = require("../services/contentService");
 const notificationService = require("../services/notificationService");
 const { getIO } = require("../config/socket");
 
-const getContents = async (req, res) => {
+const getContents = async (req, res, next) => {
   try {
     const { step } = req.query; // ex: ?step=Premier mois
     const contents = await contentService.getAllContents(step);
     res.json(contents);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const addContent = async (req, res) => {
+const addContent = async (req, res, next) => {
   try {
     const content = await contentService.createContent(req.body);
 
-    // Créer automatiquement une notification pour prévenir les étudiants
+    // ... notification logic ...
     const titleObj = content.title || {};
     const notifData = {
       title: {
@@ -43,37 +43,37 @@ const addContent = async (req, res) => {
 
     res.status(201).json(content);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const updateContent = async (req, res) => {
+const updateContent = async (req, res, next) => {
   try {
     const content = await contentService.updateContent(req.params.id, req.body);
     if (!content) return res.status(404).json({ message: "Contenu non trouvé" });
     res.json(content);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const deleteContent = async (req, res) => {
+const deleteContent = async (req, res, next) => {
   try {
     const content = await contentService.deleteContent(req.params.id);
     if (!content) return res.status(404).json({ message: "Contenu non trouvé" });
     res.json({ message: "Contenu supprimé avec succès" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // Contenus contextuels — auto-filtrés par la phase de l'utilisateur connecté
-const getRelevantContents = async (req, res) => {
+const getRelevantContents = async (req, res, next) => {
   try {
     const contents = await contentService.getRelevantForUser(req.user);
     res.json(contents);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

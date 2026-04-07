@@ -1,7 +1,7 @@
 const notificationService = require("../services/notificationService");
 const { getIO } = require("../config/socket");
 
-const getNotifications = async (req, res) => {
+const getNotifications = async (req, res, next) => {
   try {
     const { step } = req.query;
     const notifications = await notificationService.getNotificationsByStep(
@@ -10,31 +10,31 @@ const getNotifications = async (req, res) => {
     );
     res.json(notifications);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // Notifications intelligentes — combinaison dynamiques + persistantes
-const getSmartNotifications = async (req, res) => {
+const getSmartNotifications = async (req, res, next) => {
   try {
     const notifications =
       await notificationService.getSmartNotificationsForUser(req.user);
     res.json(notifications);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const markAsRead = async (req, res) => {
+const markAsRead = async (req, res, next) => {
   try {
     const user = await notificationService.markAllAsRead(req.user);
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const markOneAsRead = async (req, res) => {
+const markOneAsRead = async (req, res, next) => {
   try {
     const user = await notificationService.markOneAsRead(
       req.user,
@@ -43,14 +43,13 @@ const markOneAsRead = async (req, res) => {
     res.json(user);
   } catch (error) {
     if (error.message === "Notification non autorisee") {
-      return res.status(403).json({ message: error.message });
+      error.statusCode = 403;
     }
-
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const deleteNotification = async (req, res) => {
+const deleteNotification = async (req, res, next) => {
   try {
     const deleted = await notificationService.deleteOneNotification(
       req.params.id,
@@ -61,13 +60,13 @@ const deleteNotification = async (req, res) => {
     }
     res.json({ message: "Notification supprimée avec succès" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 
 
-const createNotification = async (req, res) => {
+const createNotification = async (req, res, next) => {
   try {
     const notification = await notificationService.createNotification(req.body);
     
@@ -81,7 +80,7 @@ const createNotification = async (req, res) => {
     
     res.status(201).json(notification);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 

@@ -3,12 +3,12 @@ const Notification = require('../models/Notification');
 const User = require('../models/User');
 const { getIO } = require('../config/socket');
 
-const createQuestion = async (req, res) => {
+const createQuestion = async (req, res, next) => {
   try {
     const { subject, content, isAnonymous } = req.body;
     
     if (!subject || !content) {
-      return res.status(400).json({ message: 'Subject and content are required' });
+      return res.status(400).json({ message: 'Le sujet et le contenu sont obligatoires.' });
     }
 
     const question = await Question.create({
@@ -36,45 +36,44 @@ const createQuestion = async (req, res) => {
 
     res.status(201).json(question);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create question', error: err.message });
+    next(err);
   }
 };
 
-const getMyQuestions = async (req, res) => {
+const getMyQuestions = async (req, res, next) => {
   try {
     const questions = await Question.find({ author: req.user._id })
       .sort({ createdAt: -1 });
     res.json(questions);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch questions', error: err.message });
+    next(err);
   }
 };
 
-const getAllQuestions = async (req, res) => {
+const getAllQuestions = async (req, res, next) => {
   try {
     const questions = await Question.find()
       .populate('author', 'name email program')
       .sort({ createdAt: -1 });
     
- 
     res.json(questions);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch all questions', error: err.message });
+    next(err);
   }
 };
 
-const replyToQuestion = async (req, res) => {
+const replyToQuestion = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { answer } = req.body;
 
     if (!answer) {
-      return res.status(400).json({ message: 'Answer content is required' });
+      return res.status(400).json({ message: 'Le contenu de la réponse est obligatoire.' });
     }
 
     const question = await Question.findById(id);
     if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
+      return res.status(404).json({ message: 'Question non trouvée.' });
     }
 
     question.answer = answer;
@@ -118,7 +117,7 @@ const replyToQuestion = async (req, res) => {
 
     res.json(question);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to reply to question', error: err.message });
+    next(err);
   }
 };
 

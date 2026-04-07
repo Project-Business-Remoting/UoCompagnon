@@ -25,22 +25,22 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json(user);
 };
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const user = await userService.registerUser(req.body);
     sendTokenResponse(user, 201, res);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await userService.loginUser(email, password);
     sendTokenResponse(user, 200, res);
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -52,7 +52,7 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   try {
     const updatedUser = await userService.updateUserProfile(
       req.user._id,
@@ -60,16 +60,16 @@ const updateProfile = async (req, res) => {
     );
     res.json(updatedUser);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const getAllStudents = async (req, res) => {
+const getAllStudents = async (req, res, next) => {
   try {
     const students = await userService.getAllStudents();
     res.json(students);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -80,7 +80,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
 
-const uploadProfilePicture = async (req, res) => {
+const uploadProfilePicture = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "Aucun fichier fourni" });
@@ -124,14 +124,11 @@ const uploadProfilePicture = async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    console.error("[Backend Upload Error]:", error);
-    res
-      .status(500)
-      .json({ message: "Erreur lors de l'upload: " + error.message });
+    next(error);
   }
 };
 
-const updatePhotoStatus = async (req, res) => {
+const updatePhotoStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
     const { id } = req.params;
@@ -196,7 +193,7 @@ const updatePhotoStatus = async (req, res) => {
       user: updatedUser
     });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la mise à jour du statut: " + error.message });
+    next(error);
   }
 };
 

@@ -64,6 +64,9 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route introuvable" });
 });
 
+// Gestionnaire d'erreurs global
+app.use(require("./src/middleware/errorMiddleware"));
+
 const PORT = process.env.PORT || 5001;
 
 if (require.main === module) {
