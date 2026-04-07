@@ -112,7 +112,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             className="sidebar-action sidebar-action--danger"
             onClick={() => {
               logout();
-              window.location.href = studentPortalWelcomeUrl;
+              window.location.href = "/login";
             }}
             aria-label="Logout from administrator account"
           >

@@ -23,7 +23,7 @@ const Layout = () => {
   }, []);
 
   // WebSocket: listen for new questions from students via the global context
-  const { lastMessage, lastNotification } = useSocketContext();
+  const { lastMessage, setLastMessage, lastNotification, setLastNotification } = useSocketContext();
 
   useEffect(() => {
     if (lastMessage) {
@@ -34,8 +34,9 @@ const Layout = () => {
         type: lastMessage.type === "Anonymous" ? "warning" : "info",
         onClick: () => navigate("/questions"),
       });
+      setLastMessage(null);
     }
-  }, [lastMessage, addToast, navigate]);
+  }, [lastMessage, addToast, navigate, setLastMessage]);
 
   useEffect(() => {
     if (lastNotification) {
@@ -45,8 +46,9 @@ const Layout = () => {
         type: lastNotification.type || "info",
         onClick: () => navigate("/notifications"),
       });
+      setLastNotification(null);
     }
-  }, [lastNotification, addToast, navigate]);
+  }, [lastNotification, addToast, navigate, setLastNotification]);
 
   return (
     <div className="layout">
