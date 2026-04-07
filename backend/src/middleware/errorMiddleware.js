@@ -79,7 +79,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // 5. Default Generic Error
-  const statusCode = error.statusCode || 500;
+  const statusCode = error.statusCode || (error.message.includes("invalide") || error.message.includes("existant") || error.message.includes("trouvé") ? 400 : 500);
   const message = statusCode === 500 
     ? "Une erreur interne s'est produite. Veuillez réessayer plus tard." 
     : error.message;

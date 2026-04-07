@@ -14,8 +14,8 @@
 /* --- Top Bar --- */
 .auth-topbar {
   position: absolute;
-  top: 1rem;
-  right: 1.5rem;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1.5rem, env(safe-area-inset-right));
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
