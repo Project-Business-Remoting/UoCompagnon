@@ -332,4 +332,7 @@ h3 {
   .card {
     padding: 1rem;
   }
+  .form-input, .form-select {
+    font-size: 1rem; /* Prevent iOS Safari auto-zoom */
+  }
 }

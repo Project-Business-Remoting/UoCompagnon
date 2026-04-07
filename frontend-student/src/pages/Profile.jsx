@@ -112,8 +112,14 @@ const Profile = () => {
       const formData = new FormData();
       formData.append('profilePicture', file);
 
-      const response = await fetch('/api/users/profile-picture', {
+      const API_BASE = import.meta.env.VITE_API_URL || "/api";
+      const token = JSON.parse(localStorage.getItem('uo_user'))?.token;
+
+      const response = await fetch(`${API_BASE}/users/profile-picture`, {
         method: 'POST',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
         body: formData,
       });
 
